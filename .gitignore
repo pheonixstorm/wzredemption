@@ -1,0 +1,55 @@
+# Visual C++ cache files
+win32/ipch/
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+
+# Visual Studio profiler
+*.psess
+*.vsp
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+win32/[Dd]ebug/
+win32/[Rr]elease/
+win32/bin/
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.vspscc
+*.vssscc
+*.log
+*.tlog
+*lastbuildstate
+
+# Patch Files
+*.patch
+*.diff
+
+# Temp build files
+win32/libs/Framework.lib
+win32/libs/Gamelib.lib
+win32/libs/Ivis02.lib
+win32/libs/Netplay.lib
+win32/libs/Script.lib
+win32/libs/Sequence.lib
+win32/libs/Sound.lib
+win32/libs/Widget.lib
+
+# Temp misc files
+*.7z
+*.zip
+*.rar
