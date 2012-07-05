@@ -1,0 +1,224 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{f6e7f763-115b-42f2-bfc7-3ce721fdddc6}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{b52ee918-c0ea-4980-91de-654b41acc486}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="3dfxdyn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3dfxFunc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3dfxmode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="3dfxtext.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BitImage.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bspimd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D3dmode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="d3drender.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dx6TexMan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fbf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Getdxver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Imd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Imdload.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ivi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pcx.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pieBlitFunc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pieClip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Piedraw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Piefunc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pieMatrix.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pieMode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="piePalette.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pieState.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pieTexture.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendfunc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Rendmode.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Texd3d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextDraw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="V4101.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Vsr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="3dfxFunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3dfxmode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="3dfxText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Amd3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BitImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bspfunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bspimd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3dmode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="d3drender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dglide.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dx6TexMan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fbf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Geo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Imd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ivi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ivisdef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ivispatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pcx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pieBlitFunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pieclip.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Piedef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Piefunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pieMatrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pieMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="piePalette.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pieState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pieTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pieTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendfunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Rendmode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texd3d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextDraw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="V4101.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vsr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

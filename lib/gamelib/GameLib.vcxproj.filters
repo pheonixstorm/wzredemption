@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{db4f2fd9-9d9e-410e-8fb8-8b00ab4829d9}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{b953c042-e1af-4a72-825b-5847a1092dd7}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Anim.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Animobj.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GTime.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hashtabl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser_l.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser_y.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pqueue.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ptrlist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Ani.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Anim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Animobj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hashtabl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Maxpidef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser_y.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pqueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Priority.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ptrlist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

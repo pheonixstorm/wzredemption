@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{f6a7fc5d-6ee7-4946-a41f-a91c5bfc3fa3}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{81519851-4456-435f-a9fc-711283852769}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Block.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cursor.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dderror.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DXInput.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Frame.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameResource.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Heap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mono.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="multiWDG.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resource_l.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resource_y.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Screen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StrRes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StrRes_l.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StrRes_y.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Surface.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Treap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Trig.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="W95trace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Wdg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cursor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dderror.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DXInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fractions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Frame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameInt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ListMacs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MemInt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mono.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="multiWDG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResLY.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource_y.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StrRes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StrRes_y.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StrResLY.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Surface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Treap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TreapInt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Trig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="W95trace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wdg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
