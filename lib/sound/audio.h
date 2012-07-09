@@ -5,9 +5,7 @@
 
 /***************************************************************************/
 
-#ifdef WIN32
 #include "dsound.h"
-#endif
 
 #include "track.h"
 
@@ -74,9 +72,7 @@ extern SDWORD	audio_GetSampleMixVol( AUDIO_SAMPLE * psSample, SDWORD iVol,
 extern SDWORD	audio_Get3DVolume( void );
 extern void		audio_Set3DVolume( SDWORD iVol );
 
-#ifdef WIN32
 extern LPDIRECTSOUND	audio_GetDirectSoundObj( void );
-#endif
 
 /***************************************************************************/
 

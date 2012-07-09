@@ -833,7 +833,6 @@ sound_SampleIsFinished( AUDIO_SAMPLE * psSample )
 
 /***************************************************************************/
 
-#ifdef WIN32
 LPDIRECTSOUND
 sound_GetDirectSoundObj( void )
 {
@@ -853,6 +852,5 @@ sound_GetDirectSoundObj( void )
 		return pDirectSound;
 	}
 }
-#endif
 
 /***************************************************************************/

@@ -14,11 +14,7 @@
 
 #define	NO_SAMPLE				-2
 
-#ifdef WIN32
 #define	AUDIO_SAMPLE_HEAP_INIT	1000
-#else
-#define	AUDIO_SAMPLE_HEAP_INIT	100			// 100 allocates approx 8.4k   ... 1000 allocated 84k
-#endif
 
 #define	AUDIO_SAMPLE_HEAP_EXT	10
 
@@ -124,9 +120,7 @@ audio_Shutdown()
 		return TRUE;
 	}
 
-#ifdef WIN32
 	sound_StopAll();
-#endif
 
 	bOK = sound_Shutdown();
 
@@ -346,9 +340,6 @@ audio_QueueSample( SDWORD iTrack )
 	}
 
 	printf("audio_queuetrack called1\n");
-#ifdef PSX
-	KeyOnSFX(iTrack,0);	// play sfx to try it out
-#else
 	HEAP_ALLOC( g_psSampleHeap, &psSample );
 
 	if ( psSample != NULL )
@@ -363,7 +354,6 @@ audio_QueueSample( SDWORD iTrack )
 		/* add to queue */
 		audio_AddSampleToTail( &g_psSampleQueue, psSample );
 	}
-#endif
 
 	return psSample;
 }
@@ -649,7 +639,6 @@ BOOL
 audio_SetTrackVals( char szFileName[], BOOL bLoop, int *piID, int iVol,
 						int iPriority, int iAudibleRadius, int VagID )
 {
-#ifdef WIN32		// F.F.S.
 	TRACK	*psTrack;
 
 	/* if audio not enabled return TRUE to carry on game without audio */
@@ -685,16 +674,6 @@ audio_SetTrackVals( char szFileName[], BOOL bLoop, int *piID, int iVol,
 									iPriority, iAudibleRadius, VagID );
 		}
 	}
-#else
-{
-	UDWORD TrackID;
-
-	sscanf(szFileName,"%d",&TrackID);
-	printf("audio_SetTrackVals [%s] TrackNum=%d VagID=%d\n",szFileName,TrackID);
-	
-}	
-		return(TRUE);		
-#endif
 }
 
 /***************************************************************************/
@@ -703,7 +682,6 @@ BOOL
 audio_SetTrackValsHashName( UDWORD hash, BOOL bLoop, int iTrack, int iVol,
 							int iPriority, int iAudibleRadius, int VagID )
 {
-#ifdef WIN32		// F.F.S.
 	TRACK	*psTrack;
 
 	/* if audio not enabled return TRUE to carry on game without audio */
@@ -724,16 +702,6 @@ audio_SetTrackValsHashName( UDWORD hash, BOOL bLoop, int iTrack, int iVol,
 		return sound_SetTrackVals( psTrack, bLoop, iTrack, iVol,
 								iPriority, iAudibleRadius, VagID );
 	}
-#else
-{
-	UDWORD TrackID;
-
-	sscanf(szFileName,"%d",&TrackID);
-	printf("audio_SetTrackVals [%s] TrackNum=%d VagID=%d\n",szFileName,TrackID);
-	
-}	
-		return(TRUE);		
-#endif
 }
 
 /***************************************************************************/
@@ -932,7 +900,6 @@ BOOL
 audio_PlayStream( char szFileName[], SDWORD iVol,
 					AUDIO_CALLBACK pUserCallback )
 {
-#ifdef WIN32
 	AUDIO_SAMPLE	*psSample;
 
 	/* if audio not enabled return TRUE to carry on game without audio */
@@ -957,9 +924,6 @@ audio_PlayStream( char szFileName[], SDWORD iVol,
 	}
 
 	return FALSE;
-#else
-	return TRUE;
-#endif
 
 }
 
@@ -1014,10 +978,6 @@ void audio_PlayTrack( int iTrack )
 		return;
 	}
 
-#ifdef PSX
-	KeyOnSFX(iTrack,0);	// play sfx to try it out
-#else
-
 	HEAP_ALLOC( g_psSampleHeap, &psSample );
 	if ( psSample != NULL )
 	{
@@ -1037,7 +997,6 @@ void audio_PlayTrack( int iTrack )
 			HEAP_FREE( g_psSampleHeap, psSample );
 		}
 	}
-#endif
 }
 
 /***************************************************************************/
@@ -1112,9 +1071,7 @@ audio_PauseAll( void )
 
 	g_bAudioPaused = TRUE;
 
-#ifdef WIN32
 	sound_PauseAll();
-#endif
 }
 
 /***************************************************************************/
@@ -1130,9 +1087,7 @@ audio_ResumeAll( void )
 
 	g_bAudioPaused = FALSE;
 
-#ifdef WIN32
 	sound_ResumeAll();
-#endif
 }
 
 /***************************************************************************/
@@ -1148,7 +1103,6 @@ audio_StopAll( void )
 		return;
 	}
 
-#ifdef WIN32
 	DBPRINTF( ("audio_StopAll called\n") );
 
 	g_bStopAll = TRUE;
@@ -1176,7 +1130,6 @@ audio_StopAll( void )
 	g_bStopAll = FALSE;
 
 	DBPRINTF( ("audio_StopAll done\n") );
-#endif
 }
 
 /***************************************************************************/
@@ -1189,7 +1142,6 @@ audio_CheckAllUnloaded()
 
 /***************************************************************************/
 
-#ifdef WIN32
 LPDIRECTSOUND
 audio_GetDirectSoundObj( void )
 {
@@ -1201,7 +1153,6 @@ audio_GetDirectSoundObj( void )
 
 	return sound_GetDirectSoundObj();
 }
-#endif
 
 /***************************************************************************/
 
