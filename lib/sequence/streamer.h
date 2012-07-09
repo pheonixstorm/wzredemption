@@ -14,61 +14,6 @@
 
 #include <stddef.h>
 
-#ifndef WIN32
-
-#ifndef TYPEDEFS
-#define TYPEDEFS
-
-#ifndef FALSE
-	#define FALSE 0
-#endif
-
-#ifndef TRUE
-	#define TRUE 1
-#endif
-
-#define FAR      
-#define HUGE     
-
-typedef unsigned int 			BOOL;
-
-typedef signed char				CHAR;
-typedef signed char	*			LPCHAR;
-typedef signed char	*			LPCSTR;
-
-typedef char					BYTE;
-typedef char *					LPBYTE;
-
-typedef unsigned char *			LPSTR;
-typedef unsigned char  			UBYTE;
-typedef unsigned char *			LPUBYTE;
-
-typedef void					VOID;
-typedef void *					LPVOID;
-
-typedef float					FLOAT;
-
-typedef unsigned int			UINT;
-typedef unsigned int *			LPUINT;
-
-typedef signed int				INT;
-typedef signed int *			LPINT;
-
-typedef signed short			WORD;
-typedef signed short *			LPWORD;
-
-typedef signed long				LONG;
-typedef signed long *			LPLONG;
-
-typedef unsigned long			ULONG;
-typedef unsigned long			DWORD;
-
-typedef unsigned long *			LPULONG;
-typedef unsigned short 			UWORD;
-
-#endif
-
-#endif
 
 struct _VIDEOHANDLE;
 struct _ALPHAHANDLE;

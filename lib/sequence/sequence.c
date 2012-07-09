@@ -449,7 +449,7 @@ BOOL seq_SetSequence(char* filename, LPDIRECTDRAWSURFACE4 lpDDSF, LPDIRECTSOUND 
 	mhandle = NULL;
 	vhandle = NULL;
 	shandle = NULL;
-	lpDSSB == NULL;
+	lpDSSB  = NULL;
 
 	if (perfMode == VIDEO_PERF_FULLSCREEN)
 	{
@@ -739,9 +739,9 @@ int seq_ClearMovie(void)
 	Streamer_ShutDownSound(	&shandle );
 	Streamer_ShutDownVideo(	&vhandle );
 	Streamer_ShutDownMovie(	&mhandle );
-	shandle == NULL;
-	vhandle == NULL;
-	mhandle == NULL;
+	shandle = NULL; // Was == in this block FIXME
+	vhandle = NULL; 
+	mhandle = NULL;
 	return TRUE;
 }
 
@@ -1211,10 +1211,10 @@ BOOL	seq_ShutDown(void)
 	Streamer_ShutDownSound(	&shandle );
 	Streamer_ShutDownVideo(	&vhandle );
 	Streamer_ShutDownMovie(	&mhandle );
-	lpDSSB = NULL;
-	shandle == NULL;
-	vhandle == NULL;
-	mhandle == NULL;
+	lpDSSB  = NULL;
+	shandle = NULL; // Was == in this block FIXME
+	vhandle = NULL;
+	mhandle = NULL;
 	return TRUE;
 }
 

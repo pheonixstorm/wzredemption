@@ -5,17 +5,6 @@
  * The yacc grammar for the scipt files.
  */
 
-#ifdef PSX
-/* A few definitions so the yacc generated code will compile on the PSX.
- * These shouldn't actually be used by any code that is run on the PSX, it
- * just keeps the compiler happy.
- */
-//static int printf(char* c, ...)
-//{
-//	return 0;
-//}
-#endif
-
 #include <string.h>
 #include <limits.h>
 #include <stdio.h>
