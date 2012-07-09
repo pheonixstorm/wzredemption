@@ -304,8 +304,6 @@ anim_SetVals( char szFileName[], UWORD uwAnimID )
 }
 
 /***************************************************************************/
-#ifdef WIN32
-// the playstation version uses sscanf's ... see animload.c
 BASEANIM *
 anim_LoadFromBuffer( UBYTE *pBuffer, UDWORD size )
 {
@@ -318,16 +316,12 @@ anim_LoadFromBuffer( UBYTE *pBuffer, UDWORD size )
 	/* loaded anim is at head of list */
 	return g_animGlobals.psAnimList;
 }
-#endif
+
 /***************************************************************************/
 
 UWORD
 anim_GetAnimID( char *szName )
 {
-#ifdef PSX
-		DBERROR( ("anim_GetAnimID: Not on PDC\n") );
-		return NO_ANIM;
-#else
 	BASEANIM	*psAnim;
 	char		*cPos = strstr( szName, ".ani" );
 
@@ -353,7 +347,6 @@ anim_GetAnimID( char *szName )
 	{
 		return NO_ANIM;
 	}
-#endif
 }
 
 /***************************************************************************/
