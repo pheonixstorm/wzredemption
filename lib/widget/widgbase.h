@@ -35,25 +35,7 @@ struct _w_context;
 typedef void (*WIDGET_CALLBACK)(struct _widget *psWidget, struct _w_context *psContext);
 
 typedef void (*WIDGET_AUDIOCALLBACK)(int AudioID);
-
-#ifdef PSX
-/* The common widget data */
-#define WIDGET_BASE \
-	UDWORD			formID;			/* ID of the widgets base form. */ \
-	UDWORD			id;				/* The user set ID number for the widget */ \
-									/* This is returned when e.g. a button is pressed */ \
-	WIDGET_TYPE		type;			/* The widget type */ \
-	UDWORD			style;			/* The style of the widget */ \
-	SWORD			x,y;			/* The location of the widget */ \
-	UWORD			width,height;	/* The size of the widget */ \
-	WIDGET_DISPLAY	display;		/* Display the widget */\
-	WIDGET_CALLBACK	callback;		/* User callback (if any) */\
-	void			*pUserData;		/* Pointer to a user data block (if any) */\
-	UDWORD			UserData;		/* User data (if any) */\
-	\
-	struct _widget	*psNext;		/* Pointer to the next widget in the screen list */\
-	UWORD			OTIndex			/* OT Index to draw this widget at */
-#else
+ 
 /* The common widget data */
 #define WIDGET_BASE \
 	UDWORD			formID;			/* ID of the widgets base form. */ \
@@ -69,7 +51,6 @@ typedef void (*WIDGET_AUDIOCALLBACK)(int AudioID);
 	UDWORD			UserData;		/* User data (if any) */\
 	\
 	struct _widget	*psNext			/* Pointer to the next widget in the screen list */
-#endif
 
 /* The base widget data type */
 typedef struct _widget

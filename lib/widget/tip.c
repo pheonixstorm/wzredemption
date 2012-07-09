@@ -12,12 +12,6 @@
 #include "Tip.h"
 #include "Vid.h"
 
-#ifdef PSX
-#include "PiePalette.h"
-#include "ivis02.h"
-#include "Primatives.h"
-#endif
-
 
 /* Time delay before showing the tool tip */
 #define TIP_PAUSE	200
@@ -183,12 +177,7 @@ void tipDisplay(void)
 
 			/* Position the text */
 			fx = tx + TIP_HGAP;
-#ifdef PSX
-			ty = (ty + 1) & 0xfffe;
 			fy = ty + (th - iV_GetTextLineSize())/2 - iV_GetTextAboveBase();
-#else
-			fy = ty + (th - iV_GetTextLineSize())/2 - iV_GetTextAboveBase();
-#endif
 
 			/* Note the time */
 			startTime = GetTickCount();
@@ -212,21 +201,6 @@ void tipDisplay(void)
 //			return;
 //		}
 
-#ifdef PSX
-		iV_SetOTIndex_PSX(OT2D_FOREMOST);
-
-		/* Draw the tool tip */
-		iV_SetFont(FontID);
-//		iV_SetTextColour((UWORD)*(pColours + WCOL_TEXT));
-		iV_SetTextColour((UWORD)TipColour);
-		iV_DrawText(pTip,fx+2,fy);
-		iV_Box(tx,ty, tx+tw-1, ty+th-1,*(pColours + WCOL_LIGHT));
-		iV_Line(tx+1, ty+th-2, tx+1, ty+1,*(pColours + WCOL_DARK));
-		iV_Line(tx+2, ty+1, tx+tw-2, ty+1,*(pColours + WCOL_DARK));
-		iV_Line(tx, ty+th, tx+tw, ty+th,*(pColours + WCOL_DARK));
-		iV_Line(tx+tw, ty+th-1, tx+tw, ty,*(pColours + WCOL_DARK));
-		iV_BoxFill(tx,ty, tx+tw, ty+th,*(pColours + WCOL_TIPBKGRND));
-#else
 		/* Draw the tool tip */
 		pie_BoxFillIndex(tx,ty, tx+tw, ty+th,(UBYTE)*(pColours + WCOL_TIPBKGRND));
 		iV_Box(tx,ty, tx+tw-1, ty+th-1,*(pColours + WCOL_LIGHT));
@@ -240,7 +214,6 @@ void tipDisplay(void)
 //		iV_SetTextColour((UWORD)*(pColours + WCOL_TEXT));
 		iV_SetTextColour((UWORD)TipColour);
 		iV_DrawText(pTip,fx,fy);
-#endif
 		break;
 	}
 }

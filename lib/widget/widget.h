@@ -121,11 +121,7 @@ typedef struct _w_init
  * management MUCH simpler.
  */
 
-#ifdef PSX
-#define WFORM_MAXMAJOR		5
-#else
 #define WFORM_MAXMAJOR		9	   //15		// Maximum number of major tabs on a tab form
-#endif
 #define WFORM_MAXMINOR		5	   //15		// Maximum number of minor tabs off a major
 
 #define TAB_MINOR 0	// Tab types passed into tab display callbacks.
@@ -431,14 +427,6 @@ extern UDWORD widgRunScreen(W_SCREEN *psScreen);
  *  processing to be seperated from the display of the widgets).
  */
 extern void widgDisplayScreen(W_SCREEN *psScreen);
-
-#ifdef PSX
-// Set the default ot index used when creating new widgets.
-extern void WidgSetOTIndex(UWORD OTIndex);
-
-// Get the default ot index used when creating new widgets.
-extern UWORD WidgGetOTIndex(void);
-#endif
 
 // Set the current audio callback function and audio id's.
 extern void WidgSetAudio(WIDGET_AUDIOCALLBACK Callback,SWORD HilightID,SWORD ClickedID);

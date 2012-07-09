@@ -10,9 +10,6 @@
 #include "EditBox.h"
 #include "Form.h"
 #include "Vid.h"
-#ifdef PSX
-#include "Primatives.h"
-#endif
 
 /* Pixel gap between edge of edit box and text */
 #define WEDB_XGAP	4
@@ -85,9 +82,6 @@ BOOL editBoxCreate(W_EDITBOX **ppsWidget, W_EDBINIT *psInit)
 	(*ppsWidget)->UserData = psInit->UserData;
 	(*ppsWidget)->pBoxDisplay = psInit->pBoxDisplay;
 	(*ppsWidget)->pFontDisplay = psInit->pFontDisplay;
-#ifdef PSX
-	(*ppsWidget)->OTIndex = WidgGetOTIndex();
-#endif
 	(*ppsWidget)->AudioCallback = WidgGetAudioCallback();
 	(*ppsWidget)->HilightAudioID = WidgGetHilightAudioID();
 	(*ppsWidget)->ClickedAudioID = WidgGetClickedAudioID();
@@ -586,17 +580,13 @@ void editBoxClicked(W_EDITBOX *psWidget, W_CONTEXT *psContext)
 			fitStringEnd(psWidget->aText, psWidget->width,
 				&psWidget->printStart, &psWidget->printChars, &psWidget->printWidth);
 
-#ifdef WIN32
+#ifdef WIN32 // FIXME
 			/* Clear the input buffer */
 			inputClearBuffer();
 #endif
 			/* Tell the form that the edit box has focus */
 			screenSetFocus(psContext->psScreen, (WIDGET *)psWidget);
 
-#ifdef PSX
-			// So we can tell when it's been clicked on.
-			widgSetReturn((WIDGET *)psWidget);
-#endif
 		}
 	}
 }
@@ -679,9 +669,6 @@ void editBoxDisplay(WIDGET *psWidget, UDWORD xOffset, UDWORD yOffset, UDWORD *pC
 		psEdBox->pBoxDisplay((WIDGET *)psEdBox, xOffset, yOffset, pColours);
 	} else {
 		pie_BoxFillIndex(x0,y0,x1,y1,WCOL_BKGRND);
-#ifdef PSX
-		iV_SetOTIndex_PSX(iV_GetOTIndex_PSX()-1);
-#endif
 		iV_Line(x0,y0, x1,y0,*(pColours + WCOL_DARK));
 		iV_Line(x0,y0, x0,y1,*(pColours + WCOL_DARK));
 		iV_Line(x0,y1, x1,y1,*(pColours + WCOL_LIGHT));
@@ -708,11 +695,7 @@ void editBoxDisplay(WIDGET *psWidget, UDWORD xOffset, UDWORD yOffset, UDWORD *pC
 //	if(psEdBox->pFontDisplay) {
 //		psEdBox->pFontDisplay(fx,fy, pPrint);
 //	} else {
-#ifdef PSX
-		if(iV_GetOTIndex_PSX() >= OT2D_FARFARFORE) {
-			iV_SetOTIndex_PSX(iV_GetOTIndex_PSX()-1);
-		}
-#endif
+
 		iV_DrawText(pPrint,fx,fy);
 //	}
 	*pInsPoint = ch;
