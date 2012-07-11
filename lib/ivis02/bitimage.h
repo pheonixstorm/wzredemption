@@ -22,13 +22,13 @@ IMAGEFILE *iV_LoadImageFile(UBYTE *FileData, UDWORD FileSize);
 void iV_FreeImageFile(IMAGEFILE *ImageFile);
 
 // Load a tim format texture page to VRAM.
-BOOL iV_LoadTexturePage_PSX(void *Data,RECT *StoredArea,int *TextureMode,CLUTCALLBACK ClutCallback);
-BOOL iV_ReLoadTexturePage_PSX(void *Data,RECT *StoredArea,CLUTCALLBACK ClutCallback);
+// BOOL iV_LoadTexturePage_PSX(void *Data,RECT *StoredArea,int *TextureMode,CLUTCALLBACK ClutCallback);
+// BOOL iV_ReLoadTexturePage_PSX(void *Data,RECT *StoredArea,CLUTCALLBACK ClutCallback);
 
 
 // Load a clut file into VRAM.
-BOOL iV_LoadClut_PSX(UBYTE *Data,CLUTLIST **ClutList,BOOL HalfBright);
+// BOOL iV_LoadClut_PSX(UBYTE *Data,CLUTLIST **ClutList,BOOL HalfBright);
 // Free up a clut list alloceted by iV_LoadClut_PSX.
-void iV_FreeClut_PSX(CLUTLIST *ClutList);
+// void iV_FreeClut_PSX(CLUTLIST *ClutList);
 
 #endif

@@ -15,10 +15,6 @@
 #include "pieMatrix.h" // clockwise check
 #include "pieClip.h"
 
-#ifndef PIEPSX		// was #ifdef WIN32
-
-
-
 #ifdef iV_DDX
 	#include <Wtypes.h>
 	#include <ddraw.h>
@@ -3754,5 +3750,3 @@ void _ttspolygon_4101(int npoints, iVertex *vrt, iTexture  *tex, int brightness)
 		}
 	}
 }
-
-#endif

@@ -83,9 +83,6 @@ extern iError	_iVERROR;
 
 //*************************************************************************
 
-#ifdef PSX
-extern void iV_Initialise(void);
-#endif
 extern void iV_Reset(int bResetPal );
 extern void iV_ShutDown(void);
 extern void iV_Stop(char *string, ...);

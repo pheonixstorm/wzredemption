@@ -22,11 +22,8 @@
 /***************************************************************************/
 
 
-
 /*
-
 	Playstation and PC stuff   ... just the matrix stack & surface normal code is all thats needed on the PSX
-
 */
 
 
@@ -100,13 +97,6 @@ void pie_SurfaceNormal(iVector *p1, iVector *p2, iVector *p3, iVector *v)
 	v->z = ((a.x * b.y) - (a.y * b.x)) >> FP12_SHIFT;
 	pie_VectorNormalise(v);
 }
-
-
-
-
-
-#ifdef WIN32
-
 
 
 #define SC_TABLESIZE	4096
@@ -355,8 +345,6 @@ void pie_SetGeometricOffset(int x, int y)
 }
 
 
-
-#ifndef PIEPSX		// was #ifdef WIN32
 // all these routines use the PC format of iVertex ... and are not used on the PSX
 //*************************************************************************
 
@@ -371,7 +359,6 @@ BOOL pie_PieClockwise(PIEVERTEX *s)
 	return (((s[1].sy - s[0].sy) * (s[2].sx - s[1].sx)) <=
 			((s[1].sx - s[0].sx) * (s[2].sy - s[1].sy)));
 }
-#endif
 
 //*************************************************************************
 //*** inverse rotate 3D vector with current rotation matrix
@@ -399,7 +386,6 @@ void pie_VectorInverseRotate0(iVector *v1, iVector *v2)
 //*
 //******
 
-#ifdef WIN32
 void pie_MatInit(void)
 {
 	unsigned i, scsize;
@@ -427,36 +413,4 @@ void pie_MatInit(void)
 	iV_DEBUG0("geo[_geo_setup] = setup successful\n");
 }
 
-#else
 
-void _iv_geo_setup(void)
-
-{
-	unsigned i, scsize;
-	FRACT conv,v;
-
-	// sin/cos table
-
-	scsize = SC_TABLESIZE + (SC_TABLESIZE / 4);
-
-  	conv = (PSX360 / SC_TABLESIZE);
-	for (i=0; i<scsize; i++) {
-		v = rsin(i * conv) * FP12_MULTIPLIER;
-
-		if (v >= 0)
-			_iVSIN_TABLE[i] = (int32)((v + (FIXEDVAL/2))/FIXEDVAL);
-		else
-			_iVSIN_TABLE[i] = (int32)((v - (FIXEDVAL/2))/FIXEDVAL);
-	}
-
-	// init matrix/quat stack
-
-	pie_MatReset();
-
-
-	iV_DEBUG0("geo[_geo_setup] = setup successful\n");
-}
-
-#endif
-
-#endif

@@ -876,31 +876,20 @@ void pie_SetGammaValue(float val)
 /***************************************************************************/
 void pie_DrawMouse(SDWORD x,SDWORD y)
 {
-#ifndef PIEPSX
 	if (pie_GetRenderEngine() == ENGINE_GLIDE)
 	{
 		iV_DrawMousePointer(x, y);
 	}
-
-#endif
-#ifdef PSX
-	iV_DrawMousePointer(x, y);
-#endif
 }
 
 /***************************************************************************/
 UWORD	presentMouseID;
 void pie_SetMouse(IMAGEFILE *psImageFile,UWORD ImageID)
 {
-#ifndef PIEPSX
 	if (pie_GetRenderEngine() == ENGINE_GLIDE)
 	{
 		iV_SetMousePointer(psImageFile,ImageID);
 	}
-#endif
-#ifdef PSX
-	iV_SetMousePointer(psImageFile,ImageID);		// Let's not forget the Playstation eh.
-#endif
 	presentMouseID = ImageID;
 }
 

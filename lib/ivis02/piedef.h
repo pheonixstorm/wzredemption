@@ -17,14 +17,8 @@
 #include "ivispatch.h"
 
 
-#ifdef WIN32
-
 // #define DIRECT3D_VERSION 0x0700
 #include "d3d.h"
-
-#endif
-
-
 
 /***************************************************************************/
 /*
@@ -52,9 +46,6 @@
 
 #define TEXTURE_SIZE			(256.0f)
 #define INV_TEX_SIZE			(0.00390625f)
-
-
-#ifdef WIN32
 
 #define MAX_FILE_PATH		256
 #define pie_MAX_POLY_SIZE	16
@@ -139,9 +130,7 @@ typedef struct {UBYTE b,g,r,a;} PIELIGHTBYTES; //for byte fields in a DWORD
 typedef union  {PIELIGHTBYTES byte; UDWORD argb;} PIELIGHT;
 typedef struct {UBYTE r, g, b, a;} PIEVERTLIGHT; 
 typedef struct {SDWORD sx, sy, sz; UWORD tu, tv; PIELIGHT light, specular;} PIEVERTEX;
-#ifdef WIN32 
 typedef struct {float d3dx, d3dy, d3dz;} PIEPIXEL; 
-#endif
 typedef struct {SWORD x, y, w, h;} PIERECT; //screen rectangle
 typedef struct {SDWORD texPage; SWORD tu, tv, tw, th;} PIEIMAGE; //an area of texture
 typedef struct {UDWORD pieFlag; PIELIGHT colour, specular; UBYTE light, trans, scale, height;} PIESTYLE; //render style for pie draw functions
@@ -156,7 +145,6 @@ typedef struct
 	iPalette *Palette;
 } TEXTUREPAGE;
 
-#ifdef WIN32
 	typedef struct {
 		UDWORD flags;
 		SDWORD nVrts;
@@ -169,12 +157,6 @@ typedef struct
 		PIEVERTEX *pVrts;
 		iTexAnim *pTexAnim;
 	} PIEPOLY;
-#else		// playstation poly structure ... slimline version of memory saving
-	//piePoly undefined for playstation
-	typedef struct {
-		UDWORD flags;
-	} PIEPOLY;
-#endif
 
 /***************************************************************************/
 /*
@@ -219,72 +201,6 @@ extern void pie_DrawTile(PIEVERTEX *pv0, PIEVERTEX *pv1, PIEVERTEX *pv2, PIEVERT
 // Special re-mix of sscanf that moves the string pointer along - defined in imdLoad.c
 extern int __cdecl sscanf1 (char **stringPos, const char *format, ...);
 */
-
-#else	// heres the psx stuff
-
-// This is the new resource loaded structure (TEXPAGE)
-typedef struct
-{
-	iSprite *Texture;
-	iPalette *Palette;
-} TEXTUREPAGE;
-
-#define pie_MIN(a,b)	(((a) < (b)) ? (a) : (b))
-#define pie_MAX(a,b)	(((a) > (b)) ? (a) : (b))
-#define pie_ABS(a)		(((a) < 0) ? (-(a)) : (a))
-
-#define MAX_FILE_PATH		256
-
-// Valid bit flags for the Flags member in the PIE structure.
-#define PIE_HEIGHTSCALE (1)		// Scale heights, the HeightScale member is valid.
-#define PIE_LIGHTMODEL (2)		// ? Not used.
-#define PIE_HEIGHTALIGNED (4)	// Morph to height, the CornerHeight member is valid.
-#define PIE_PALETTEID (8)		// Render using specified clut, the PaletteID is valid.
-#define PIE_COLOURED	(16)	// Render using shading, the ColourRGB member is valid.
-#define PIE_TRANSPARENT (32)	// Render transparent, the TransMode member is valid.
-#define PIE_CULLBLACK (64)		// Don't draw if black.
-#define PIE_OTZ (128)			// Render at fixed OTZ, the OtZ member is valid.
-
-// Possible values for the TransMode member in the PIE structure.
-#define TRANSMODE_TRANSLUCENT 0
-#define TRANSMODE_ADDITIVE 1
-#define TRANSMODE_WEIRDY1 2
-#define TRANSMODE_WEIRDY2 3
-
-// Parameter structure for render control.
-typedef struct	  
-{
-	UDWORD Flags;			// see PIE_??? above
-
-	UBYTE HeightScale;		// 0->100 for scale of height of the IMD
-	UBYTE LightValue;		// Lighting value (128 is normal) ( not used )
-	UBYTE PaletteID;		// Palette ID ( needed for PSX ).
-	UBYTE Pad0;
-
-	UWORD CornerHeight[5];	// [0] is height of pie at the centre [1]->[4] are at the corner
-	UWORD TransMode;		// if PIE_TRANSPARENT then one of TRANSMODE_?
-	UBYTE ColourRGB[4];		// rgb values to use when pie_COLOURED. [0..2] = rgb, [3] = pad. (DWORD aligned)
-	UWORD OtZ;				// Fixed OTZ location for rendering.
-} PIE;
-
-
-// These are a hangover from the PC and should'nt be used.
-#define pie_TRANSLUCENT			0x1
-#define pie_HEIGHT_SCALED		0x2
-#define pie_RAISE				0x4
-#define pie_NO_BILINEAR			0x8
-#define pie_ADDITIVE			0x10
-#define pie_RAISE_SCALE			256
-
-extern void SetBSPObjectPos(SDWORD x,SDWORD y,SDWORD z);
-extern void SetBSPCameraPos(SDWORD x,SDWORD y,SDWORD z);
-
-BOOL DrawPie(iIMDShape *shape, PIE *PieOptions);
-
-
-
-#endif
-
 
 
 

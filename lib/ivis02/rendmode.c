@@ -22,15 +22,9 @@
 #include "ivispatch.h"
 #include "fractions.h"
 
-#ifdef WIN32
 #ifdef INC_GLIDE
 #include "dGlide.h"
 #include "3dfxfunc.h"
-#endif
-#else
-
-#include "vpsx.h"
-#include "psxvram.h"
 #endif
 
 //*************************************************************************
@@ -266,50 +260,16 @@ uint8 *iV_VideoMemoryAlloc(int mode)
 //*
 //*
 //******
-#ifdef PSX
-void _iv_vid_setup(void)
-{
-	int i;
-#ifdef WIN32
-	pie_SetRenderEngine(ENGINE_UNDEFINED);
-#endif
-	rendSurface.usr = REND_UNDEFINED;
-	rendSurface.flags = REND_SURFACE_UNDEFINED;
-#ifndef PIEPSX		// was #ifdef WIN32
-	rendSurface.buffer = NULL;
-#endif
-	rendSurface.size = 0;
-}
-#endif
 
 iSurface *iV_SurfaceCreate(uint32 flags, int width, int height, int xp, int yp, uint8 *buffer)
 {
 	iSurface *s;
 	int i;
-#ifdef PSX
-	AREA *SurfaceVram;
-#endif
 
-#ifndef PIEPSX		// was #ifdef WIN32
 	assert(buffer!=NULL);	// on playstation this MUST be null
-#else
-//	assert(buffer==NULL);	// Commented out by Paul as a temp measure to make it work.
-#endif
-
 	if ((s = (iSurface *) iV_HeapAlloc(sizeof(iSurface))) == NULL)
 		return NULL;
 
-#ifdef PSX
-	SurfaceVram=AllocTexture(width,height,2,0);	// allocate some 32k colour texture ram
-	if (SurfaceVram==NULL) return NULL;
-
-	s->VRAMLocation.x=SurfaceVram->area_x0;
-	s->VRAMLocation.y=SurfaceVram->area_y0;
-	s->VRAMLocation.w=width;
-	s->VRAMLocation.h=height;
-
-	ClearImage(&s->VRAMLocation,0,0,0);	// clear the area to black.
-#endif
 	s->flags = flags;
 	s->xcentre = width>>1;
 	s->ycentre = height>>1;
@@ -318,11 +278,9 @@ iSurface *iV_SurfaceCreate(uint32 flags, int width, int height, int xp, int yp, 
 	s->width = width;
 	s->height = height;
 	s->size = width * height;
-#ifndef PIEPSX		// was #ifdef WIN32
 	s->buffer = buffer;
 	for (i=0; i<iV_SCANTABLE_MAX; i++)
 		s->scantable[i] = i * width;
-#endif
 	s->clip.left = 0;
 	s->clip.right = width-1;
 	s->clip.top = 0;
@@ -370,31 +328,6 @@ void rend_AssignScreen(void)
 {
 	iV_RenderAssign(rendSurface.usr,&rendSurface);
 }
-
-
-#ifdef PSX
-iBool iV_VideoOpen(int mode)
-{
-	iBool r;
-
-	switch (mode) {
-		case REND_PSX:
-			r = _mode_psx();
-			break;
-		default:
-			r = FALSE;
-
-	}
-
-
-	if (r) {
-		iV_RenderAssign(mode,&rendSurface);
-		pal_Init();
-	}
-
-	return r;
-}
-#endif
 
 
 int iV_GetDisplayWidth(void)
@@ -490,10 +423,8 @@ void iV_RenderAssign(int mode, iSurface *s)
 {
 	/* Need to look into this - won't the unwanted called still set render surface? */
 	psRendSurface = s;
-
-#ifdef WIN32
 	bHas3DNow = cpuHas3DNow();	// do some funky stuff to see if we have an AMD
-#endif
+
 	/* Force to 3dfx if glide included */
 /*#ifdef INC_GLIDE
 	mode = REND_GLIDE_3DFX;
@@ -505,21 +436,11 @@ void iV_RenderAssign(int mode, iSurface *s)
 //
 #endif
 */
-#ifdef PSX
-// If psx version then always force mode to iV_MODE_PSX.
-	mode = REND_PSX;
-
-	rendSurface.width = 640;
-	rendSurface.height = 480;
-	pie_Set2DClip(0,0,rendSurface.width,rendSurface.height);
-
-#endif
 
 	g_mode = mode;
 
 	switch (mode) {
 
-#ifndef PIEPSX		// was #ifdef WIN32
 		case iV_MODE_SURFACE:
 			_clear_sr(0);
 //			pie_Draw3DShape				= pie_Draw3DIntelShape;
@@ -920,101 +841,12 @@ void iV_RenderAssign(int mode, iSurface *s)
 
 			break;
 
-#else
-			case REND_PSX:
-//			pie_VideoShutDown 		 		= _close_psx;
-			iV_VSync 			 		= _vsync_psx;
-//			iV_Clear 			 		= _clear_psx;
-//			iV_RenderEnd 				= _bank_on_psx;
-//			iV_RenderBegin 			= _bank_off_psx;
-//			iV_Palette 			 		= _palette_psx;
-//			iV_Pixel 			 		= _pixel_psx;
-//			iV_pPixel 			 		= _pixel_psx;
-			iV_pLine 			 		= _line_psx;
-//			iV_pHLine 			 		= _hline_psx;
-//			iV_pVLine 			 		= _vline_psx;
-//			iV_pCircle 			 		= _circle_psx;
-//			iV_pCircleFill 	 		= _circlef_psx;
-//			iV_pPolygon 		 		= _polygon_psx;
-//			iV_pQuad				 		= _quad_psx;
-//			iV_pTriangle 		 		= _triangle_psx;
-			iV_pBox 				 		= _box_psx;
-			iV_pBoxFill 		 		= _boxf_psx;
-			iV_ppBitmap 		 		= _bitmap_psx;
-//			iV_ppBitmapColour			= _bitmapcolour_psx;
-			iV_ppBitmapColourTrans		= _tbitmapcolour_psx;
-//			iV_pBitmap			 		= pbitmap;
-//			iV_pBitmapResize 	 		= _rbitmap_psx;
-//			iV_pBitmapResizeRot90 	= _rbitmapr90_psx;
-//			iV_pBitmapResizeRot180	= _rbitmapr180_psx;
-//			iV_pBitmapResizeRot270	= _rbitmapr270_psx;
-//			iV_pBitmapGet 				= _gbitmap_psx;
-			iV_ppBitmapTrans			= _tbitmap_psx;
-//			iV_pBitmapTrans			= ptbitmap;
-//			iV_ppBitmapShadow			= _sbitmap_psx;
-//			iV_pBitmapShadow			= psbitmap;
-//			iV_ppBitmapRot90			= _bitmapr90_psx;
-//			iV_pBitmapRot90			= pbitmapr90;
-//			iV_ppBitmapRot180			= _bitmapr180_psx;
-//			iV_pBitmapRot180			= pbitmapr180;
-//			iV_ppBitmapRot270			= _bitmapr270_psx;
-//			iV_pBitmapRot270			= pbitmapr270;
-
-//			iV_Line 					= line;
-//			iV_HLine 					= hline;
-//			iV_VLine 					= vline;
-//			iV_Circle 					= circle;
-//			iV_CircleFill 				= circlef;
-//			iV_Polygon 					= iV_pPolygon;
-//			iV_Quad						= ivquad;
-//			iV_Triangle 				= iV_pTriangle;
-//			iV_Box 						= box;
-//			iV_BoxFill 					= boxf;
-//			iV_Bitmap 					= bitmap;
-//			iV_BitmapResize 			= rbitmap;
-//			iV_BitmapResizeRot90		= rbitmapr90;
-//			iV_BitmapResizeRot180	= rbitmapr180;
-//			iV_BitmapResizeRot270 	= rbitmapr270;
-//			iV_BitmapGet 				= gbitmap;
-//			iV_BitmapTrans				= tbitmap;
-//			iV_BitmapShadow			= sbitmap;
-//			iV_BitmapRot90				= bitmapr90;
-//			iV_BitmapRot180			= bitmapr180;
-//			iV_BitmapRot270			= bitmapr270;
-			iV_SetTransFilter			= SetTransFilter_psx;
-//			iV_TransBoxFill				= TransBoxFill_psx;
-
-//			iV_DrawImageDef			= DrawImageDef_PSX;
-//			iV_DrawSemiTransImageDef = DrawSemiTransImageDef_PSX;
-//			iV_DrawImage			= DrawImage_PSX;
-//			iV_DrawImageRect		= DrawImageRect_PSX;
-//			iV_DrawTransImage		= DrawTransImage_PSX;
-//			iV_DrawTransImageRect	= DrawTransImageRect_PSX;
-//			iV_DrawColourImage		= DrawColourImage_PSX;
-//			iV_DrawColourTransImage	= DrawTransColourImage_PSX;
-//			iV_DrawStretchImage		= DrawStretchImage_PSX;
-
-//			iV_BeginTextRender		= BeginTextRender;
-//			iV_TextRender270		= TextRender270;
-//			iV_TextRender			= TextRender;
-//			iV_EndTextRender		= EndTextRender;
-
-//			pie_DownLoadRadar		= DownLoadRadar;
-
-//			iV_UploadDisplayBuffer	= UploadDisplayBuffer_PSX;
-//			iV_DownloadDisplayBuffer = DownloadDisplayBuffer_PSX;
-//			iV_ScaleBitmapRGB		= ScaleBitmapRGB_PSX;
-
-			break;
-#endif
 	}
 
 
 	iV_DEBUG0("vid[RenderAssign] = assigned renderer :\n");
-#ifndef PIEPSX		// was #ifdef WIN32
 	iV_DEBUG5("usr %d\nflags %x\nxcentre, ycentre %d\nbuffer %p\n",
 			s->usr,s->flags,s->xcentre,s->ycentre,s->buffer);
-#endif
 
 }
 #endif	// don't want this function at all if we have PIETOOL defined

@@ -30,15 +30,8 @@ extern SDWORD	aSinTable[];
 
 //*************************************************************************
 
-#ifdef WIN32
 #define SIN(X)					aSinTable[(uint16)(X) >> 4]
 #define COS(X)					aSinTable[((uint16)(X) >> 4) + 1024]
-#else
-
-#define SIN(X)				   rsin(angle_IVIS2PSX(X))
-#define COS(X)				   rcos(angle_IVIS2PSX(X))
-
-#endif
 #define pie_INVTRANSX(X)		psMatrix->j = (X)<<FP12_SHIFT
 #define pie_INVTRANSY(Y)		psMatrix->k = (Y)<<FP12_SHIFT
 #define pie_INVTRANSZ(Z)		psMatrix->l = (Z)<<FP12_SHIFT

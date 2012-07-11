@@ -100,7 +100,6 @@ void OutputTriangleList(FILE *fp,PSBSPPTRLIST TriList)
 		if (Triangle->flags & iV_IMD_TEXANIM)
 		{
 			
-#ifndef PIEPSX
 			if (Triangle->pTexAnim == NULL)
 			{
 				DBPRINTF(("No TexAnim pointer!\n"));				
@@ -113,7 +112,6 @@ void OutputTriangleList(FILE *fp,PSBSPPTRLIST TriList)
 					Triangle->pTexAnim->textureWidth,
 					Triangle->pTexAnim->textureHeight);
 			}
-#endif
 		}
 
 		
@@ -368,8 +366,6 @@ iBool iV_IMDSave(char *filename, iIMDShape *s, BOOL PieIMD)
 
 				if (poly->flags & iV_IMD_TEXANIM)
 				{
-
-#ifndef PIEPSX					
 					if (poly->pTexAnim == NULL)
 					{
 						printf("No TexAnim pointer!\n");				
@@ -383,7 +379,6 @@ iBool iV_IMDSave(char *filename, iIMDShape *s, BOOL PieIMD)
 							poly->pTexAnim->textureHeight);
 
 					}
-#endif
 				}
 
 
@@ -543,9 +538,7 @@ void iV_IMDRelease(iIMDShape *s)
 	      if (s->polys) {
 	         for (i=0; i<s->npolys; i++) {
 	            if (s->polys[i].pindex) iV_HeapFree(s->polys[i].pindex,s->polys[i].npnts * sizeof(int));
-#ifndef PIEPSX   // was #ifdef WIN32
 	            if (s->polys[i].pTexAnim) iV_HeapFree(s->polys[i].pTexAnim,sizeof(iTexAnim));
-#endif
 				if (s->polys[i].vrt) iV_HeapFree(s->polys[i].vrt,s->polys[i].npnts * sizeof(iVertex));
 	         }
 	         iV_HeapFree(s->polys,s->npolys * sizeof(iIMDPoly));

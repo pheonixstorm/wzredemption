@@ -273,7 +273,6 @@ void pie_ScreenFlip(CLEAR_MODE clearMode)
 
 void pie_Clear(UDWORD colour)
 {
-#ifndef PIEPSX    // Arse	
 	switch (pie_GetRenderEngine())
 	{
 	case ENGINE_SR:
@@ -285,7 +284,6 @@ void pie_Clear(UDWORD colour)
 	default:
 		break;
 	}
-#endif
 }
 /***************************************************************************/
 

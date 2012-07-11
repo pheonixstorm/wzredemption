@@ -4,14 +4,8 @@
 #include "ivisdef.h"
 #include "v4101.h"
 #include "vsr.h"
-#ifdef WIN32
 #include "pieBlitFunc.h"
-#endif
-//#include "ivid3d.h"
 #include "BitImage.h"
-#ifdef PSX
-#include "vpsx.h"
-#endif
 #include "TextDraw.h"
 
 //*************************************************************************
@@ -36,29 +30,7 @@
 #define iV_DownloadDisplayBuffer	pie_DownloadDisplayBuffer
 #define iV_ScaleBitmapRGB			pie_ScaleBitmapRGB
 
-#ifdef PSX
-#define pie_SetMouse			iV_SetMousePointer
-#define pie_DrawMouse			iV_DrawMousePointer
-#define pie_LocalRenderBegin	_bank_off_psx
-#define pie_LocalRenderEnd		_bank_on_psx
-#define	pie_Line				_line_psx	
-#define	pie_Box					_box_psx
-#define	pie_BoxFillIndex		_boxf_psx
-#define	pie_TransBoxFill		TransBoxFill_psx
-#define	pie_UniTransBoxFill		FORCED_ERROR
-#define	pie_ImageFileID			DrawImage_PSX
-#define	pie_ImageFileIDTile		DrawImageRect_PSX
-#define	pie_ImageFileID			DrawTransImage_PSX
-#define	pie_ImageFileIDTile		DrawTransImageRect_PSX
-#define	pie_ImageFileIDStretch	DrawStretchImage_PSX
-//#define	pie_ImageFileIDColour	DrawTransColourImage_PSX
-#define	pie_ImageDef			DrawImageDef_PSX
-#define	pie_ImageDefTrans		DrawSemiTransImageDef_PSX
-#define	pie_DownLoadRadar		DownLoadRadar
-#define pie_UploadDisplayBuffer		UploadDisplayBuffer_PSX
-#define pie_ScaleBitmapRGB		ScaleBitmapRGB_PSX
 
-#endif
 //*************************************************************************
 
 #define iV_MODE_4101		0x4101			// DDX 640x480x256
@@ -68,7 +40,6 @@
 #define REND_GLIDE_3DFX		0x200			// 3dfx Glide API
 #define REND_16BIT			0x400			// 16bit software mode for video
 #define iV_MODE_SURFACE		0x10000			// off-screen surface
-#define REND_PSX			0x20000			// PlayStation - added by tjc
 #define REND_UNDEFINED		-1				// undefined mode
 
 //*************************************************************************
@@ -81,9 +52,8 @@
 //#define PIE_GOURAUD			0x00001000
 #define PIE_NO_CULL			0x00002000
 //#define PIE_TEXANIM			0x00004000	// PIE_TEX must be set also
-#define PIE_PSXTEX			0x00008000	// - use playstation texture allocation method
 #define PIE_BSPFRESH		0x00010000	// Freshly created by the BSP 
-#define PIE_NOHALFPSXTEX	0x00020000
+// #define PIE_NOHALFPSXTEX	0x00020000
 #define PIE_ALPHA			0x00040000
 
 //*************************************************************************
@@ -91,10 +61,6 @@
 #define REND_SURFACE_UNDEFINED	0
 #define REND_SURFACE_SCREEN		1
 #define REND_SURFACE_USR		2
-
-#ifdef PSX
-#define pie_GetVideoBufferWidth()	(640)
-#endif
 
 #define REND_MAX_X			pie_GetVideoBufferWidth()
 #define iV_SCREEN_Y_MAX		pie_GetVideoBufferHeight()
@@ -107,13 +73,6 @@
 
 extern iSurface	rendSurface;
 extern iSurface	*psRendSurface;
-
-//*************************************************************************
-
-#ifdef PSX
-extern void	_iv_vid_setup(void);
-extern iBool iV_VideoOpen(int n);
-#endif
 
 //*************************************************************************
 
@@ -132,11 +91,7 @@ extern iSurface *iV_SurfaceCreate(uint32 flags, int width, int height, int xp, i
 
 extern int iV_GetDisplayWidth(void);
 extern int iV_GetDisplayHeight(void);
-#ifdef WIN32
 extern BOOL	weHave3DNow( void );	// called whenever - returns a boolean
-
-#endif
-
 
 //*************************************************************************
 // vid stuff still to be cut down
@@ -215,11 +170,6 @@ extern void	iVFBlitTransRect(UDWORD x0, UDWORD y0, UDWORD x1, UDWORD y1);
 #define TRANS_BLUE	2
 #define TRANS_BRITE	3
 #define TINT_DEEPBLUE	4
-
-#ifdef PSX
-BOOL SetRGBLookup(UBYTE *Pal,PALETTEENTRY *DestPal,iColour *DestPal2);
-iColour *GetRGBLookup(void);
-#endif
 
 //extern void (*iV_BeginTextRender)(SWORD ColourIndex);
 //extern void (*iV_TextRender)(IMAGEFILE *ImageFile,UWORD ID,int x,int y);

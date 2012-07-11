@@ -34,9 +34,8 @@
 
 #define iV_IMD_TEX			0x00000200
 #define iV_IMD_TEXANIM		0x00004000	// iV_IMD_TEX must be set also
-#define iV_IMD_PSXTEX		0x00008000	// - use playstation texture allocation method
 #define iV_IMD_BSPFRESH		0x00010000	// Freshly created by the BSP 
-#define iV_IMD_NOHALFPSXTEX 0x00020000
+// #define iV_IMD_NOHALFPSXTEX 0x00020000
 
 // shape override flags
 

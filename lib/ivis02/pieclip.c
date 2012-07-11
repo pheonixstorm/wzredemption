@@ -132,7 +132,6 @@ void pie_Set2DClip(int x0, int y0, int x1, int y1)
 int pie_PolyClipTex2D(int npoints, iVertex *points, iVertex *clip)
 
 {
-#ifndef PIEPSX
 	static iVertex xclip[iV_POLY_MAX_POINTS+4];
 	iVertex *p0, *p1;
 	int n1, n, i;
@@ -162,7 +161,6 @@ int pie_PolyClipTex2D(int npoints, iVertex *points, iVertex *clip)
 	}
 
 	return n;
-#endif
 }
 
 //*************************************************************************
@@ -286,7 +284,6 @@ int iV_PolyClip2D(int npoints, iVertex *points, iVertex *clip)
 static int _xtclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
 
 {
-#ifndef PIEPSX
 	register n, dx;
 	int32 t;
 
@@ -398,7 +395,6 @@ static int _xtclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
    	}
 		return n;
 	}
-#endif
 }
 
 /***************************************************************************/
@@ -563,7 +559,6 @@ static int pie_ClipXT(PIEVERTEX *s1, PIEVERTEX *s2, PIEVERTEX *clip)
 static int _ytclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
 
 {
-#ifndef PIEPSX
 	register int n, dy;
 	int32 t;
 
@@ -678,7 +673,6 @@ static int _ytclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
 
 		return n;
 	}
-#endif
 }
 //*************************************************************************
 // New version - clips rgb lighting values
@@ -845,7 +839,6 @@ static int pie_ClipYT(PIEVERTEX *s1, PIEVERTEX *s2, PIEVERTEX *clip)
 static int _xclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
 
 {
-#ifndef PIEPSX
 	register n, dx;
 
 	n = 1;
@@ -924,7 +917,6 @@ static int _xclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
    	}
 		return n;
 	}
-#endif
 }
 
 //*************************************************************************
@@ -932,7 +924,6 @@ static int _xclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
 static int _yclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
 
 {
-#ifndef PIEPSX
 	register int n, dy;
 
 
@@ -1015,7 +1006,6 @@ static int _yclip_edge2d(iVertex *s1, iVertex *s2, iVertex *clip)
 
 		return n;
 	}
-#endif
 }
 
 int	pie_ClipFlat2dLine(SDWORD x0, SDWORD y0, SDWORD x1, SDWORD y1)

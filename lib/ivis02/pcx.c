@@ -16,8 +16,6 @@
 
 //*************************************************************************
 
-#ifdef WIN32
-
 #define PCX_BUFFER_SIZE		65536
 //#define PCX_PIXEL(s,x,y)	(* ((uint8 *) ((s)->bmp + (x) + ((y) * (s)->width))))
 
@@ -384,21 +382,3 @@ BOOL pie_PCXLoadMemToBuffer(int8 *pcximge, iSprite *s, iColour *pal)
 
 	return TRUE;
 }
-
-//*************************************************************************
-//*************************************************************************
-
-
-#else // PSX version.
-
-
-
-#include "psxvram.h"
-
-#define TEXTUREWIDTH (256)
-#define TEXTUREHEIGHT (256)
-
-static	AREA *VRAMarea;	// Playstation vram area structure
-
-
-#endif // End of PSX version.

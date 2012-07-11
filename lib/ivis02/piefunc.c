@@ -219,7 +219,6 @@ int	retVal=0;
 
 void pie_DrawBoundingDisc(iIMDShape *shape, int pieFlag)
 {
-#ifndef PIEPSX
 	int i, n, radR2;
 	iVector vertex;
 	PIEPIXEL *pPixels;
@@ -343,7 +342,6 @@ void pie_DrawBoundingDisc(iIMDShape *shape, int pieFlag)
 	renderPoly.pVrts = &d3dVrts[0];
 	renderPoly.pTexAnim = NULL;
 	pie_D3DPoly(&renderPoly);	   // draw the polygon ... this is an inline function
-#endif
 }
 
 void pie_Blit(SDWORD texPage, SDWORD x0, SDWORD y0, SDWORD x1, SDWORD y1)

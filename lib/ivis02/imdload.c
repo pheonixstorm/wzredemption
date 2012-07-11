@@ -14,10 +14,6 @@
 
 #include <stdio.h>
 
-#ifdef PSX
-#define PIEPSX	// define all the time for the psx ... only for the binary util on the pc
-#endif
-
 #include "frame.h"
 #include "pieMatrix.h" //for surface normals
 #include "ivisdef.h"	// for imd structures
@@ -26,12 +22,6 @@
 #include "ivispatch.h"
 #include "bug.h"
 #include "tex.h"		// texture page loading
-
-#ifdef PSX
-#include "file_psx.h"
-#include "drawimd_psx.h"	// for the scrvertex structure
-#endif
-
 #include "bspfunc.h"	// for imd functions
 
 
@@ -59,21 +49,6 @@ static char *_imd_get_path(char *filename, char *path);
 //iIMDShape *iV_ProcessIMD(UBYTE **FileData, UBYTE *FileDataEnd, UBYTE *IMDpath,iBool palkeep);
 iIMDShape *iV_ProcessIMD(UBYTE **ppFileData, UBYTE *FileDataEnd, UBYTE *IMDpath, UBYTE *PCXpath,iBool palkeep);
 BOOL CheckColourKey( iIMDShape *psShape );
-
-#ifdef PSX
-// convert a string to lower case... by Tim ... dedicated to JS ... with love
-void strlwr(char *String)
-{
-	while (*String != 0)		// loop around till we reach the end of the zero terminated string
-	{
-		if ((*String>='A')&&(*String<='Z'))	// if the current letter is in upper case
-		{
-			*String+=('a'-'A');				// convert it to lower case
-		}
-		String++;							// move to the next letter
-	}
-}
-#endif
 
 /* Section removed. Obsolete and unsupported after VC8
 #ifdef WIN32
@@ -161,15 +136,7 @@ BOOL AtEndOfFile(char *CurPos, char *EndOfFile)
 
 BOOL TESTDEBUG=FALSE;
 
-#ifdef PSX
-#define PRE_LEVEL_TEXTURELOAD				// 	 load the texture then load the polygon level   ... needed for the playstation
-#else
 #define POST_LEVEL_TEXTURELOAD			// load the polygon level ... then load the texture     .... Gareths code
-#endif
-
-#ifdef PSX
-#define ALLOW_NONTEXTURED		// if we can't load the texture ... draw it flat shaded
-#endif
 
 iIMDShape *iV_IMDLoad(char *filename, iBool palkeep)
 {
@@ -256,174 +223,6 @@ void DumpIMDInfo(void)
 
 }
 
-#ifdef PIEPSX
-// Playstation special effect pie (types 9 and 10)
-/*
-
-// Examples.
-
-// sprite effect.
-PIE 9
-gamefx.img
-1 IMAGE_BANG1_1 NumFrames XSize YSize
-
-// single line projectile.
-PIE 10
-1 0 Radius 0 LRed LGreen LBlue TRed TGreen TBlue 
-
-// twin line projectile.
-PIE 10
-1 1 Radius Seperation LRed LGreen LBlue TRed TGreen TBlue 
-
-// bit 0 in the flags field must be set for an effect and cleared for a normal 3d pie
-
-*/
-
-iIMDShape *LoadEffectIMD(UBYTE **ppFileData)
-{
-	
-	iIMDShapeEffect *Effect;
-	IMAGEDEF *Image;
-	UBYTE *pFileData = *ppFileData;
-	int cnt;
-
-	UDWORD flags;
-	UDWORD firstframe,numframes,xsize,ysize;
-	UBYTE String[64];
-	UDWORD HashValue;
-	BOOL FoundFrame = FALSE;
-	UWORD i;
-  	IMAGEFILE *ImageFile;
-
-	Effect=iV_HeapAlloc(sizeof(iIMDShapeEffect));
-	if (Effect==NULL)
-	{
-		return(NULL);
-	}
-
-	if (sscanf(pFileData,"%s%n",String,&cnt) != 1) {
-		iV_Error(0xff,"(IMDLoad) PSX Effect error ( Image File Name )");
-		return NULL;
-	}
-	pFileData += cnt;
-
-#ifndef PIETOOL // when creating binary pies, do not do a resgetdata
-	
-	ImageFile = (IMAGEFILE*)resGetData("IMG",String);
-	if(ImageFile == NULL) {
-		iV_Error(0xff,"(IMDLoad) PSX Effect ( Unable to get image resource )");
-		return NULL;
-	}
-#endif
-
-	if (sscanf(pFileData,"%x %s %d %d %d%n",&flags,String,&numframes,&xsize,&ysize,&cnt) != 5) 
-	{
-		iV_Error(0xff,"(IMDLoad) PSX Effect error");
-		return NULL;
-	}
-	pFileData += cnt;
-
-
-
-	HashValue = HashString(String);
-
-#ifndef PIETOOL // when creating binary pies, do not do a resgetdata
-//	DBPRINTF(("%s (#%d) :",String,HashValue));
-	Image = ImageFile->ImageDefs;
-
-	for(i=0; i<ImageFile->Header.NumImages; i++) {
-		if(HashValue == Image->HashValue) {
-			firstframe = i;
-			FoundFrame = TRUE;
-//			DBPRINTF((" ID = %d\n",firstframe));
-			break;
-		}
-
-		Image++;
-	}
-
-	if(!FoundFrame) {
-		DBPRINTF((" NOT FOUND %s\n",String));
-		iV_Error(0xff,"(IMDLoad) Effect: Unable to resolve image hash value");
-		firstframe = 0;	// Don't fail, just default the frame number to 0.
-//		return NULL;
-	}
-
-#endif
-
-	// bit 0 must be set in the flag field ... so that we can tell it from a normal pie
-	if ((flags & iV_IMD_XEFFECT)==0)
-	{
-		iV_Error(0xff,"(IMDLoad) Effect: XEFFECT is not set");
-		return NULL;
-	}
-
-#ifndef PIETOOL // when creating binary pies, do not do a resgetdata
-	Effect->ImageFile=ImageFile;
-	Effect->firstframe=(UWORD)firstframe;
-#else
-	Effect->ImageFile=(void *)HashValue;
-	Effect->firstframe=1;	// 1 indicates  gamefx.img
-#endif
-
-	Effect->flags=flags;
-	Effect->numframes=(UWORD)numframes;
-	Effect->xsize=(UWORD)xsize;
-	Effect->ysize=(UWORD)ysize;
-
-	*ppFileData = pFileData;
-	return((iIMDShape *)Effect);
-
-}
-
-iIMDShape *LoadProjectileIMD(UBYTE **ppFileData)
-{
-	UBYTE *pFileData = *ppFileData;
-	int cnt;
-
-	iIMDShapeProjectile *Projectile;
-
-	int Flags;
-	int Type,Radius,Seperation,LRed,LGreen,LBlue,TRed,TGreen,TBlue;
-
-	Projectile=iV_HeapAlloc(sizeof(iIMDShapeProjectile));
-	if (Projectile==NULL)
-	{
-		return(NULL);
-	}
-
-	if (sscanf(pFileData,"%x %d %d %d %d %d %d %d %d %d%n",
-				&Flags,
-				&Type,
-				&Radius,
-				&Seperation,
-				&LRed,&LGreen,&LBlue,
-				&TRed,&TGreen,&TBlue,&cnt ) != 10) {
-		iV_Error(0xff,"(IMDLoad) PSX Projectile error.");
-		return NULL;
-	}
-	pFileData += cnt;
-
-	Projectile->flags = Flags | iV_IMD_XEFFECT | iV_IMD_XEFFECT_PROJECTILE;
-	Projectile->Type = Type;
-	Projectile->Radius = Radius;
-	Projectile->Seperation = Seperation;
-	Projectile->LRed = LRed;
-	Projectile->LGreen = LGreen;
-	Projectile->LBlue = LBlue;
-	Projectile->TRed = TRed;
-	Projectile->TGreen = TGreen;
-	Projectile->TBlue = TBlue;
-
-        *ppFileData = pFileData;
-	return((iIMDShape *)Projectile);
-}
-#endif
-
-
-
-
-
 static char texfile[64];	//Last loaded texture page filename
 
 
@@ -468,29 +267,12 @@ iIMDShape *iV_ProcessIMD(UBYTE **ppFileData, UBYTE *FileDataEnd, UBYTE *IMDpath,
 		return NULL;
 	}
 
-
-#ifdef PIEPSX
-//	IMD type of 9 - This is for the playstation effects pie !
-	if (_IMD_VER == 9)
-	{
-		return (LoadEffectIMD(&pFileData));
-	}
-	if (_IMD_VER == 10)
-	{
-		return (LoadProjectileIMD(&pFileData));
-	}
-#endif
-
-
 	//Now supporting version 4 files
 	if ((_IMD_VER < 1) || (_IMD_VER > 4)) 
 	{
 		iV_Error(0xff,"(IMDLoad) file version not supported");
 		return NULL;
 	}
-
-
-
 
 	if (sscanf(pFileData,"%s %x%n",buffer,&_IMD_FLAGS,&cnt) != 2) 
 	{
@@ -504,24 +286,6 @@ iIMDShape *iV_ProcessIMD(UBYTE **ppFileData, UBYTE *FileDataEnd, UBYTE *IMDpath,
 	// get texture page if specified
 	if (_IMD_FLAGS & iV_IMD_XTEX)
 	{
-#ifdef PSX		// psx fscanf support %t which loads crappy filenames with spaces
-		if (_IMD_VER == 1 || _IMD_VER==2)
-		{
-			if (sscanf(pFileData,"%s %d %t %d %d%n",buffer,&ptype,&texfile,&pwidth,&pheight,&cnt) != 5) 
-			{
-				iV_Error(0xff,"(IMDLoad) file corrupt -C");
-				return NULL;
-			}
-			pFileData += cnt;
-			if (strcmp(buffer,"TEXTURE") != 0) 
-			{
-				iV_Error(0xff,"(IMDLoad) expecting 'TEXTURE' directive");
-				return NULL;
-			}
-			bTextured = TRUE;
-
-		}
-#else	// we definately don't want any of this bollocks on the Playstation thank you very much
 		if (_IMD_VER == 1)
 		{
 			if (sscanf(pFileData,"%s %d %s %d %d%n",buffer,&ptype,&texfile,&pwidth,&pheight,&cnt) != 5) 
@@ -597,9 +361,7 @@ iIMDShape *iV_ProcessIMD(UBYTE **ppFileData, UBYTE *FileDataEnd, UBYTE *IMDpath,
 				return NULL;
 			}
 		}
-#endif	// psx/pc TEXTURE command
 
-#ifdef WIN32
 #ifndef PIETOOL		// The BSP tool should not reduce the texture page name down (please)
 		// Super scrummy hack to reduce texture page names down to the page id
 		if (bTextured)
@@ -617,7 +379,6 @@ iIMDShape *iV_ProcessIMD(UBYTE **ppFileData, UBYTE *FileDataEnd, UBYTE *IMDpath,
 				texfile[i] = 0;
 			}
 		}
-#endif
 #endif
 
 #ifdef PRE_LEVEL_TEXTURELOAD
@@ -682,9 +443,7 @@ iIMDShape *iV_ProcessIMD(UBYTE **ppFileData, UBYTE *FileDataEnd, UBYTE *IMDpath,
 	// load texture page if specified
 	if ( (s != NULL) && (_IMD_FLAGS & iV_IMD_XTEX) )
 	{
-#ifdef WIN32
 		bColourKey = TRUE;// CheckColourKey( s );//TRUE not the only imd using this texture
-#endif
 		if(bTextured)
 		{
 			/* Note call to new texture page loader that doesn't actually load!!!!!!!!!! */
@@ -742,18 +501,13 @@ static iBool _imd_load_polys(UBYTE **ppFileData, UBYTE *FileDataEnd, iIMDShape *
 	iVector p0, p1, p2, *points;
 	iIMDPoly *poly;
 	int	nFrames,pbRate,tWidth,tHeight;
-#ifdef PIEPSX
-	UWORD Tpage;				
-#endif
 
 	//assumes points already set
 	points = s->points;
 
 	IMDPolycount+= s->npolys;
-#ifndef PIEPSX
 	s->numFrames = 0;
 	s->animInterval = 0;
-#endif
 	s->polys = (iIMDPoly *) iV_HeapAlloc(sizeof(iIMDPoly) * s->npolys);
 
 	if (s->polys) {
@@ -844,13 +598,11 @@ static iBool _imd_load_polys(UBYTE **ppFileData, UBYTE *FileDataEnd, iIMDShape *
 
 				
 				IMDTexAnims++;
-#ifndef PIEPSX   // was #ifdef WIN32
 				if ((poly->pTexAnim = (iTexAnim *)iV_HeapAlloc(sizeof(iTexAnim))) == NULL)
 				{
 					iV_Error(0xff,"(_load_polys) [poly %d] memory alloc fail (iTexAnim struct)",i);
 					return FALSE;
 				}
-#endif
 				// even the psx needs to skip the data
 				if (sscanf(pFileData,"%d %d %d %d%n",
 						&nFrames,
@@ -864,7 +616,6 @@ static iBool _imd_load_polys(UBYTE **ppFileData, UBYTE *FileDataEnd, iIMDShape *
 				}
 				pFileData += cnt;
 
-#ifndef PIEPSX   // was #ifdef WIN32
 				ASSERT( (tWidth>0, "_imd_load_polys: texture width = %i", tWidth) );
 				ASSERT( (tHeight>0, "_imd_load_polys: texture height = %i", tHeight) );
 
@@ -879,18 +630,12 @@ static iBool _imd_load_polys(UBYTE **ppFileData, UBYTE *FileDataEnd, iIMDShape *
 				s->animInterval = pbRate;
 				poly->pTexAnim->textureWidth =tWidth;
 				poly->pTexAnim->textureHeight =tHeight;
-#else
-				poly->flags&=(~iV_IMD_TEXANIM);		// remove the flag on the psx ... cause it won't be saved out
-#endif
 			}
 			else
 			{
-#ifndef PIEPSX   // was #ifdef WIN32
 				poly->pTexAnim = NULL;	
-#endif
 			}
-#ifndef PIEPSX		// PC texture coord routine
-			if (poly->vrt && (poly->flags & (iV_IMD_TEX|iV_IMD_PSXTEX))) {
+			if (poly->vrt && (poly->flags & (iV_IMD_TEX/*|iV_IMD_PSXTEX*/))) {
 				for (j=0; j<poly->npnts; j++)
 				{
 					int32 VertexU,VertexV;
@@ -907,144 +652,11 @@ static iBool _imd_load_polys(UBYTE **ppFileData, UBYTE *FileDataEnd, iIMDShape *
 					poly->vrt[j].g=255;
 				}
 			}
-#endif
 
 
 #ifdef BSPIMD
 			poly->BSP_NextPoly=BSPPOLYID_TERMINATE;	// make it end end of the BSP chain by default
 #endif
-
-#ifdef PIEPSX	// must be playstation only because we need a slightly different vertex format
-		  
-/*
-	 Special version for PlayStation that correctly handles loading into VRAM
-*/
-			// Check for specific playstation texture format
-			if (poly->vrt && (poly->flags & (iV_IMD_PSXTEX|iV_IMD_TEX))) 
-			{
-#define MAXPOLYPOINTS (4)
-				UDWORD TexturePoints[MAXPOLYPOINTS][2];
-				int32 VertexU,VertexV;
-				SWORD PolyTPage=0;
-  
-				assert(poly->npnts<=MAXPOLYPOINTS);
-
-				// Read in the points and adjust them so that the right & bottom edges refer the the last pixel - not the begining of the next one 
-				//     - this probably was carried over from MAX, or maybe the PC-IMD code needed it.
-				for (j=0; j<poly->npnts; j++)
-				{
-					if (sscanf(pFileData,"%d %d%n",&VertexU,&VertexV,&cnt) != 2) 
-					{
-						iV_Error(0xff,"(_load_polys) [poly %d] error reading tex outline",i);
-
-						DBPRINTF(("IMD name=%s poly %d  point %d\n",_IMD_NAME,i,j));
-						return FALSE;
-					}
-					pFileData += cnt;
-
-/*
-	
-					The IMD's textures coords have the range 0 -> 256.
-					 This indicates the pixel range 0.0000 to 255.9999
-
-					If we allow a texture coord of 256 on the playstation this will wrap around to 0 and produce totally wrong textures.
-
-					As a quick fix for the moment lets clamp the coord if it overflows. This might cause some weird problems at the edge of polygons
-
-*/
-
-					if (VertexU>255) VertexU=255;
-					if (VertexV>255) VertexV=255;
-
-					TexturePoints[j][0]=VertexU;
-					TexturePoints[j][1]=VertexV;
-
-					if (j>0)
-					{
-						// Check for right/bottom edges of polygon
-						if ( TexturePoints[j-1][0] < TexturePoints[j][0])
-							TexturePoints[j][0]--;
-
-						if ( TexturePoints[j-1][1] < TexturePoints[j][1])
-							TexturePoints[j][1]--;
-					}
-				}					
-				// After reading in the last point, we must check the last point against the first			
-				if (  TexturePoints[poly->npnts-1][0] < TexturePoints[0][0])
-					TexturePoints[0][0]--;
-
-			    if (  TexturePoints[poly->npnts-1][1] < TexturePoints[0][1])
-					TexturePoints[0][1]--;
-
-				// Now go through the list translating them into playstation VRAM coords
-				for (j=0; j<poly->npnts; j++)
-				{
-					UBYTE TxtrU,TxtrV;
-					UWORD Clut;
-
-					VertexU=TexturePoints[j][0];
-					VertexV=TexturePoints[j][1];
-
-
-					// This routine does the translating, it no longer sends the graphics to VRAM when needed 
-					if (IVIStoVRAMtranslate(VertexU,VertexV,&Tpage,&Clut,&TxtrU,&TxtrV,s->texpage,poly->flags)==FALSE)
-					{
-						DBPRINTF(("ERROR translating texture coords (%d,%d)\n",VertexU,VertexV));
-						continue;
-					}
-
-
-					poly->vrt[j].u=TxtrU;
-					poly->vrt[j].v=TxtrV;
-//					poly->vrt[j].tpage=Tpage;	// not needed for every vertex - only once per polygon !
-
-//					poly->tpage=Tpage;			// not needed for every polygon - only once per shape
-//					poly->clut=Clut;
-
-
-					s->tpage=Tpage;	
-					s->clut=Clut;
-
-					if (PolyTPage==0)
-					{
-						PolyTPage=Tpage;
-					}
-					else
-					{
-						if (PolyTPage!=Tpage)
-						{
-							DBPRINTF(("WARNING: Polygon tpage mismatch ...\n"));
-						}
-					}
-#if(0)
-					DBPRINTF(("(%d,%d) -> %d,%d @ ",VertexU,VertexV,TxtrU,TxtrV));
-					DBPRINTF(("tpage: (%d,%d,%d,%d)\n",				
-					   ((Tpage)>>7)&0x003,((Tpage)>>5)&0x003,	
-					   ((Tpage)<<6)&0x7c0,	
-					   (((Tpage)<<4)&0x100)+(((Tpage)>>2)&0x200)));
-#endif
-				}
-
-/*
-				if (Tpage == 0)		// random colouring for non-texture imd
-				{
-					UWORD LightLevel;
-					LightLevel=CalcLightLevel(& poly->normal);	// returns light level 0->255
-
-	LightLevel+=32;
-	if (LightLevel>255) LightLevel=255;
-					poly->vrt[0].u=LightLevel;	// red
-					poly->vrt[1].u=LightLevel;		// green
-					poly->vrt[2].u=LightLevel;		// blue
-				}
-*/
-
-			}
-#endif
-
-
-
-
 
 		}
 	} else
@@ -1811,14 +1423,10 @@ static iIMDShape *_imd_load_level(UBYTE **ppFileData, UBYTE *FileDataEnd, int nl
 
 	if (s)
 	{
-
 		s->points = NULL;
 		s->polys = NULL;
 		s->connectors = NULL;
-
-#ifndef PIEPSX
 		s->texanims = NULL;
-#endif
 		s->next=NULL;
 
 // if we can be sure that there is no bsp ... the we check for level number at this point
@@ -2060,25 +1668,11 @@ static int32 _imd_find_scale(int32 value, int32 limit)
 
 iIMDShape *iV_ProcessIMD(UBYTE **ppFileData, UBYTE *FileDataEnd, UBYTE *IMDpath, UBYTE *PCXpath,iBool palkeep)
 {
-#ifdef PSX
-#ifdef DEBUG
-	DBPRINTF(("Text PIE files are not supported in the version!\n"));
-#else
-	DBPRINTF(("NO TEXT PIES! %s\n",GetLastResourceFilename()));
-#endif
-#endif
 	return(NULL);
 }	
 
 iIMDShape *iV_IMDLoad(char *filename, iBool palkeep)
 {
-#ifdef PSX
-#ifdef DEBUG
-	DBPRINTF(("Text PIE files are not supported in the version!\n"));
-#else
-	DBPRINTF(("NO TEXT PIES! %s\n",filename));
-#endif
-#endif
 	return(NULL);
 }	
 
@@ -2092,201 +1686,10 @@ iIMDShape *iV_IMDLoad(char *filename, iBool palkeep)
 		Binary format pie loading code - currently only for playstation
 */
 
-
-#ifdef PIEPSX
-static PSBSPTREENODE RelocBSPBranch(PSBSPTREENODE node, iIMDShape *Pie);
-static void RelocatePie(iIMDShape *Pie);
-static BOOL FixBinaryEffect( iIMDShapeEffect *Effect);
-static void Reloc(UBYTE **pRel, UBYTE *RelocStart);
-#endif
-
-
-
-#ifdef PIEPSX
-// Change the offsets into pointers for the just loaded binary pie
-void RelocatePie(iIMDShape *Pie)
-{
-	int poly;
-
-	Reloc(&Pie->points,Pie);
-	Reloc(&Pie->polys,Pie);
-	Reloc(&Pie->connectors,Pie);
-
-	for (poly=0;poly<Pie->npolys;poly++)
-	{
-		iIMDPoly *CurPoly;
-
-		CurPoly= ((Pie->polys)+poly);
-
-		Reloc(&CurPoly->pindex,Pie);
-		Reloc(&CurPoly->vrt,Pie);
-	}
-
-	Pie->BSPNode=RelocBSPBranch(Pie->BSPNode,Pie);
-
-	if (Pie->next!=NULL)
-	{
-		Reloc(&Pie->next,Pie);		// next level if it exists!
-	}
-
-}
-
-PSBSPTREENODE RelocBSPBranch(PSBSPTREENODE node, iIMDShape *Pie)
-{
-	if (node==NULL) return(NULL);
-
-	Reloc(&node,Pie);
-	
-	node->link[0]=RelocBSPBranch(node->link[0],Pie);
-	node->link[1]=RelocBSPBranch(node->link[1],Pie);
-
-	return(node);
-		
-}
-
-
-
-
-BOOL FixBinaryEffect( iIMDShapeEffect *Effect)
-{
-	UDWORD HashValue;
-	UWORD ImageFileNum;
-
-	
-	IMAGEDEF *Image;
-	BOOL FoundFrame = FALSE;
-	UWORD i;
-  	IMAGEFILE *ImageFile;
-	UWORD firstframe;
-
-
-
-	HashValue=Effect->ImageFile;	
-	ImageFileNum=Effect->firstframe;	// which is the number of the image file 
-
-
-	// Hardcode it to image file 1 for the mo.
-	if (ImageFileNum!=1)
-	{
-		iV_Error(0xff,"(IMDLoad) Effect: Bad image file number");
-		DBPRINTF(("Image number = %d\n",ImageFileNum));	
-		return FALSE;
-		
-	}
-
-// Get imagefile pointer from file string	- this shouldn't be done every time !
-	ImageFile = (IMAGEFILE*)resGetData("IMG","gamefx.img");
-	if(ImageFile == NULL) {
-		iV_Error(0xff,"(IMDLoad) PSX Effect ( Unable to get image resource )");
-		return FALSE;
-	}
-
-
-// match up hash value
-//	DBPRINTF(("%s (#%d) :",String,HashValue));
-	Image = ImageFile->ImageDefs;
-
-	for(i=0; i<ImageFile->Header.NumImages; i++) {
-		if(HashValue == Image->HashValue) {
-			firstframe = i;
-			FoundFrame = TRUE;
-//			DBPRINTF((" ID = %d\n",firstframe));
-			break;
-		}
-
-		Image++;
-	}
-
-	if(!FoundFrame) {
-		DBPRINTF((" NOT FOUND\n"));
-		iV_Error(0xff,"(IMDLoad) Effect: Unable to resolve image hash value- using 0");
-		firstframe=0;	// Default to first frame
-//		return FALSE;
-	}
-
-	// Fix the 
-	Effect->firstframe=firstframe;
-	Effect->ImageFile=ImageFile;
-	return(TRUE);
-	
-}
-
-
-// Changes the binary pie offset into a pointer
-void Reloc(UBYTE **pRel, UBYTE *RelocStart)
-{
-	UDWORD	Temp;
-
-//	assert(((UDWORD)pRel)&3==0);
-//	assert(((UDWORD)(*pRel))&3==0);		// pointers must be on DWORD boundry
-
-	if ((((UDWORD)pRel)&3)!=0)
-	{
-		DBPRINTF(("Odd reloc!\n"));
-	}
-
-	Temp=(UDWORD)(*pRel);
-	Temp+= ((UDWORD)RelocStart);
-	*pRel=(UBYTE *)Temp;
-}
-
-
-
-
-	
-#endif
-
-
-
 // Load a binary pie file - now handles multiple levels !
 iIMDShape *iV_ProcessBPIE(iIMDShape *InputPie, UDWORD SizeOfInputData)
 {
-#ifdef PIEPSX
-	iIMDShape *NewPie, *StartNewPie;
-
-	StartNewPie = (iIMDShape *) iV_HeapAlloc(SizeOfInputData);
-	NewPie=StartNewPie;
-	if (NewPie !=NULL)
-	{
-		memcpy(NewPie,InputPie,SizeOfInputData);
-
-		while(NewPie!=NULL)		// end of the level linked list
-		{
-			NewPie->flags|=iV_IMD_BINARY;		// set the binary file flag 
-
-			// Check for the pie type
-			if (NewPie->flags & iV_IMD_XEFFECT)
-			{
-
-				if (NewPie->flags & iV_IMD_XEFFECT_PROJECTILE)
-				{
-					// No special data changes needed for projectile pie's			
-				}
-				else
-				{
-					if (FixBinaryEffect(NewPie)==FALSE)
-					{
-						return(NULL);		//error then return null
-					}
-				}
-				NewPie=NULL;		// multi-level effects are not allowed ... terminated now
-			}
-			else
-			{
-				RelocatePie(NewPie);	// change offsets into pointers
-				MapTexturePage(NewPie);	// map texture page number to one of the loaded ones
-				NewPie=NewPie->next;	// next level
-			}
-
-		}
-
-	}
-
-
-	return(StartNewPie);
-#else
 	return(NULL);	// return NULL on pc
-#endif
 }
 
 
