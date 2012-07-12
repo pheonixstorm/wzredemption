@@ -31,11 +31,6 @@
 
 #include "fractions.h"
 
-#ifdef	 PSX
-#include  "CtrlPSX.h"
-#endif
-
-
 #include <assert.h>
 
 #define MAX_CURSORS 26 
@@ -310,9 +305,6 @@ void frameSetCursor(HCURSOR hNewCursor)
 	hCursor = hNewCursor;
 	SetCursor(hCursor);
 }
-
-#ifdef WIN32	// not on PSX
-
 
 
 /* Set the current cursor from a Resource ID */
@@ -939,116 +931,7 @@ void frameShutDown(void)
 
 }
 
-#else // ifdef WIN32 - here are the PSX version of the routines
 
-
-void frameSetCursorFromRes(WORD resID)
-{
-//	SetPSXCursorFrame(resID);
-}
-
-/*
- * frameInitialise
- *
- * Initialise the framework library. - PSX Version
- */
-BOOL frameInitialise(HANDLE hInst,			// The windows application instance
-					 STRING *pWindowName,	// The text to appear in the window title bar
-					 UDWORD	width,			// The display width
-					 UDWORD height,			// The display height
-					 UDWORD bitDepth,		// The display bit depth
-					 BOOL	fullScreen,		// Whether to start full screen or windowed
-					 BOOL	bVidMem,	 	// Whether to put surfaces in video memory
-					 BOOL	bGlide )		// Whether to create surfaces
-{
-	winQuit = FALSE;
-	focusState = FOCUS_IN;
-	focusLast = FOCUS_IN;
-	mouseOn = TRUE;
-	displayMouse = TRUE;
-	hInstance = hInst;
-
-	if (!memInitialise())
-	{
-		return FALSE;
-	}
-
-
-	if (!blkInitialise())
-	{
-		return FALSE;
-	}
-
-	/* Initialise the windows stuff and open a window - windows stuff */
-//	if (!winInitApp(hInstance, pWindowName, width, height))
-//	{
-//		return FALSE;
-//	}
-
-
-
-	/* Initialise the Direct Draw Buffers */
-	if (!screenInitialise(width, height, bitDepth, fullScreen, hWndMain))
-	{
-		return FALSE;
-	}
-
-	/* Initialise the input system */
-//	inputInitialise();
-
-	/* Initialise the frame rate stuff */
-	InitFrameStuff();
-
-
-	/* Initialise the trig stuff ... must go after the PSX hard init (uses SQRT)*/
-	if (!trigInitialise())
-	{
-		return FALSE;
-	}
-
-	// Initialise the resource stuff
-	if (!resInitialise())
-	{
-		return FALSE;
-	}
-
-
-
-
-	return TRUE;
-}
-
-
-
-
-
-/*
- * frameUpdate
- *
- * Call this each cycle to allow the framework to deal with
- * windows messages, and do general house keeping.
- *
- * Returns FRAME_STATUS.
- */
-FRAME_STATUS frameUpdate(void)
-{
-	/* Tell the input system about the start of another frame */
-	inputNewFrame();
-
-	MaintainFrameStuff();
-
-	return NULL;
-}
-
-
-
-void frameShutDown(void)
-{
-}
-
-
-
-#endif
 
 BOOL loadFile(STRING *pFileName, UBYTE **ppFileData, UDWORD *pFileSize)
 {
@@ -1073,14 +956,8 @@ BOOL loadFile2(STRING *pFileName, UBYTE **ppFileData, UDWORD *pFileSize, BOOL Al
 	if (res==TRUE)	return TRUE;
 
 	// Not in WDG so we try to load it the old fashion way !
-	// This will never work on the final build of the PSX because we can *ONLY* load files
-	// directly from CD, i.e. from the WDG's normal fopen/fread calls will never work!
 #ifdef DEBUG
 	DBPRINTF(("FOPEN ! %s\n",pFileName));
- #ifdef PSX_USECD
-	assert(2+2==5);		// no fopens when using CD code !!!
- #endif
-
 #endif
 
 

@@ -18,7 +18,6 @@ extern void *	g_ElementToBeRemoved;
 #define	THREE_QUARTERS	((UINT) ((BITS_IN_int * 3) / 4))
 #define	ONE_EIGHTH		((UINT) (BITS_IN_int / 8))
 
-//#define	HIGH_BITS		( ~((UINT)(~0) >> ONE_EIGHTH ))       /* DOES NOT WORK ON THE PSX ! use the version below */
 #define	HIGH_BITS		((UINT)( ~((0xffffffff) >> ONE_EIGHTH )))
 
 /***************************************************************************/

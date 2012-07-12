@@ -51,17 +51,13 @@ typedef struct res_data
 } RES_DATA;
 
 
-// New reduced resource type ... specially for PSX
+// New reduced resource type ...
 // These types  are statically defined in data.c
 typedef struct _res_type
 {
 
-	// type is still needed on psx ... strings are defined in source - data.c (yak!)
-#ifdef WIN32
+	// strings are defined in source - data.c (yak!)
 	STRING			aType[RESTYPE_MAXCHAR];		// type string (e.g. "PIE"	 - just for debug use only, only aplicable when loading from wrf (not wdg)
-#else
-	UBYTE *aType;		// Arse
-#endif
 
 	RES_BUFFERLOAD buffLoad;	// routine to process the data for this type 
 	RES_FREE release;			// routine to release the data (NULL indicates none)

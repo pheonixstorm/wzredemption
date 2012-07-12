@@ -11,17 +11,6 @@
 #include <windows.h>
 #pragma warning (default : 4201 4214 4115)
 
-#ifdef PSX		// If Playstation version then compile lean version.
-
-#ifdef FINALBUILD
-#define scrv_error(a...) ;	// don't want the yackky errors on final version
-#endif
-
-#define FRAMEWORK_LEAN_AND_MEAN
-#include "cfunc.h"	// redefines memset & cpy to fast version - calls cfunc.lib
-#include "printf.h"	// in framepsx
-#endif
-
 #include "types.h"
 #include "debug.h"
 #include "mem.h"

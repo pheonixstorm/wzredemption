@@ -139,10 +139,6 @@ extern void dbg_SetAssertCallback(DB_MBCALLBACK callback);
 /*lint -printf(1,dbg_printf,dbg_MessageBox,dbg_ErrorBox) */
 /*lint -printf(2,dbg_Assert) */
 
-#ifdef PSX
-extern char DBGstring[256];
-#endif
-
 #ifdef DEBUG
 /* Debugging output required */
 
@@ -160,20 +156,7 @@ extern char DBGstring[256];
  * to be used :
  *		DBPRINTF(("Example output string with a variable: %d\n", Variable));
  */
-#ifdef WIN32
 #define DBPRINTF(x)				dbg_printf x
-#else
-/*#define DBPRINTF(x) \
-	printf("DBPRINTF @ %s,%d:\n",__FILE__,__LINE__);\
-	printf x;\
-	printf("\n") */
-
-//	#ifdef FINALBUILD
-//		#define DBPRINTF(x);
-//	#else
-		#define DBPRINTF(x) printf x;
-//	#endif
-#endif
 
 /*
  *
@@ -239,13 +222,9 @@ extern char DBGstring[256];
  *
  * Arguments as for printf
  */
-#ifdef PSX
-#define DBERROR(x) printf x; printf("\n...DBERROR in line %d of %s\n",__LINE__,__FILE__);
-#else				   
 #define DBERROR(x) \
 	dbg_ErrorPosition(__FILE__, __LINE__), \
 	dbg_ErrorBox x
-#endif
 
 /****************************************************************************************
  *
@@ -438,11 +417,7 @@ extern char DBGstring[256];
 #else
 
 /* No Debugging output required */
-#ifdef WIN32
 #define DBPRINTF(x)
-#else	// currently we want DBPRINTF to work on the PSX even on release build
-#define DBPRINTF(x) printf x;
-#endif
 
 #define DBOUTPUTFILE(x)
 #define DBNOOUTPUTFILE()
@@ -460,12 +435,7 @@ extern char DBGstring[256];
 
 
 
-#ifdef PSX
-#define DBERROR(x)	printf x; printf("\n...DBERROR in line %d of %s\n",__LINE__,__FILE__)
-#else				   
 #define DBERROR(x)	dbg_ErrorBox x
-#endif
-
 
 #define DBMONOPRINTF(x)
 #define DBMONOCLEAR()

@@ -1,8 +1,6 @@
-
-
  /*******************************************************************
  *
- *    DESCRIPTION:	 Routines to handle format 4 .WDG files for PSX & PC
+ *    DESCRIPTION:	 Routines to handle format 4 .WDG files for PC
  *
  *    AUTHOR:		 Tim ... at first
  *
@@ -18,22 +16,10 @@
 #include "wdg.h"
 #include "MultiWDG.h"
 
-#ifdef PSX
-#include "cdpsx.h"
-#include "file_psx.h"
-#endif
 
 /** local definitions **/
 
-#ifdef PSX
 //#define	PRIMCATALOG		// define this if we want to use the primative buffer to store the wdg catalogs - frees up 29k (!)
-#else
-//#define	PRIMCATALOG		// define this if we want to use the primative buffer to store the wdg catalogs - frees up 29k (!)
-#endif
-
-
-
-#ifndef PSX_USECD
 
 #define MAX_STR (256)
 
@@ -48,18 +34,6 @@ int freadpos(UDWORD filepos,UBYTE *buffer, UDWORD bytescount, FILE *handle)
 	fseek(handle,filepos,SEEK_SET);
 	return (fread(buffer,1,bytescount,handle));
 }
-
-#else
-// This is for PSX CD code only 
-typedef UDWORD DISK_FILE;		// this isn't used !
-
-#define DISK_OpenFile(name)								OpenCDfile(name)
-#define DISK_ReadPos(filepos,buffer,bytecount,handle)	ReadCDdata(filepos,buffer,bytecount)	
-#define DISK_Close(handle)								CloseCDfile()
-
-#define MAX_STR (32)
-#endif
-
 
 
 /* default settings */
@@ -177,7 +151,7 @@ BOOL WDG_SetCurrentWDG(char *filename)
 		CurrentWDGname[0]=0;
 		return TRUE;
 	}
-	pFileHandle=DISK_OpenFile(filename);	// tries to open the WDG on the HD (pc) or CD  (psx)
+	pFileHandle=DISK_OpenFile(filename);	// tries to open the WDG on the HD (pc)
 	if (pFileHandle==NULL)
 	{
 		DBPRINTF(("WDG_SetCurrentWDG unable to open %s\n",filename));
@@ -432,18 +406,11 @@ BOOL WDG_ProcessWRF(char *WRFname,BOOL UseDataFromWDG )
 	// If the wrf is not in the wdg lets shout and scream and moan about it...
 	if (FoundWRF==FALSE)
 	{
-//#ifdef PSX
-//		char t[32];
-//		sprintf(t,"bad wrf %s\n",wrfentryname);
-//		prnt(1,t,0,0);
-//#endif
-
-
  		DBPRINTF(("Unable to find %s in WDG\n",wrfentryname));
 		return FALSE;//error			UseDataFromWDG=FALSE;
 	}*/
 
-	pFileHandle=DISK_OpenFile(CurrentWDGname);	// tries to open the WDG on the HD (pc) or CD  (psx)
+	pFileHandle=DISK_OpenFile(CurrentWDGname);	// tries to open the WDG on the HD (pc)
 	if (pFileHandle==NULL)
 	{
 		DBPRINTF(("WDG_ProcessWRF unable to open %s\n",CurrentWDGname));
@@ -489,14 +456,6 @@ BOOL WDG_ProcessWRF(char *WRFname,BOOL UseDataFromWDG )
 
 		UBYTE *pRetreivedFile;
 
-#ifdef PSX
-extern UDWORD MouseIn2;
-
-	if (MouseIn2 == 1)
-	{
-		zrintf("file =%d",File);
-	}
-#endif
 		CurrentFile = WRFfilesCatalog + File;
 
 		if (CurrentFile->offset == UDWORD_MAX)
@@ -595,9 +554,6 @@ void FILE_InvalidateCache(void)
 //	{
 //		UBYTE buf[32];
 //		sprintf(buf,"cache invalid\n");
-//#ifdef PSX
-//		prnt(1,buf,0,0);
-//#endif
 //	}
 	Cache.IsCacheDataValid=FALSE;	// This is the actual data in the cache 
 #ifdef PRIMCATALOG
@@ -621,15 +577,9 @@ BOOL FILE_IsCatalogValid(void)
 	{
 		if (PrimBufferCatalog->Check1==CHECK1 && PrimBufferCatalog->Check2==CHECK2)
 		{
-//#ifdef PSX
-//			prnt(1,"CataValid\n",0,0);
-//#endif
 			return TRUE;
 		}
 	}
-//#ifdef PSX	
-//	prnt(1,"CataInvalid\n",0,0);
-//#endif
 	return FALSE;
 #else
 	return TRUE;
@@ -661,27 +611,10 @@ BOOL FILE_InitialiseCache(SDWORD CacheSize)
 	}
 	else if (CacheSize==0)
 	{
-#ifdef PSX
-		UDWORD BufferUsed;
-#endif
-
 		UBYTE *CacheStart;
 		UDWORD CacheSize;
 
 		Cache.IsCacheDataMalloced=FALSE;
-
-#ifdef PSX
-
-	// Calculate where the cache is on the playstation
-		BufferUsed=GetPrimBufferAllocatedSize();
-		DBPRINTF(("InitialiseCache - %d bytes already allocated in the primative buffer\n",BufferUsed));
-
-
-		GetPrimBufferMem(&CacheStart, &CacheSize);
-		// adjust the values by the amount allocated
-		CacheStart+=BufferUsed;
-		CacheSize-=BufferUsed;
-#endif
 
 // if we are loading the catalog data from the primative buffer add in the size and setup the pointers now
 #ifdef	PRIMCATALOG
@@ -850,7 +783,7 @@ UBYTE *FILE_RetreivePending( UDWORD *SizeLoaded)
 
 	// Now read in the catalog for the MISCDATA section
 	// If it's already loaded then we shouldn't really re-load it  ... but what the fuck it's saturday
-	pFileHandle=DISK_OpenFile(CurrentWDGname);	// tries to open the WDG on the HD (pc) or CD  (psx)
+	pFileHandle=DISK_OpenFile(CurrentWDGname);	// tries to open the WDG on the HD (pc)
 	if (pFileHandle==NULL)
 	{
 		DBPRINTF(("WDG_ProcessWRF unable to open %s\n",CurrentWDGname));
@@ -1029,9 +962,6 @@ BOOL loadFileFromWDGCache(WDG_FINDFILE *psFindFile, UBYTE **ppFileData, UDWORD *
 	// The cache also holds the wrf/wdg catalog infomation ... this needs to be reloaded before we can continue to load a wrf
 	if ( FILE_IsCatalogValid()==FALSE)
 	{
-////#ifdef PSX
-//		prnt(1,"RELOADING CATALOG INFOMATION !! \n",0,0);
-//#endif
 		FILE_RestoreCache();
 	}
 
@@ -1048,7 +978,7 @@ BOOL loadFileFromWDGCache(WDG_FINDFILE *psFindFile, UBYTE **ppFileData, UDWORD *
 
 	// Now read in the catalog for the MISCDATA section
 	// If it's already loaded then we shouldn't really re-load it  ... but what the fuck it's saturday
-	pFileHandle=DISK_OpenFile(CurrentWDGname);	// tries to open the WDG on the HD (pc) or CD  (psx)
+	pFileHandle=DISK_OpenFile(CurrentWDGname);	// tries to open the WDG on the HD (pc)
 	if (pFileHandle==NULL)
 	{
 		DBPRINTF(("WDG_ProcessWRF unable to open %s\n",CurrentWDGname));
@@ -1108,7 +1038,7 @@ BOOL loadFileFromWDGCache(WDG_FINDFILE *psFindFile, UBYTE **ppFileData, UDWORD *
 
 	FILE_InvalidateCache();
 
-	pFileHandle=DISK_OpenFile(psFindFile->psCurrCache->aFileName);	// tries to open the WDG on the HD (pc) or CD  (psx)
+	pFileHandle=DISK_OpenFile(psFindFile->psCurrCache->aFileName);	// tries to open the WDG on the HD (pc)
 	if (pFileHandle==NULL)
 	{
 		DBPRINTF(("WDG_ProcessWRF unable to open %s\n",CurrentWDGname));
