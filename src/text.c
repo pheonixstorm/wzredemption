@@ -82,7 +82,6 @@ STR_ID asFixedID[STR_MAX_ID] =
 	STR_INT_POWERACCRUED,			"INT_POWERACCRUED",
 	STR_INT_POWER,		            "INT_POWER",	
 
-#ifdef WIN32		// PSX ... non!
 	// multiplayer strings
 	STR_MUL_PHONENO,				"MUL_PHONENO",	
 	STR_MUL_IPADDR,					"MUL_IPADDR",	
@@ -185,7 +184,7 @@ STR_ID asFixedID[STR_MAX_ID] =
 	STR_COMPATIBLE,			"COMPATIBLE",
 	STR_PLAYER_NAME,		"PLAYER_NAME",
 	STR_GAME_NAME,			"GAME_NAME",
-#endif
+
 	//In Game Options
 	STR_GAME_QUIT,			"GAME_QUIT",
 	STR_GAME_RESUME,		"GAME_RESUME",
@@ -237,13 +236,10 @@ STR_ID asFixedID[STR_MAX_ID] =
 	STR_NORMAL,							"NORMAL",
 	STR_HARD,							"HARD",
 
-
-#ifdef WIN32		// PSX ... non!																					  
 	// Ingame MultiPlayer Announcements.
 	STR_MUL_LEAVE,						"MUL_LEAVE",
 	STR_MUL_JOINING,					"MUL_JOINING",
 	STR_MUL_RESPOND,					"MUL_RESPOND",
-#endif
 
 	// Droid order screen.
 	STR_DORD_RANGE1,					"DORD_RANGE1",
@@ -518,6 +514,7 @@ STR_GAM_COMNOTFOUND,			"GAM_COMNOTFOUND" ,
 /* The string resource object */
 STR_RES *psStringRes;
 
+
 /* Initialise the string system */
 BOOL stringsInitialise(void)
 {
@@ -540,4 +537,3 @@ void stringsShutDown(void)
 {
 	strresDestroy(psStringRes);
 }
-

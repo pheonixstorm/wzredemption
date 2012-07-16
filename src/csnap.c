@@ -11,14 +11,8 @@
 #include "deliverance.h"
 #include "Fractions.h"
 
-#ifdef WIN32
 #include "PieState.h"
 #include "PieClip.h"
-#endif
-
-#ifdef PSX
-#include "CtrlPSX.h"
-#endif
 
 #include "CSnap.h"
 #include "audio_id.h"
@@ -87,7 +81,6 @@ void snapInitVars(void)
 }
 
 
-#ifdef WIN32
 void SetMousePos(UDWORD nowt,UDWORD x,UDWORD y)
 {
 	POINT	point;
@@ -118,7 +111,6 @@ void SetMousePos(UDWORD nowt,UDWORD x,UDWORD y)
 
 
 }
-#endif
 
 
 
@@ -257,9 +249,6 @@ BOOL widgGetScreenExtents(UDWORD ID,int *sx,int *sy,int *sw,int *sh)
 //
 void SetCurrentSnapFormID(CURSORSNAP *SnapBuffer,UDWORD FormID)
 {
-#ifdef PSX
-	if(GetControllerType(0) != CON_MOUSE)
-#endif
 	{
 		int x,y,w,h;
 		SnapBuffer->NewCurrentFormID = FormID;
@@ -279,9 +268,6 @@ void SetCurrentSnapFormID(CURSORSNAP *SnapBuffer,UDWORD FormID)
 //
 void SetCurrentSnapID(CURSORSNAP *SnapBuffer,UDWORD ID)
 {
-#ifdef PSX
-	if(GetControllerType(0) != CON_MOUSE)
-#endif
 	{
 		int x,y,w,h;
 

@@ -24,11 +24,6 @@
 //used to get a location next to a droid - withinh one tile
 #define LOOK_NEXT_TO_DROID		8
 
-#ifdef PSX
-//#define DROID_SCALE	133	// Percentage scale for droids on PSX.
-#define DROID_SCALE	100	// Percentage scale for droids on PSX.
-#endif
-
 /* The different types of droid */
 // NOTE, if you add to, or change this list then you'll need
 // to update the DroidSelectionWeights lookup table in Display.c
@@ -87,14 +82,11 @@ typedef struct _droid_template
 {
 	// FOR DROID TEMPLATES
 	// On the PC the pName entry in STATS_BASE is redundant and can be assumed to be NULL, 
-	// on the PSX the NameHash entry is used. If it is database generated template, the hashed version of the short name of the template is stored. If it is a user generated template NULL is stored.
+	// If it is database generated template, the hashed version of the short name of the template is stored. If it is a user generated template NULL is stored.
 	STATS_BASE;						/* basic stats */ 
 
-#ifdef WIN32
 	// on the PC this contains the full editable ascii name of the template
-	// on the PSX this is not used, the full name is NON-EDITABLE and is generated from the template components e.g. Viper Mk I
 	STRING			aName[DROID_MAXNAME];	 
-#endif
 	UBYTE 			NameVersion;			// Version number used in name (e.g. Viper Mk "I" would be stored as 1 - Viper Mk "X" as 10)  - copied to droid structure
 
 	/* The droid components.  This array is indexed by COMPONENT_TYPE
@@ -117,10 +109,8 @@ typedef struct _droid_template
 	//UDWORD			asProgs[DROID_MAXPROGS];	/* program indices*/
 
 	DROID_TYPE		droidType;					// The type of droid
-//#ifdef WIN32
 	UDWORD			multiPlayerID;				// multiplayer unique descriptor(cant use id's for templates)
 												// used for save games as well now - AB 29/10/98
-//#endif
 	struct _droid_template	*psNext;			/* Pointer to next template*/
 
 } DROID_TEMPLATE;
@@ -131,13 +121,8 @@ typedef struct _droid
 	/* The common structure elements for all objects */
 	BASE_ELEMENTS(struct _droid);
 
-#ifdef WIN32
 	//Ascii name of the droid - This is generated from the droid template and can not be changed by the game player after creation.
 	STRING		aName[DROID_MAXNAME];			
-#else
-	// If the droid is from the database a hashed value pointing to its name is stored, if it is user created then it is NULL, and its name must be created from the droids components (see templates)
-	UDWORD		HashedDroidName;
-#endif
 //	UBYTE 		NameVersion;			// Version number used for generating on-the-fly names (e.g. Viper Mk "I" would be stored as 1 - Viper Mk "X" as 10)  - copied from droid template
 
 
@@ -195,22 +180,17 @@ typedef struct _droid
                                                     //for vtols its the rearming pad
 
 	// queued orders
-#ifdef WIN32
 	SDWORD			listSize;
 	ORDER_LIST		asOrderList[ORDER_LIST_MAX];
-#endif
-
 
 	/* Order data */
 	SDWORD				order;
 	UWORD				orderX,orderY;
 	UWORD				orderX2,orderY2;
-#ifdef WIN32
 // 	struct _base_object	*psLastAttacker;
 	UDWORD				lastHitWeapon;
 	UDWORD				timeLastHit;
 	BOOL				bTargetted;
-#endif
 
 	struct _base_object	*psTarget;
 	struct _base_stats	*psTarStats;
@@ -218,9 +198,7 @@ typedef struct _droid
 	// secondary order data
 	UDWORD				secondaryOrder;
 
-#ifdef WIN32
 	UDWORD				lastSync;			// multiplayer synchronisation value.
-#endif
 
 	/* Action data */
 	SDWORD				action;
@@ -245,9 +223,7 @@ typedef struct _droid
 	/* anim data */
 	ANIM_OBJECT			*psCurAnim;			
 
-#ifdef WIN32
 	SDWORD				iAudioID;
-#endif
 }
 DROID;
 

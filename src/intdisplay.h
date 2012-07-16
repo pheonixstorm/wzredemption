@@ -65,35 +65,6 @@ typedef struct {
 struct 	iSurface *Surface;	// Ivis surface definition.
 } BUTTON_SURFACE;
 
-
-#ifdef PSX
-
-#define RENDERED_BUTTON_InUse (1)
-#define RENDERED_BUTTON_Initialised (2)
-
-#define RENDERBUTTON_INUSE(x)  ((x)->flags|=RENDERED_BUTTON_InUse)
-#define RENDERBUTTON_NOTINUSE(x)  ((x)->flags&=(~RENDERED_BUTTON_InUse))
-
-#define RENDERBUTTON_INITIALISED(x)  ((x)->flags|=RENDERED_BUTTON_Initialised)
-#define RENDERBUTTON_NOTINITIALISED(x)  ((x)->flags&=(~RENDERED_BUTTON_Initialised))
-
-#define IsBufferInitialised(x) ((x)->flags&RENDERED_BUTTON_Initialised==RENDERED_BUTTON_Initialised)
-#define IsBufferInUse(x) ((x)->flags&RENDERED_BUTTON_InUse==RENDERED_BUTTON_InUse)
-
-typedef struct {
-	UBYTE flags;		// see RENDERED_BUTTON flags above
-	UWORD ImdRotation;		
-	UDWORD State;		// Copy of widget's state so we know if state has changed.
-	void *Data;			// Any data we want to attach.
-	void *Data2;		// Any data we want to attach.
-} RENDERED_BUTTON;
-
-
-
-#else
-
-// I tried to get the PC code working with the above PSX structure but it was having none of it
-//  ... sorry about that ... TC
 #define RENDERBUTTON_INUSE(x)  ((x)->InUse=TRUE)
 #define RENDERBUTTON_NOTINUSE(x)  ((x)->InUse=FALSE)
 
@@ -114,11 +85,6 @@ typedef struct {
 //	uint8 *Buffer;		// Bitmap buffer.
 //	iSurface *Surface;	// Ivis surface definition.
 } RENDERED_BUTTON;
-
-
-
-
-#endif
 
 
 extern RENDERED_BUTTON TopicBuffers[NUM_TOPICBUFFERS];
@@ -344,13 +310,6 @@ extern void intDisplayProximityBlips(struct _widget *psWidget, UDWORD xOffset,
 					UDWORD yOffset, UDWORD *pColours);
 
 extern void intUpdateQuantitySlider(struct _widget *psWidget, struct _w_context *psContext);
-
-#ifdef PSX
-//void intUpdateReticuleButtonNoSB(struct _widget *psWidget, struct _w_context *psContext);
-void intSetVibroOnID(UDWORD id);
-void intUpdateReticuleButton(struct _widget *psWidget, struct _w_context *psContext);
-#define intUpdateReticuleButtonNoSB intUpdateReticuleButton
-#endif
 
 extern void intDisplayDPButton(struct _widget *psWidget, UDWORD xOffset, UDWORD yOffset, UDWORD *pColours);
 

@@ -80,7 +80,6 @@ enum _fixed_str_id
 	STR_INT_POWERACCRUED,
     STR_INT_POWER,
 
-#ifdef WIN32		// PSX ... non!
 	// multiplayer strings
 	STR_MUL_PHONENO,	
 	STR_MUL_IPADDR,	
@@ -189,7 +188,6 @@ enum _fixed_str_id
 	STR_COMPATIBLE,			
 	STR_PLAYER_NAME,		
 	STR_GAME_NAME,			
-#endif	
 	//ingame ops.
 	STR_GAME_QUIT,
 	STR_GAME_RESUME,

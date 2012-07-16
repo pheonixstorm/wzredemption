@@ -379,7 +379,6 @@ BOOL scrGroupObjGet(UDWORD index)
 	return TRUE;
 }
 
-#ifdef WIN32
 // get the name from a stat pointer
 STRING	*scrGetStatName(INTERP_TYPE type, UDWORD data)
 {
@@ -966,13 +965,3 @@ BOOL scrValDefLoad(SDWORD version, INTERP_TYPE type, UBYTE *pBuffer, UDWORD size
 	return TRUE;
 }
 
-#else
-BOOL scrValDefSave(INTERP_TYPE type, UDWORD data, UBYTE *pBuffer, UDWORD *pSize)
-{
-	DBERROR(("scrValDefSave: not implemented for PSX"));
-}
-BOOL scrValDefLoad(SDWORD version, INTERP_TYPE type, UBYTE *pBuffer, UDWORD size, UDWORD *pData)
-{
-	DBERROR(("scrValDefLoad: not implemented for PSX"));
-}
-#endif

@@ -33,17 +33,12 @@
 #include "Drive.h"
 #include "mission.h"
 #include "audio_id.h"
-#ifdef WIN32
 #include "multiplay.h"
-#endif
 #include "formation.h"
 #include "intdisplay.h"
 #include "fpath.h"
 #include "script.h"
 #include "scripttabs.h"
-#ifdef PSX
-#include "dcache.h"
-#endif
 
 
 /* attack run distance */
@@ -629,11 +624,7 @@ BOOL actionTargetTurret(BASE_OBJECT *psAttacker, BASE_OBJECT *psTarget, UWORD *p
 		/* get target distance */
 		fR = trigIntSqrt( dx*dx + dy*dy );
 
-#ifdef WIN32
 		targetPitch = (SDWORD)( RAD_TO_DEG(atan2(dz, fR)));
-#else
-		targetPitch = angle_PSX2World(ratan2(dz, fR));
-#endif
 		//tPitch = tPitch;
 		if (tPitch > 180)
 		{
@@ -2907,7 +2898,6 @@ static void actionDroidBase(DROID *psDroid, DROID_ACTION_DATA *psAction)
 }
 
 
-#ifdef WIN32
 /* Give a droid an action */
 void actionDroid(DROID *psDroid, DROID_ACTION action)
 {
@@ -2956,119 +2946,6 @@ void actionDroidObjLoc(DROID *psDroid, DROID_ACTION action,
 	sAction.y = y;
 	actionDroidBase(psDroid, &sAction);
 }
-
-#else	// PSX versions.
-
-/* Give a droid an action */
-static void _actionDroid(DROID *psDroid, DROID_ACTION action)
-{
-	DROID_ACTION_DATA	sAction;
-
-	memset(&sAction, 0, sizeof(DROID_ACTION_DATA));
-	sAction.action = action;
-	actionDroidBase(psDroid, &sAction);
-}
-
-/* Give a droid an action with a location target */
-static void _actionDroidLoc(DROID *psDroid, DROID_ACTION action, UDWORD x, UDWORD y)
-{
-	DROID_ACTION_DATA	sAction;
-
-	memset(&sAction, 0, sizeof(DROID_ACTION_DATA));
-	sAction.action = action;
-	sAction.x = x;
-	sAction.y = y;
-	actionDroidBase(psDroid, &sAction);
-}
-
-/* Give a droid an action with an object target */
-static void _actionDroidObj(DROID *psDroid, DROID_ACTION action, BASE_OBJECT *psObj)
-{
-	DROID_ACTION_DATA	sAction;
-
-	memset(&sAction, 0, sizeof(DROID_ACTION_DATA));
-	sAction.action = action;
-	sAction.psObj = psObj;
-	sAction.x = psObj->x;
-	sAction.y = psObj->y;
-	actionDroidBase(psDroid, &sAction);
-}
-
-/* Give a droid an action with an object target and a location */
-static void _actionDroidObjLoc(DROID *psDroid, DROID_ACTION action,
-					   BASE_OBJECT *psObj, UDWORD x, UDWORD y)
-{
-	DROID_ACTION_DATA	sAction;
-
-	memset(&sAction, 0, sizeof(DROID_ACTION_DATA));
-	sAction.action = action;
-	sAction.psObj = psObj;
-	sAction.x = x;
-	sAction.y = y;
-	actionDroidBase(psDroid, &sAction);
-}
-
-void actionDroid(DROID *psDroid, DROID_ACTION action)
-{
-	if(SpInDCache()) {
-		SetSpAlt();
-		_actionDroid(psDroid,action);
-		SetSpAltNormal();
-	} else {
-		_actionDroid(psDroid,action);
-	}
-}
-
-/* Give a droid an action with a location target */
-void actionDroidLoc(DROID *psDroid, DROID_ACTION action, UDWORD x, UDWORD y)
-{
-	if(SpInDCache()) {
-		SetSpAlt();
-		_actionDroidLoc(psDroid,action,x,y);
-		SetSpAltNormal();
-	} else {
-		_actionDroidLoc(psDroid,action,x,y);
-	}
-}
-
-/* Give a droid an action with an object target */
-void actionDroidObj(DROID *psDroid, DROID_ACTION action, BASE_OBJECT *psObj)
-{
-	if(SpInDCache()) {
-		SetSpAlt();
-		_actionDroidObj(psDroid,action,psObj);
-		SetSpAltNormal();
-	} else {
-		_actionDroidObj(psDroid,action,psObj);
-	}
-}
-
-/* Give a droid an action with an object target and a location */
-void actionDroidObjLoc(DROID *psDroid, DROID_ACTION action,
-					   BASE_OBJECT *psObj, UDWORD x, UDWORD y)
-{
-	if(SpInDCache()) {
-		static DROID *_psDroid;
-		static DROID_ACTION _action;
-		static BASE_OBJECT *_psObj;
-		static UDWORD _x;
-		static UDWORD _y;
-
-		_psDroid = psDroid;
-		_action = action;
-		_psObj = psObj;
-		_x = x;
-		_y = y;
-
-		SetSpAlt();
-		_actionDroidObjLoc(_psDroid,_action,_psObj,_x,_y);
-		SetSpAltNormal();
-	} else {
-		_actionDroidObjLoc(psDroid,action,psObj,x,y);
-	}
-}
-
-#endif	// End of PSX versions.
 
 
 /*send the vtol droid back to the nearest rearming pad - if one otherwise

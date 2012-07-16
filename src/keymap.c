@@ -5,10 +5,7 @@
 #include "Console.h"
 #include "KeyBind.h"
 #include "Display3d.h"
-#ifdef WIN32
 #include "keyedit.h"
-#endif
-
 /*	
 	KeyMap.c
 	Alex McLean
@@ -84,7 +81,7 @@ SDWORD	spin;
 static	KEYMAP_MARKER	qwertyKeyMappings[NUM_QWERTY_KEYS];
 #endif
 
-static	BOOL			bDoingDebugMappings = FALSE; // PSX needs this too...
+static	BOOL			bDoingDebugMappings = FALSE;
 // ----------------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------------
@@ -239,7 +236,6 @@ void	keyInitMappings( BOOL bForceDefaults )
 	bKeyProcessing = TRUE;
 	processDebugMappings(FALSE);
 
-#ifdef WIN32
 	for(i=0; i<NUM_QWERTY_KEYS; i++)
 	{
 		qwertyKeyMappings[i].psMapping = NULL;
@@ -474,45 +470,6 @@ if(bAllowDebugMode)
 	
 
 
-#else	// PSX key mapings.
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_T,KEYMAP_PRESSED,kf_SelectNaybors,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_A,KEYMAP_PRESSED,kf_NextGroup,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_D,KEYMAP_PRESSED,kf_PrevGroup,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_N,KEYMAP_PRESSED,kf_NextUnit,"");
-
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_1,KEYMAP_PRESSED,kf_AssignGrouping,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_2,KEYMAP_PRESSED,kf_AssignGrouping,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_3,KEYMAP_PRESSED,kf_AssignGrouping,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_4,KEYMAP_PRESSED,kf_AssignGrouping,"");
-
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_Q,KEYMAP_PRESSED,kf_SelectGrouping,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_W,KEYMAP_PRESSED,kf_SelectGrouping,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_E,KEYMAP_PRESSED,kf_SelectGrouping,"");
-	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_R,KEYMAP_PRESSED,kf_SelectGrouping,"");
-
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_A,KEYMAP_PRESSED,kf_SelectMoveGrouping,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_S,KEYMAP_PRESSED,kf_SelectMoveGrouping,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_D,KEYMAP_PRESSED,kf_SelectMoveGrouping,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_F,KEYMAP_PRESSED,kf_SelectMoveGrouping,"");
-
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_J,KEYMAP_PRESSED,kf_ToggleCamera,"");
-//#ifdef COVERMOUNT
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_J,KEYMAP_PRESSED,kf_SystemClose,"");
-//#endif
-
-// Diagnostic controls.
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_P,KEYMAP_PRESSED,kf_TogglePauseMode,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_X,KEYMAP_PRESSED,kf_addInGameOptions,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_Z,KEYMAP_PRESSED,kf_ToggleGodMode,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_G,KEYMAP_PRESSED,kf_MaxScrollLimits,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_V,KEYMAP_PRESSED,kf_TogglePower,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_B,KEYMAP_PRESSED,kf_AllAvailable,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_M,KEYMAP_PRESSED,kf_AddMissionOffWorld,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_Y,KEYMAP_PRESSED,kf_ToggleDemoMode,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_O,KEYMAP_PRESSED,kf_ChooseOptions,"");
-//	keyAddMapping(KEYMAP_ALWAYS,KEY_IGNORE,KEY_C,KEYMAP_PRESSED,kf_FinishResearch,"");
-
-#endif
 }
 
 // ----------------------------------------------------------------------------------

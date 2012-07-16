@@ -29,7 +29,6 @@ typedef enum _title_mode {
 //	DEMOMODE,					// demo mode. remove for release?
 } tMode;
 
-// This dos'nt compile on the PSX.
 //typedef enum _titlemode tMode;	// define the type
 
 tMode titleMode;					// the global case
@@ -38,11 +37,7 @@ tMode titleMode;					// the global case
 //#define DEFAULT_LEVEL	"CAM_2A"
 #define TUTORIAL_LEVEL	"TUTORIAL3"
 
-#ifdef WIN32
 #define MAX_LEVEL_NAME_SIZE	(256)
-#else
-#define MAX_LEVEL_NAME_SIZE	(22)
-#endif
 
 extern char	pLevelName[MAX_LEVEL_NAME_SIZE+1];	//256];			// vital! the wrf file to use.
 
@@ -79,18 +74,11 @@ extern void	displayTextOption		(struct _widget *psWidget, UDWORD xOffset, UDWORD
 
 extern void loadOK					(void);
 extern BOOL CancelPressed			(VOID);
-#ifdef WIN32
 BOOL		runGameOptions2Menu		(VOID);
-#endif
 
 extern BOOL GetInFastPlay(void);
 
 BOOL addIGTextButton(UDWORD id,UWORD y,UDWORD StringID,UDWORD Style);
-#ifdef PSX
-BOOL addCentreScreen(UDWORD FormID,UDWORD x,UDWORD y);
-void processToggleOptions(UDWORD id);
-void processCentreScreen(UDWORD id);
-#endif
 
 // ////////////////////////////////////////////////////////////////////////////
 // defines.
@@ -117,22 +105,14 @@ void processCentreScreen(UDWORD id);
 
 
 #define FRONTEND_BOTFORM		20002
-#ifdef WIN32
 #define FRONTEND_BOTFORMX		80
 #define FRONTEND_BOTFORMY		170
 #define FRONTEND_BOTFORMW		480
 #define FRONTEND_BOTFORMH		300
-#else
-#define FRONTEND_BOTFORMX		80
-#define FRONTEND_BOTFORMY		170
-#define FRONTEND_BOTFORMW		480
-#define FRONTEND_BOTFORMH		(300-8)
-#endif
 
 #define FRONTEND_BUTWIDTH		FRONTEND_BOTFORMW-40 // text button sizes.
 #define FRONTEND_BUTHEIGHT		30
 
-#ifdef WIN32
 #define FRONTEND_POS1X			20				// button positions
 #define FRONTEND_POS1Y			10
 #define FRONTEND_POS1M			290
@@ -161,39 +141,6 @@ void processCentreScreen(UDWORD id);
 #define FRONTEND_POS7Y			250
 #define FRONTEND_POS7M			290
 
-#else	// PSX version.
-
-#define FRONTEND_YSPACE			40	//50
-
-#define FRONTEND_POS1X			20				// button positions
-#define FRONTEND_POS1Y			20
-#define FRONTEND_POS1M			(265+16)
-
-#define FRONTEND_POS2X			20			
-#define FRONTEND_POS2Y			(FRONTEND_POS1Y+FRONTEND_YSPACE)
-#define FRONTEND_POS2M			(265+16)
-
-#define FRONTEND_POS3X			20		
-#define FRONTEND_POS3Y			(FRONTEND_POS1Y+FRONTEND_YSPACE*2)
-#define FRONTEND_POS3M			(265+16)
-
-#define FRONTEND_POS4X			20
-#define FRONTEND_POS4Y			(FRONTEND_POS1Y+FRONTEND_YSPACE*3)
-#define FRONTEND_POS4M			(265+16)
-
-#define FRONTEND_POS5X			20
-#define FRONTEND_POS5Y			(FRONTEND_POS1Y+FRONTEND_YSPACE*4)
-#define FRONTEND_POS5M			(265+16)
-
-#define FRONTEND_POS6X			20
-#define FRONTEND_POS6Y			(FRONTEND_POS1Y+FRONTEND_YSPACE*5)
-#define FRONTEND_POS6M			(265+16)
-
-#define FRONTEND_POS7X			20
-#define FRONTEND_POS7Y			(FRONTEND_POS1Y+FRONTEND_YSPACE*6)
-#define FRONTEND_POS7M			(265+16)
-
-#endif	// End of PSX version.
 
 #define FRONTEND_SINGLEPLAYER	20003		// title screen
 #define FRONTEND_MULTIPLAYER	20004
@@ -310,19 +257,7 @@ void processCentreScreen(UDWORD id);
 #define FRONTEND_MFLIP			20095
 #define FRONTEND_MFLIP_R		20096
 
-#ifdef WIN32
 #define FRONTEND_SEQUENCE		20097
 #define FRONTEND_SEQUENCE_R		20098
-#else
-// Used in Playstation version.
-#define FRONTEND_NEWGAME_EASY	20097
-#define FRONTEND_NEWGAME_NORMAL	20098
-#define FRONTEND_NEWGAME_HARD	20099
-#define FRONTEND_SOUNDOPTIONS	20100
-#define FRONTEND_CONTROLOPTIONS	20101
-#define FRONTEND_DISPLAYOPTIONS	20102
-#define FRONTEND_SUBTITLES		20103
-#define FRONTEND_SUBTITLES_BT	20104
-#endif
 
 #endif

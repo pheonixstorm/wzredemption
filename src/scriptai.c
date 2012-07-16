@@ -24,9 +24,6 @@
 #include "research.h"
 #include "gateway.h"
 #include "multiplay.h"
-#ifdef PSX
-#include "text.h"
-#endif
 
 // Add a droid to a group
 BOOL scrGroupAddDroid(void)
@@ -624,11 +621,6 @@ BOOL scrOrderDroidStatsLoc(void)
 	if(IsPlayerStructureLimitReached(psDroid->player) == FALSE) {
 		orderDroidStatsLoc(psDroid, order, psStats, (UDWORD)x,(UDWORD)y);
 	}
-//#ifdef PSX
-//	else {
-//		BeepMessage(STR_GAM_MAXSTRUCTSREACHED);
-//#endif
-//	}
 
 	return TRUE;
 }

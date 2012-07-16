@@ -4136,9 +4136,6 @@ void displayMultiBut(struct _widget *psWidget, UDWORD xOffset, UDWORD yOffset, U
 						(SWORD)(y+(psWidget->height/2)),psWidget->formID,psWidget->id,NULL);
 	}
 
-#ifdef PSX
-	iV_SetOTIndex_PSX(iV_GetOTIndex_PSX()-1);
-#endif
 }
 
 

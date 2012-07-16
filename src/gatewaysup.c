@@ -75,9 +75,7 @@ BOOL gwFloodBlock(SDWORD x, SDWORD y);
 // generate the zone equivalence tables
 BOOL gwGenerateZoneEquiv(SDWORD numZones);
 
-#ifdef WIN32
-#define ENABLEFILL		// disable this on the psx 
-#endif
+#define ENABLEFILL
 
 #ifdef ENABLEFILL
 struct Segment stack[MAX], *sp = stack;	/* stack of filled segments */
@@ -95,9 +93,7 @@ void gwSeedFill(SDWORD x, SDWORD y, SDWORD nv)
 #ifdef ENABLEFILL
     int l, x1, x2, dy;
     Pixel ov;							/* old pixel value */
-#ifdef WIN32
     struct Segment stack[MAX], *sp = stack;	/* stack of filled segments */
-#endif
     ov = gwGetZone(x, y);		/* read pv at seed point */
 
     if (ov==nv) {

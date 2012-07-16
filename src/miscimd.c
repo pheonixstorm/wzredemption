@@ -36,38 +36,23 @@ MISC_IMD	miscImds[] =
 	{NULL,"mirain"},	// rainImd				MI_RAIN                  
 	{NULL,"misnow"},	// snowImd				MI_SNOW                  
 	{NULL,"fxssplsh"},	// splashImd			MI_SPLASH                
-#ifdef WIN32
 	{NULL,"fxexpdrt"},	// kickImd				MI_KICK                  
 	{NULL,"fxlightr"},	// landingImd			MI_LANDING               
 	{NULL,"fxl3dshk"},	// shockImd				MI_SHOCK  
-#else
-	{NULL,"fxblip"},	// kickImd				MI_KICK                  
-	{NULL,"fxlightr"},	// landingImd			MI_LANDING               
-//	{NULL,"fxblip"},	// landingImd			MI_LANDING               
-	{NULL,"fxblip"},	// shockImd				MI_SHOCK  
-#endif
 	{NULL,"blipenm"},	// proximityImds[0]	   	MI_BLIP_ENEMY    
 	{NULL,"blipres"},	// proximityImds[1]	   	MI_BLIP_RESOURCE 
 	{NULL,"blipart"},	// proximityImds[2]	   	MI_BLIP_ARTEFACT 
-#ifdef WIN32
 	{NULL,"miwrek1"},	// wreckageImds[0]		MI_WRECK0 
 	{NULL,"miwrek2"},	// wreckageImds[1]		MI_WRECK1 
 	{NULL,"miwrek3"},	// wreckageImds[2]		MI_WRECK2 
 	{NULL,"miwrek4"},	// wreckageImds[3]		MI_WRECK3 
 	{NULL,"miwrek5"},	// wreckageImds[4]		MI_WRECK4 
-#endif
 	{NULL,"midebr1"},	// debrisImds[0]		MI_DEBRIS0  
 	{NULL,"midebr2"},	// debrisImds[1]		MI_DEBRIS1  
 	{NULL,"midebr3"},	// debrisImds[2]		MI_DEBRIS2  
 	{NULL,"midebr4"},	// debrisImds[3]		MI_DEBRIS3  
 	{NULL,"midebr5"},	// debrisImds[4]		MI_DEBRIS4  
-#ifdef WIN32
 	{NULL,"fxflecht"},	// met hit - for repair centre MI_FIREWORK
-#endif
-#ifdef PSX
-	{NULL,"fxmodule"},	// 						MI_MODULE  
-#endif
-
 	{NULL,"END_OF_IMD_LIST"}
 };
 
@@ -110,7 +95,6 @@ iIMDShape	*getImdFromIndex(UDWORD	index)
 	return(miscImds[index].pImd);
 }
 // -------------------------------------------------------------------------------
-#ifdef WIN32
 iIMDShape	*getRandomWreckageImd( void )
 {
 	iIMDShape *WreckageIMD;
@@ -128,7 +112,6 @@ iIMDShape	*getRandomWreckageImd( void )
 
 	return(WreckageIMD);
 }
-#endif
 // -------------------------------------------------------------------------------
 iIMDShape	*getRandomDebrisImd( void )
 {
@@ -167,7 +150,6 @@ BOOL	initMiscImds( void )
 			DBERROR(("Can't find assembly point graphic for factory"));
 			return(FALSE);
 		}
-//#ifdef WIN32
 		cybName[6] = *pieNum; 
 		pAssemblyPointIMDs[CYBORG_FLAG][i] = resGetData("IMD", cybName);
 		if (!pAssemblyPointIMDs[CYBORG_FLAG][i])
@@ -188,10 +170,6 @@ BOOL	initMiscImds( void )
 			DBERROR(("Can't find assembly point graphic for repair facility"));
 			return(FALSE);
 		}
-//#else
-//		pAssemblyPointIMDs[CYBORG_FLAG][i] = pAssemblyPointIMDs[FACTORY_FLAG][i];
-//		pAssemblyPointIMDs[VTOL_FLAG][i] = pAssemblyPointIMDs[FACTORY_FLAG][i];
-//#endif
 	}
 
 	return(TRUE);

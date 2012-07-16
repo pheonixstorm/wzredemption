@@ -6,20 +6,6 @@
  *
  */
 
-
-#ifdef PSX
-/* A few definitions so the yacc generated code will compile on the PSX.
- * These shouldn't actually be used by any code that is run on the PSX, it
- * just keeps the compiler happy.
- */
-
-//static int printf(char* c, ...)
-//{
-//	return 0;
-//}
-
-#endif
-
 #include <stdio.h>
 
 #include "Frame.h"
@@ -196,14 +182,6 @@ script_name:	SCRIPT QTEXT
 						{
 							psCurrScript=resGetData("SCRIPT",stringname);				
 						}
-#ifdef PSX
-						else
-						{
-							// change extension to "blo"
-							stringname[extpos]='b';
-							psCurrScript=resGetData("BLO",stringname);				
-						}
-#endif
 					}
 
 					if (!psCurrScript)
@@ -630,20 +608,6 @@ var_init:		var_entry TYPE var_value
 						}
 						break;
 					case ST_SOUND:
-#ifdef PSX
-						if ($3.type != IT_INDEX)
-						{
-							scrv_error("Typemismatch for variable %d", $1);
-							YYABORT;
-						}
-						if (!eventSetContextVar(psCurrContext, $1, $2, (UDWORD) $3.index))
-						{
-							scrv_error("Set Value Failed for %s", $1 );
-							YYABORT;
-						}
-		
-#else
-
 						if ($3.type != IT_STRING)
 						{
 							scrv_error("Typemismatch for variable %d", $1);
@@ -662,7 +626,6 @@ var_init:		var_entry TYPE var_value
 							scrv_error("Set Value Failed for %s", $1);
 							YYABORT;
 						}
-#endif
 						break;
 					case ST_RESEARCH:
 						if ($3.type != IT_STRING)

@@ -27,12 +27,6 @@
 #include "ScriptTabs.h"
 //#endif
 
-// semi hack to get the playstation to load resources from the WDG
-#ifdef PSX
-#define DisplayBuffer		NULL
-#define displayBufferSize	0
-#endif
-
 // minimum type number for a type instruction
 #define MULTI_TYPE_START	10
 

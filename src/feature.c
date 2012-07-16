@@ -27,17 +27,11 @@
 #include "Effects.h"
 #include "Geometry.h"
 #include "Scores.h"
-#ifdef WIN32
 #include "MultiPlay.h" 
 #include "AdvVis.h"
-#endif
 #include "MapGrid.h"
 #include "display3d.h"
 #include "Gateway.h"
-
-#ifdef PSX
-extern  BOOL EnableVibration;
-#endif
 
 /* The statistics for the features */
 FEATURE_STATS	*asFeatureStats;
@@ -830,14 +824,8 @@ FEATURE * buildFeature(FEATURE_STATS *psStats, UDWORD x, UDWORD y,BOOL FromSave)
 	// set up the imd for the feature
 	if(psFeature->psStats->subType==FEAT_BUILD_WRECK)
 	{
-#ifdef WIN32
 //		psFeature->sDisplay.imd = wreckageImds[rand()%MAX_WRECKAGE];
 		psFeature->sDisplay.imd = getRandomWreckageImd();
-#else
-		psFeature->sDisplay.imd = NULL;
-		DBPRINTF(("buildFeature: NO WRECKS ON PSX\n"));
-		assert(0);
-#endif
 	}
 	else
 	{
@@ -853,14 +841,12 @@ FEATURE * buildFeature(FEATURE_STATS *psStats, UDWORD x, UDWORD y,BOOL FromSave)
 		for (breadth = 0; breadth <= psStats->baseBreadth; breadth++)
 		{
 			//check not outside of map - for load save game
-#ifdef WIN32
 			ASSERT(((mapX+width) < mapWidth,
 				"x coord bigger than map width - %s, id = %d",
 				getName(psFeature->psStats->pName), psFeature->id));
 			ASSERT(((mapY+breadth) < mapHeight,
 				"y coord bigger than map height - %s, id = %d",
 				getName(psFeature->psStats->pName), psFeature->id));
-#endif
 			psTile = mapTile(mapX+width, mapY+breadth);
 			if (width != psStats->baseWidth && breadth != psStats->baseBreadth)
 			{
@@ -871,9 +857,6 @@ FEATURE * buildFeature(FEATURE_STATS *psStats, UDWORD x, UDWORD y,BOOL FromSave)
 				SET_TILE_FEATURE(psTile);	
 				// if it's a tall feature then flag it in the map.
 				if(psFeature->sDisplay.imd->ymax > TALLOBJECT_YMAX) {
-//#ifdef PSX
-//DBPRINTF(("Tall feature %d, (%d x %d)\n",psFeature->sDisplay.imd->ymax,psStats->baseWidth,psStats->baseBreadth));
-//#endif
 					SET_TILE_TALLSTRUCTURE(psTile);
 				}
 
@@ -888,7 +871,7 @@ FEATURE * buildFeature(FEATURE_STATS *psStats, UDWORD x, UDWORD y,BOOL FromSave)
 				psTile->height = (UBYTE)(height / ELEVATION_SCALE);
 				// This sets the gourad shading to give 'as the artist drew it' levels
 
-//				psTile->illumination = ILLUMINATION_NONE;		// set the tile so that there is no illumination connecting to feature ... this value works on both psx & pc
+//				psTile->illumination = ILLUMINATION_NONE;		// set the tile so that there is no illumination connecting to feature ...
 			}
 			
 		}
@@ -969,12 +952,10 @@ void removeFeature(FEATURE *psDel)
 		return;
 	}
 
-#ifdef WIN32	// dont send if starting up, all players do this anyway.
 	if(bMultiPlayer && !ingame.localJoiningInProgress)
 	{
 		SendDestroyFeature(psDel);	// inform other players of destruction
 	}
-#endif
 
 	//remove from the map data
 	mapX = (psDel->x - psDel->psStats->baseWidth * TILE_UNITS / 2) >> TILE_SHIFT;
@@ -1025,7 +1006,6 @@ void removeFeature(FEATURE *psDel)
 
 	killFeature(psDel);
 
-#ifdef WIN32	// No wrecks on PSX please.
 	//once a feature of type FEAT_BUILDING is destroyed - it leaves a wrecked 
 	//struct FEATURE in its place - ?!
 	if (psDel->psStats->subType == FEAT_BUILDING)
@@ -1044,7 +1024,6 @@ void removeFeature(FEATURE *psDel)
 //		buildFeature((asFeatureStats + structFeature), mapX << TILE_SHIFT, 
 //			mapY << TILE_SHIFT, FALSE);
 	}
-#endif
 }
 
 /* Remove a Feature and free it's memory */
@@ -1149,21 +1128,14 @@ void destroyFeature(FEATURE *psDel)
 		addEffect(&pos,EFFECT_DESTRUCTION,DESTRUCTION_TYPE_FEATURE,FALSE,NULL,0);
 
 		//play sound
-#ifdef WIN32		// ffs gj
 		if(psDel->psStats->subType == FEAT_SKYSCRAPER)
 		{
 			audio_PlayStaticTrack( psDel->x, psDel->y, ID_SOUND_BUILDING_FALL );
 		}
 		else
-#endif
 		{
 			audio_PlayStaticTrack( psDel->x, psDel->y, ID_SOUND_EXPLOSION );
 		}
-#if defined(PSX) && defined(LIBPAD)
-		if(EnableVibration) {
-			SetVibro1(0,120,512);
-		}
-#endif
 	}
 //---------------------------------------------------------------------------------------
 

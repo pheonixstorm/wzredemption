@@ -31,24 +31,11 @@ BOOL		bInTutorial = FALSE;
 BOOL		bExtraVictoryFlag = FALSE;
 BOOL		bExtraFailFlag = FALSE;
 
-#ifdef WIN32
-
 // whether or not to track the player's transporter as it comes
 // into an offworld mission.
 BOOL		bTrackTransporter = FALSE;
 // whether or not we're running on the PSX.
 BOOL		bIsPSX = FALSE;
-
-#else
-
-// whether or not to track the player's transporter as it comes
-// into an offworld mission.
-BOOL		bTrackTransporter = TRUE;
-// whether or not we're running on the PSX.
-BOOL		bIsPSX = TRUE;
-
-#endif
-
 
 // reset the script externals for a new level
 void scrExternReset(void)

@@ -7,10 +7,6 @@
 #ifndef _init_h
 #define _init_h
 
-#ifdef PSX
-#define DEFAULT_TO_DRIVE	FALSE
-#endif
-
 // the size of the file loading buffer
 #define FILE_LOAD_BUFF_SIZE		(1024*1024)
 
@@ -23,11 +19,7 @@ extern BOOL stageOneInitialise(void);
 extern BOOL stageOneShutDown(void);
 extern BOOL stageTwoInitialise(void);
 extern BOOL stageTwoShutDown(void);
-#ifdef PSX
-extern BOOL stageThreeInitialise(BOOL FromLoad);
-#else
 extern BOOL stageThreeInitialise(void);
-#endif
 extern BOOL stageThreeShutDown(void);
 extern BOOL gameReset(void);
 extern BOOL newMapInitialise(void);

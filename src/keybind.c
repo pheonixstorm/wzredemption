@@ -24,9 +24,8 @@
 #include "Component.h"
 #include "Geometry.h"
 #include "Radar.h"
-#ifdef WIN32
 #include "Cheat.h"
-#include "E3Demo.h"	// will this be on PSX?
+#include "E3Demo.h"	// Is this required? FIXME
 #include "netplay.h"
 #include "multiplay.h"
 #include "multimenu.h"
@@ -36,7 +35,6 @@
 #include "AdvVis.h"
 #include "game.h"
 #include "Difficulty.h"
-#endif
 
 #include "intorder.h"
 #include "Widget.h"
@@ -80,9 +78,7 @@ STRUCTURE	*psOldRE = NULL;
 extern		void shakeStop(void);
 STRING	sTextToSend[MAX_CONSOLE_STRING_LENGTH];	
 
-#ifdef WIN32
 int fogCol = 0;//start in nicks mode
-#endif
 
 /* Support functions to minimise code size */
 void	kfsf_SelectAllSameProp	( PROPULSION_TYPE propType );
@@ -216,10 +212,8 @@ void	kf_BuildInfo( void )
 /* Toggles whether the windows surface gets updated */
 void	kf_UpdateWindow( void )
 {
- #ifdef WIN32
-	 	updateVideoCard = !updateVideoCard;
-#endif
-		addConsoleMessage("Windows surface update toggled",DEFAULT_JUSTIFY);
+    updateVideoCard = !updateVideoCard;
+    addConsoleMessage("Windows surface update toggled",DEFAULT_JUSTIFY);
 }
 
 // --------------------------------------------------------------------------
@@ -301,8 +295,6 @@ void	kf_SetToughUnitsLevel( void )
 /* Writes out the frame rate */
 void	kf_FrameRate( void )
 {
-#ifdef WIN32
-
 	if (pie_GetRenderEngine() == ENGINE_GLIDE)
 	{
 		if(weHave3DNow())
@@ -363,7 +355,6 @@ void	kf_FrameRate( void )
 
 		CONPRINTF(ConsoleString,(ConsoleString,"Built at %s on %s",__TIME__,__DATE__));
 //		addConsoleMessage("Game statistics display toggled",DEFAULT_JUSTIFY);
-#endif
 }
 
 // --------------------------------------------------------------------------
@@ -431,13 +422,11 @@ void	kf_ToggleOutline( void )
 /* Toggles infinite power on/off */
 void	kf_TogglePower( void )
 {
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer)
 {
 	return;
 }
-#endif
 #endif
 		powerCalculated = !powerCalculated;
 		if (powerCalculated)
@@ -466,7 +455,6 @@ void	kf_RecalcLighting( void )
 /* Raises the 3dfx gamma value */
 void	kf_RaiseGamma( void )
 {
-#ifdef WIN32
 	if (pie_GetRenderEngine() == ENGINE_GLIDE)
 	{
 		if(gamma<(float)5.0)
@@ -480,7 +468,6 @@ void	kf_RaiseGamma( void )
 			gamma = (float)0.2;
 		}
 	}
-#endif
 }
 
 // --------------------------------------------------------------------------
@@ -488,7 +475,6 @@ void	kf_RaiseGamma( void )
 /* Lowers the threedfx gamma value */
 void	kf_LowerGamma( void )
 {
-#ifdef WIN32
 	if (pie_GetRenderEngine() == ENGINE_GLIDE)
 	{
 		if(gamma>(float)0.2)
@@ -502,7 +488,6 @@ void	kf_LowerGamma( void )
 			addConsoleMessage("Gamma correction at MINIMUM",DEFAULT_JUSTIFY);
 		}
 	}
-#endif
 }	
 
 // --------------------------------------------------------------------------
@@ -526,13 +511,11 @@ void	kf_ScreenDump( void )
 void	kf_AllAvailable( void )
 {
 
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer && (NetPlay.bComms != 0) )
 {
 	return;
 }
-#endif
 #endif
 
 
@@ -564,7 +547,6 @@ iVector	pos;
 // --------------------------------------------------------------------------
 void	kf_ToggleBackgroundFog( void )
 {
-#ifdef WIN32
 	static BOOL bEnabled  = TRUE;//start in nicks mode
 	
 		if (bEnabled)//true, so go to false
@@ -586,12 +568,10 @@ void	kf_ToggleBackgroundFog( void )
 			}
 			fogStatus |= FOG_BACKGROUND;//set lowest bit of 3
 		}
-#endif
 }
 
 extern void	kf_ToggleDistanceFog( void )
 {
-#ifdef WIN32
 	static BOOL bEnabled  = TRUE;//start in nicks mode
 	
 		if (bEnabled)//true, so go to false
@@ -613,12 +593,10 @@ extern void	kf_ToggleDistanceFog( void )
 			}
 			fogStatus |= FOG_DISTANCE;//set lowest bit of 3
 		}
-#endif
 }
 
 void	kf_ToggleMistFog( void )
 {
-#ifdef WIN32
 	static BOOL bEnabled  = TRUE;//start in nicks mode
 	
 		if (bEnabled)//true, so go to false
@@ -640,12 +618,10 @@ void	kf_ToggleMistFog( void )
 			}
 			fogStatus |= FOG_GROUND;//set highest bit of 3
 		}
-#endif
 }
 
 void	kf_ToggleFogColour( void )
 {
-#ifdef WIN32
 	fogCol++;
 	if (fogCol>4)
 		fogCol = 0;
@@ -669,12 +645,10 @@ void	kf_ToggleFogColour( void )
 			//pie_SetFogColour(0x0078684f);//(nicks colour + 404040)/2
 		break;
 	}
-#endif
 }
 
 void	kf_ToggleFog( void )
 {
-#ifdef WIN32
 	static BOOL fogEnabled = FALSE;
 	
 		if (fogEnabled)
@@ -690,7 +664,6 @@ void	kf_ToggleFog( void )
 			pie_EnableFog(fogEnabled);
 //			addConsoleMessage("Fog On",DEFAULT_JUSTIFY);
 		}
-#endif
 }
 
 // --------------------------------------------------------------------------
@@ -728,7 +701,6 @@ void	kf_ToggleCamera( void )
 /*
 void	kf_SimCloseDown( void )
 {
-#ifdef WIN32
   		bScreenClose = TRUE;
 		audio_PlayTrack( ID_SOUND_THX_SHUTDOWN );
 
@@ -737,7 +709,6 @@ void	kf_SimCloseDown( void )
 		spinScene = TRUE;
 		radarOnScreen = FALSE;
 		screenCloseState = SC_CLOSING_DOWN;
-#endif
 }
 */
 // --------------------------------------------------------------------------
@@ -745,11 +716,9 @@ void	kf_SimCloseDown( void )
 /* Toggles on/off gouraud shading */
 void	kf_ToggleGouraud( void )
 {
-#ifdef WIN32
  	gouraudShading = !gouraudShading;
  	addConsoleMessage("Gouraud shading toggled",DEFAULT_JUSTIFY);
 	texPage++;
-#endif
 }
 
 // --------------------------------------------------------------------------
@@ -774,7 +743,6 @@ void	kf_LowerTile( void )
 /* Quick game exit */
 void	kf_SystemClose( void )
 {
-#ifdef WIN32
 	if(pie_GetRenderEngine() == ENGINE_GLIDE)
 	{
 		grSstControl(GR_CONTROL_DEACTIVATE);
@@ -782,7 +750,6 @@ void	kf_SystemClose( void )
 
 //	ExitProcess(4);
 	loopFastExit();
-#endif
 }
 
 // --------------------------------------------------------------------------
@@ -1013,13 +980,11 @@ void	kf_ShowMappings( void )
 void	kf_SelectPlayer( void )
 {
     UDWORD	playerNumber, prevPlayer;
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer && (NetPlay.bComms != 0) )
 {
 	return;
 }
-#endif
 #endif
     //store the current player
     prevPlayer = selectedPlayer;
@@ -1042,8 +1007,6 @@ if(bMultiPlayer && (NetPlay.bComms != 0) )
 
 }
 // --------------------------------------------------------------------------
-
-#ifdef WIN32
 
 /* Selects the player's groups 1..9 */
 void	kf_SelectGrouping( void )
@@ -1093,91 +1056,14 @@ BOOL	Selected;
 #endif
 }
 
-#else	// Start of PSX version.
-
-/* Selects the player's groups 1..9 */
-void	kf_SelectGrouping( void )
-{
-	UDWORD	groupNumber;
-	BOOL	bAlreadySelected;
-	DROID	*psDroid;
-	BOOL	Selected = FALSE;
-
-	bAlreadySelected = FALSE;
-	groupNumber = (getLastSubKey()-KEY_Q) + 1;
-
-	printf("G# %d ",groupNumber);
-	if(groupNumber <= 2) {	// Only allow 2 groups on L1&L2, R1&R2 reserved for droid cycle and cluster selection.
-		for(psDroid = apsDroidLists[selectedPlayer]; psDroid!=NULL; psDroid = psDroid->psNext)
-		{
-			/* Wipe out the ones in the wrong group */
-			if(psDroid->selected AND psDroid->group!=groupNumber)
-			{
-				psDroid->selected = FALSE;
-			}
-			/* Get the right ones */
-			if(psDroid->group == groupNumber)
-			{
-				if(psDroid->selected)
-				{
-					bAlreadySelected = TRUE;
-				}
-			}
-		}
-		if(bAlreadySelected)
-		{
-			Selected = activateGroupAndMove(selectedPlayer,groupNumber);
-		}
-		else
-		{
-			Selected = activateGroup(selectedPlayer,groupNumber);
-		}
-		printf("Selected %d\n",Selected);
-	}
-
-	// Did'nt get anything?
-	if(!Selected) {
-		switch(groupNumber) {
-			case	1:
-			case	2:
-			case	3:
-				intGotoNextDroidType(DROID_ANY);
-				// Tell the driving system that the selection may have changed.
-				driveSelectionChanged();
-				break;
-			case	4:
-				if(driveModeActive()) {
-					intSelectDroidsInDroidCluster(driveGetDriven());
-				}	// Need to make this work in point'n'click mode as well.
-				break;
-		}
-	} else {
-		// Tell the driving system that the selection may have changed.
-		driveSelectionChanged();
-	}
-}
-
-#endif	// End of PSX version.
 
 // --------------------------------------------------------------------------
-
-#ifdef PSX
-extern BOOL IgnoreNextMouseClick;
-#endif
-
 
 void	kf_AssignGrouping( void )
 {
 UDWORD	groupNumber;
 
-#ifdef WIN32
 	groupNumber = (getLastSubKey()-KEY_1) + 1;	
-#else
-	groupNumber = (getLastSubKey()-KEY_1) + 1;
-	IgnoreNextMouseClick = TRUE;
-//	IgnoreNextMouseRelease();	// Tell framework to ignore the next mouse button released message.
-	dragBox3D.status = DRAG_INACTIVE;
-#endif
 	assignDroidsToGroup(selectedPlayer,groupNumber);
 }
 
@@ -1187,14 +1073,7 @@ void	kf_SelectCommander( void )
 {
 SDWORD	cmdNumber;
 
-#ifdef WIN32
 	cmdNumber = (getLastSubKey()-KEY_1) + 1;	
-#else
-	cmdNumber = (getLastSubKey()-KEY_1) + 1;
-	IgnoreNextMouseClick = TRUE;
-//	IgnoreNextMouseRelease();	// Tell framework to ignore the next mouse button released message.
-	dragBox3D.status = DRAG_INACTIVE;
-#endif
 
 	// now select the appropriate commander
 	selCommander(cmdNumber);
@@ -1206,11 +1085,7 @@ void	kf_SelectMoveGrouping( void )
 {
 UDWORD	groupNumber;
 
-#ifdef WIN32
 	groupNumber = (getLastSubKey()-KEY_1) + 1;
-#else
-	groupNumber = (getLastSubKey()-KEY_A) + 1;
-#endif
 	activateGroupAndMove(selectedPlayer,groupNumber);
 }
 // --------------------------------------------------------------------------
@@ -1228,13 +1103,11 @@ void	kf_addInGameOptions( void )
 /* Tell the scripts to start a mission*/
 void	kf_AddMissionOffWorld( void )
 {
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer)
 {
 	return;
 }
-#endif
 #endif
 	game_SetValidityKey(VALIDITYKEY_CTRL_M);
 	eventFireCallbackTrigger(CALL_MISSION_START);
@@ -1243,13 +1116,11 @@ if(bMultiPlayer)
 /* Tell the scripts to end a mission*/
 void	kf_EndMissionOffWorld( void )
 {
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer)
 {
 	return;
 }
-#endif
 #endif
 	eventFireCallbackTrigger(CALL_MISSION_END);
 }
@@ -1257,13 +1128,11 @@ if(bMultiPlayer)
 /* Initialise the player power levels*/
 void	kf_NewPlayerPower( void )
 {
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer)
 {
 	return;
 }
-#endif
 #endif
 	newGameInitPower();
 }
@@ -1272,17 +1141,14 @@ if(bMultiPlayer)
 // Display multiplayer guff.
 void	kf_addMultiMenu(void)
 {
-#ifdef WIN32
 	if(bMultiPlayer)
 	{
 		intAddMultiMenu();
 	}
-#endif
 }
 
 // --------------------------------------------------------------------------
 // start/stop capturing audio for multiplayer
-#ifdef WIN32
 void kf_multiAudioStart(void)
 {
 	if(bMultiPlayer							// multiplayer game
@@ -1303,12 +1169,10 @@ void kf_multiAudioStop(void)
 	}
 	return;
 }
-#endif
 // --------------------------------------------------------------------------
 
 void	kf_JumpToMapMarker( void )
 {
-#ifdef WIN32
 UDWORD	entry;
 	if(!getRadarTrackingStatus())
 	{
@@ -1323,7 +1187,6 @@ UDWORD	entry;
 			camToggleStatus();
 		}
 	}
-#endif
 }
 
 
@@ -1331,17 +1194,13 @@ UDWORD	entry;
 /* Raises the G Offset */
 void	kf_UpGeoOffset( void )
 {
-#ifdef WIN32
 	geoOffset++;
-#endif
 }
 // --------------------------------------------------------------------------
 /* Lowers the geoOffset */
 void	kf_DownGeoOffset( void )
 {
-#ifdef WIN32
 	geoOffset--;
-#endif
 }
 // --------------------------------------------------------------------------
 /* Ups the droid scale */
@@ -1368,13 +1227,11 @@ void	kf_TogglePowerBar( void )
 /* Toggles whether we process debug key mappings */
 void	kf_ToggleDebugMappings( void )
 {
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer && (NetPlay.bComms != 0) )
 {
 	return;
 }
-#endif
 #endif
 
 #ifndef DEBUG
@@ -1393,13 +1250,10 @@ if(bMultiPlayer && (NetPlay.bComms != 0) )
 			CONPRINTF(ConsoleString,(ConsoleString,"ALL Debug Key Mappings - PERMITTED"));
 			CONPRINTF(ConsoleString,(ConsoleString,"DISCLAIMER: YOU HAVE NOW CHEATED"));
 		}
-#ifdef WIN32
 		if(bMultiPlayer)
 		{
 			sendTextMessage("Presses Debug. CHEAT",TRUE);
 		}
-#endif
-
 	}
 }
 // --------------------------------------------------------------------------
@@ -1407,15 +1261,12 @@ if(bMultiPlayer && (NetPlay.bComms != 0) )
 
 void	kf_ToggleGodMode( void )
 {
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer && (NetPlay.bComms != 0) )
 {
 	return;
 }
 #endif
-#endif
-
 	if(godMode)
 	{
 		godMode = FALSE;
@@ -1448,13 +1299,10 @@ void	kf_SeekNorth( void )
 void	kf_TogglePauseMode( void )
 {
 
-#ifdef WIN32
 	if(bMultiPlayer && (NetPlay.bComms != 0) )
 	{
 		return;
 	}
-#endif
-
 	/* Is the game running? */
 	if(gamePaused() == FALSE)
 	{
@@ -1509,18 +1357,14 @@ void	kf_FinishResearch( void )
 // --------------------------------------------------------------------------
 void	kf_ToggleEnergyBars( void )
 {
-#ifdef WIN32
 	toggleEnergyBars();
 	CONPRINTF(ConsoleString,(ConsoleString, strresGetString(psStringRes,STR_GAM_ENERGY ) ));
-#endif
 }
 // --------------------------------------------------------------------------
 void	kf_ToggleReloadBars( void )
 {
-#ifdef WIN32
 	toggleReloadBarDisplay();
 	CONPRINTF(ConsoleString,(ConsoleString, strresGetString(psStringRes,STR_GAM_ENERGY ) ));
-#endif
 }
 // --------------------------------------------------------------------------
 void	kf_ToggleDemoMode( void )
@@ -1555,7 +1399,6 @@ void	kf_ChooseOptions( void )
 	intAddOptions();
 }
 
-#ifdef WIN32
 // --------------------------------------------------------------------------
 void	kf_ToggleBlips( void )
 {
@@ -1939,13 +1782,11 @@ void kf_KillSelected(void)
 	DROID		*psCDroid, *psNDroid;
 	STRUCTURE	*psCStruct, *psNStruct;
 
-#ifdef WIN32
 #ifndef DEBUG
 if(bMultiPlayer)
 {
 	return;
 }
-#endif
 #endif
 
 	for(psCDroid=apsDroidLists[selectedPlayer]; psCDroid; psCDroid=psNDroid)
@@ -1966,7 +1807,6 @@ if(bMultiPlayer)
 		}
 	}
 }
-#endif
 
 // --------------------------------------------------------------------------
 // display the grid info for all the selected objects
@@ -1997,19 +1837,16 @@ void kf_ShowGridInfo(void)
 // --------------------------------------------------------------------------
 void kf_GiveTemplateSet(void)
 {
-#ifdef WIN32
 	addTemplateSet(4,0);
 	addTemplateSet(4,1);
 	addTemplateSet(4,2);
 	addTemplateSet(4,3);
-#endif
 }
 
 // --------------------------------------------------------------------------
 // Chat message. NOTE THIS FUNCTION CAN DISABLE ALL OTHER KEYPRESSES
 void kf_SendTextMessage(void)
 {
-#ifdef WIN32
 	CHAR	ch;									
 
 	if(/*bMultiPlayer || */!bAllowOtherKeyPresses OR getCheatCodeStatus()) 
@@ -2125,7 +1962,6 @@ void kf_SendTextMessage(void)
 //		iV_DrawText(sTextToSend,16+D_W,RADTLY+D_H-16);
 		return;
 	}
-#endif
 }
 // --------------------------------------------------------------------------
 void	kf_ToggleConsole( void )
@@ -2491,12 +2327,10 @@ UDWORD		xJump,yJump;
 
 void kf_ToggleFormationSpeedLimiting( void )
 {
-#ifdef WIN32
 	if(bMultiPlayer)
 	{
 		return;
 	}
-#endif
 	if ( moveFormationSpeedLimitingOn() )
 	{
 		addConsoleMessage(strresGetString(psStringRes,STR_GAM_FORMATION_OFF),LEFT_JUSTIFY);

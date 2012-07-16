@@ -7,11 +7,7 @@
 #ifndef _movedef_h
 #define _movedef_h
 
-#ifdef PSX
-#define TRAVELSIZE			70
-#else
 #define TRAVELSIZE			100
-#endif
 
 typedef struct _path_point
 {

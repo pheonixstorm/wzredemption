@@ -135,10 +135,6 @@ BOOL checkPower(UDWORD player, UDWORD quantity, BOOL playAudio)
     //Not playing the power low message anymore - 6/1/99
 	/*else if (player == selectedPlayer)
 	{
-//#ifdef PSX
-//#warning POWER LOW IS DISABLED
-//		return TRUE;
-//#endif
 		if (playAudio && player == selectedPlayer)
 		{
 			audio_QueueTrack( ID_SOUND_POWER_LOW );
@@ -173,11 +169,6 @@ BOOL usePower(UDWORD player, UDWORD quantity)
 	}
 	else if (player == selectedPlayer)
 	{
-//#ifdef PSX
-//#warning POWER LOW IS DISABLED
-//		return TRUE;
-//#endif
-
 		if(titleMode == FORCESELECT) //|| (titleMode == DESIGNSCREEN))
 		{
 			return FALSE;
@@ -936,8 +927,6 @@ BOOL droidUsesPower(DROID *psDroid)
     return bUsesPower;
 }
 
-//won't bother with this on PSX unless starts being used too much!
-#ifdef WIN32
 //this is a check cos there is a problem with the power but not sure where!!
 void powerCheck(BOOL bBeforePowerUsed, UBYTE player)
 {
@@ -970,7 +959,6 @@ void powerCheck(BOOL bBeforePowerUsed, UBYTE player)
         }
     }
 }
-#endif
 
 
 /*initialise the PlayerPower based on what structures are available*/
@@ -1050,10 +1038,6 @@ void powerCheck(BOOL bBeforePowerUsed, UBYTE player)
 	}
 	else if (player == selectedPlayer)
 	{
-#ifdef PSX
-#warning POWER LOW IS DISABLED
-		return TRUE;
-#endif
 		if (playAudio && player == selectedPlayer)
 		{
 			audio_QueueTrack( ID_SOUND_POWER_LOW );
@@ -1092,11 +1076,6 @@ void powerCheck(BOOL bBeforePowerUsed, UBYTE player)
 	}
 	else if (player == selectedPlayer)
 	{
-#ifdef PSX
-#warning POWER LOW IS DISABLED
-		return TRUE;
-#endif
-
 		if(titleMode == FORCESELECT) //|| (titleMode == DESIGNSCREEN))
 		{
 			return FALSE;
@@ -1261,12 +1240,10 @@ void powerCheck(BOOL bBeforePowerUsed, UBYTE player)
 	asPower[player]->availablePower = 0;
 	
 	// add multiplayer allowances if a multiplayer game.
-#ifdef WIN32
 	if(bMultiPlayer && (game.dmatch || game.base == CAMP_CLEAN))
 	{
 		asPower[player]->availablePower = game.power+RESIDUAL_POW;		
 	}
-#endif
 
 	//calculate the total available and capacity
 	for (psBuilding = apsStructLists[player]; psBuilding != NULL; psBuilding =

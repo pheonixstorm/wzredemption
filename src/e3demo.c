@@ -11,8 +11,6 @@
 
 // -------------------------------------------------------------------------
 
-#if defined(WIN32) || defined(E3DEMO)
-
 #include "GTime.h"
 #include "Objects.h"
 #include "Map.h"
@@ -381,8 +379,8 @@ STRUCTURE_STATS	*pStructureType;
 }
 
 // -------------------------------------------------------------------------
-/*	The next two functions solve the flickering base plate problem - probably
-	won't be needed on the PSX. they're used both in demo mode and indirectly
+/*	The next two functions solve the flickering base plate problem.
+    they're used both in demo mode and indirectly
 	when godMode is toggled ON/OFF
 */
 void	demoProcessTilesOut( void )
@@ -462,109 +460,4 @@ BOOL	tooNearEdge( UDWORD x, UDWORD y )
 	}
 }
 
-#ifdef PSX
 
-extern BOOL DirectControl;
-extern BOOL AttractMode;
-extern UDWORD AttractTime;
-
-//UDWORD demoTime;
-
-#define DEMO_IDLE_TIME (GAME_TICKS_PER_SEC*60*5)
-
-void demoToggle(void)
-{
-	if(demoGetStatus() == FALSE) {
-		demoStart();
-	} else {
-		demoStop();
-	}
-}
-
-
-void demoStart(void)
-{
-	if(demoGetStatus() == FALSE) {
-		StopCameraMode();
-		toggleDemoStatus();
-		enableConsoleDisplay(TRUE);
-		AttractMode = TRUE;
-		AttractTime = gameTime2;
-	}
-}
-
-
-void demoStop(void)
-{
-	if(demoGetStatus() == TRUE) {
-
-		toggleDemoStatus();
-		flushConsoleMessages();
-		setConsolePermanence(FALSE,TRUE);
-		permitNewConsoleMessages(TRUE);
-		addConsoleMessage("Demo Mode OFF - Returning to normal game mode",LEFT_JUSTIFY);
-
-		// If warcam active then disable it.
-		if(getWarCamStatus()) {
-			camToggleStatus();
-		}
-
-		// If direct control active then start drive mode.
-//		if(!DirectControl) {
-		if(DirectControl) {
-			StopDriverMode();
-//			BeginDriveMode();
-			StartCameraMode();
-		}
-	}
-}
-
-
-void demoReset(void)
-{
-	demoStop();
-//	demoTime = gameTime + DEMO_IDLE_TIME;
-}
-
-extern BOOL AttractMode;
-
-void demoUpdate(void)
-{
-	// If demoTime reached then start demo.
-	if(gameTime2 >= GetControlIdleTime()+DEMO_IDLE_TIME) {
-		demoStart();
-	} else {
-
-//DBPRINTF(("AttractMode = FALSE : %d %d %d\n",gameTime,GetControlIdleTime(),DEMO_IDLE_TIME);
-		AttractMode = FALSE;
-		demoStop();
-	}
-	
-//	if(gameTime > demoTime) {
-//		demoStart();
-//	}
-}
-
-#endif
-
-
-
-#else
-/* empty demo functions */
-BOOL demoGetStatus ( void )
-{
-	return(FALSE);
-}
-
-void initDemoCamera( void )
-{
-}
-
-void processDemoCam( void )
-{
-}
-
-void toggleDemoStatus( void )
-{
-}
-#endif

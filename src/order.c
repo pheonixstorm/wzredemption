@@ -82,17 +82,6 @@ void orderClearDroidList(DROID *psDroid);
 void orderDroidStatsTwoLocAdd(DROID *psDroid, DROID_ORDER order,
 						BASE_STATS *psStats, UDWORD x1, UDWORD y1, UDWORD x2, UDWORD y2);
 
-//////////////////////////////////////////////////////////////////
-// added by ajl. tidied up code by adding this dummy psx func. 
-#ifdef PSX
-BOOL turnOffMultiMsg(BOOL bDummy)
-{
-	bDummy;
-	return TRUE;
-}
-#endif
-//////////////////////////////////////////////////////////////////
-
 //call this *AFTER* every mission so it gets reset
 void initRunData()
 {
@@ -4069,7 +4058,6 @@ void secondarySetAverageGroupState(UDWORD player, UDWORD group)
 //  position. the route is therefore appended to the droid's movelist.
 
 /*
-// ajl 18thsep98, pulled from psx version. (no interface and not big enough move list.
 #ifdef WIN32
 // append a new point to a droid's list.
 BOOL orderAddWayPoint(DROID *psDroid ,UDWORD dX,UDWORD dY)
@@ -4171,14 +4159,11 @@ void orderSelectedWaypoint(UDWORD player, UDWORD x, UDWORD y)
 	iVector		position;
 	FORMATION	*psFormation = NULL;
 
-#ifdef WIN32
 	if(bMultiPlayer)
 	{
 		SendDroidWaypoint((UBYTE)player,x,y);
 		turnOffMultiMsg(TRUE);
 	}
-#endif
-	
 	for(psCurr = apsDroidLists[player]; psCurr; psCurr=psCurr->psNext)
 	{
 		if (psCurr->selected)

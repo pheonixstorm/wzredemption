@@ -484,7 +484,7 @@ extern BOOL scrResetPlayerVisibility(void);
 // set the vtol return pos for a player
 extern BOOL scrSetVTOLReturnPos(void);
 
-// skirmish function **NOT PSX**
+// skirmish function
 extern BOOL scrIsVtol(void);
 
 // init templates for tutorial.

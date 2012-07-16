@@ -110,11 +110,8 @@ extern BOOL structUsesPower(STRUCTURE *psStruct);
 /*defines which droid types draw power - returns TRUE if use power*/
 extern BOOL droidUsesPower(DROID *psDroid);
 
-//won't bother with this on PSX unless starts being used too much!
-#ifdef WIN32
 //this is a check cos there is a problem with the power but not sure where!!
 extern void powerCheck(BOOL bBeforePowerUsed, UBYTE player);
-#endif
 
 extern PLAYER_POWER		*asPower[MAX_PLAYERS];
 

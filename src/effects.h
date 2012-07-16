@@ -47,10 +47,6 @@ EXPLOSION_TYPE_PLASMA,
 EXPLOSION_TYPE_KICKUP,
 EXPLOSION_TYPE_LAND_LIGHT,
 EXPLOSION_TYPE_SHOCKWAVE,
-#ifdef PSX
-EXPLOSION_TYPE_POWERMODULE,
-EXPLOSION_TYPE_RESEARCHMODULE,
-#endif
 //EXPLOSION_TYPE_SKYSCRAPER,
 
 GRAVITON_TYPE_STANDARD,
@@ -147,10 +143,6 @@ typedef enum
 #define	BLOOD_FRAME_DELAY			(150)
 #define DESTRUCTION_FRAME_DELAY		(200)
 
-#ifdef PSX
-#define EXPLOSION_POWERMODULE_FRAME_DELAY	(32)
-#define EXPLOSION_RESEARCHMODULE_FRAME_DELAY		(32)
-#endif
 #define SHOCK_WAVE_HEIGHT	(64)
 
 #define	TESLA_SPEED					(170)// + (30 - rand()%60))
@@ -243,12 +235,5 @@ extern BOOL	readFXData( UBYTE *pFileData, UDWORD fileSize );
 extern BOOL	writeFXData( STRING *pFileName );
 extern	void	effectSetSize(UDWORD size);
 extern void	effectSetLandLightSpec(LAND_LIGHT_SPEC spec);
-
-
-#ifdef PSX	// PSX specific prototypes.
-extern void rendEffect(EFFECT *psEffect,UDWORD Scale,PIE *Params);
-extern void rendMultiPIERot(iIMDShape *Shape,UWORD frameNumber,
-				iVector *Position,iVector *Rotation,iVector *Offset,UDWORD Scale,PIE *Params);
-#endif
 
 #endif

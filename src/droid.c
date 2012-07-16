@@ -66,13 +66,6 @@
 #include "Edit3D.h"
 #include "Scores.h"
 #include "Research.h"
-#ifdef PSX
-#include "geo_psx.h"
-#include "dcache.h"
-#include "profile.h"
-
-extern BOOL EnableVibration;
-#endif
 
 #define DEFAULT_RECOIL_TIME	(GAME_TICKS_PER_SEC/4)
 #define	DROID_DAMAGE_SPREAD	(16 - rand()%32)
@@ -90,11 +83,7 @@ UWORD	aDroidExperience[MAX_PLAYERS][MAX_RECYCLED_DROIDS];
 UDWORD	selectedGroup = UBYTE_MAX;
 UDWORD	selectedCommander = UBYTE_MAX;
 /*Height the transporter hovers at above the terrain*/
-#ifdef WIN32
 #define TRANSPORTER_HOVER_HEIGHT	10
-#else
-#define TRANSPORTER_HOVER_HEIGHT	64
-#endif
 
 //how far round a repair droid looks for a damaged droid
 #define REPAIR_DIST		(TILE_UNITS * 4)//8)
@@ -145,185 +134,6 @@ BOOL droidInit(void)
 /* Do damage to a droid.
  * Returns TRUE if the droid is destroyed
  */
-#ifdef PSX
-BOOL droidDamage(DROID *psDroid, UDWORD damage, UDWORD weaponClass)
-{
-	UDWORD		penDamage, armourDamage;
-	BOOL		penetrated = FALSE;
-	UDWORD		armour=0;
-	SDWORD		state;
-	SDWORD		level, cmdLevel;
-
-	ASSERT((PTRVALID(psDroid, sizeof(DROID)),
-		"unitDamage: Invalid Unit pointer"));
-
-	DBP1(("unitDamage(%d): body %d armour %d damage: %d\n",
-		psDroid->id, psDroid->body, psDroid->armour[WC_KINETIC], damage));
-
-
-//	if(selectedPlayer==0)
-	if(psDroid->player != selectedPlayer)
-	{	
-		// Player inflicting damage on enemy.
-		damage = (UDWORD) modifyForDifficultyLevel( (SDWORD) damage,TRUE);
-	} else {
-		// Enemy inflicting damage on player.
-		damage = (UDWORD) modifyForDifficultyLevel( (SDWORD) damage,FALSE);
-	}
-
-	// reset the attack level
-	if (secondaryGetState(psDroid, DSO_ATTACK_LEVEL, &state))
-	{
-		if (state == DSS_ALEV_ATTACKED)
-		{
-			secondarySetState(psDroid, DSO_ATTACK_LEVEL, DSS_ALEV_ALWAYS);
-		}
-	}
-
-	switch (weaponClass)
-	{
-		case WC_KINETIC:
-		//case WC_EXPLOSIVE:
-			if (damage > psDroid->armour[WC_KINETIC])
-			{
-				penetrated = TRUE;
-			}
-			armour = psDroid->armour[WC_KINETIC];
-			break;
-		case WC_HEAT:
-		//case WC_MISC:
-			if (damage > psDroid->armour[WC_HEAT])
-			{
-				penetrated = TRUE;
-			}
-			armour = psDroid->armour[WC_HEAT];
-			break;
-	}
-
-	clustObjectAttacked((BASE_OBJECT *)psDroid);
-
-//	if (damage > psDroid->armour[WC_KINETIC])
-	if (penetrated)
-	{
-		/* Damage has penetrated - reduce armour and body points */
-		//penDamage = damage - psDroid->armour;
-		penDamage = damage - armour;
-
-		level = getDroidLevel(psDroid);
-		cmdLevel = cmdGetCommanderLevel(psDroid);
-		if (level > cmdLevel)
-		{
-			//penDamage = (penDamage * (100 - 5 * level)) / 100;
-			penDamage = (penDamage * (100 - 6 * level)) / 100;
-		}
-		else
-		{
-			//penDamage = (penDamage * (100 - 5 * cmdLevel)) / 100;
-			penDamage = (penDamage * (100 - 6 * cmdLevel)) / 100;
-		}
-
-		DBP1(("        penetrated: %d\n", penDamage));
-		if (penDamage >= psDroid->body)
-		{
-            //hack to prevent Transporter's being blown up
-            if (psDroid->droidType == DROID_TRANSPORTER)
-            {
-                psDroid->body = 1;
-                return FALSE;
-            }
-			/* Droid destroyed */
-			DBP1(("        DESTROYED\n"));
-			if(psDroid->player == selectedPlayer)
-			{
-				CONPRINTF(ConsoleString,(ConsoleString, strresGetString(psStringRes,STR_GAM_UNITLOST)));
-				scoreUpdateVar(WD_UNITS_LOST);				
-			}
-			else
-			{
-				scoreUpdateVar(WD_UNITS_KILLED);				
-			}
-			if(psDroid->droidType == DROID_PERSON AND weaponClass == WC_HEAT)
-			{
-				droidBurn(psDroid);
-			}
-			else
-			{
-	  			destroyDroid(psDroid);
-			}
-			return TRUE;
-		}
-		else
-		{
-			psDroid->body -= penDamage;
-		}
-
-		/* Do damage to armour */
-//		armourDamage = (damage / PEN_ARMOUR_DAMAGE_FACTOR) + 1;
-
-//		DBP1(("penetrated: %d, armour: %d\n", penDamage, armourDamage));
-	}
-	else
-	{
-		/* Damage didn't penetrate - only reduce armour */
-		armourDamage = (damage / ARMOUR_DAMAGE_FACTOR) + 1;
-
-		/* Do one point of damage to body */
-		DBP1(("        not penetrated - 1 point damage\n"));
-		if(psDroid->droidType == DROID_PERSON AND weaponClass == WC_HEAT)
-		{
-			droidBurn(psDroid);
-		}
-		if (psDroid->body == 1)
-		{
-            //hack to prevent Transporter's being blown up
-            if (psDroid->droidType == DROID_TRANSPORTER)
-            {
-                return FALSE;
-            }
-
-            if(psDroid->player == selectedPlayer)
-			{
-				CONPRINTF(ConsoleString,(ConsoleString,strresGetString(psStringRes,STR_GAM_UNITLOST)));
-				scoreUpdateVar(WD_UNITS_LOST);				
-			}
-			else
-			{
-				scoreUpdateVar(WD_UNITS_KILLED);				
-			}	
-  			destroyDroid(psDroid);
-			DBP1(("        DESTROYED\n"));
-			return TRUE;
-		}
-		else
-		{
-			psDroid->body -= 1;
-		}
-
-//		DBP1(("armour: %d\n", armourDamage));
-	}
-
-	/* Actually reduce the droids armour */
-/*	if (armourDamage >= psDroid->armour)
-	{
-		psDroid->armour = 0;
-	}
-	else
-	{
-		psDroid->armour -= armourDamage;
-	}*/
-
-	DBP1(("        body left: %d armour left: %d\n",
-		psDroid->body, psDroid->armour));
-
-	/* now check for auto return on droid's secondary orders */
-	secondaryCheckDamageLevel(psDroid);
-    /* now check for scripted run-away based on health */
-    orderHealthCheck(psDroid);
-
-	return FALSE;
-
-}
-#else
 #define UNIT_LOST_DELAY	(5*GAME_TICKS_PER_SEC)
 BOOL droidDamage(DROID *psDroid, UDWORD damage, UDWORD weaponClass, UDWORD weaponSubClass)
 {
@@ -350,15 +160,12 @@ BOOL droidDamage(DROID *psDroid, UDWORD damage, UDWORD weaponClass, UDWORD weapo
     }
 
 	
-#ifdef WIN32
     //only overwrite if the last weapon to hit was not an EMP - need the time value for this
     if (psDroid->lastHitWeapon != WSC_EMP)
     {
     	psDroid->timeLastHit = gameTime;
 	    psDroid->lastHitWeapon = weaponSubClass;
     }
-#endif
-
 
 //	if(selectedPlayer==0)
 	if(psDroid->player != selectedPlayer)
@@ -542,20 +349,17 @@ BOOL droidDamage(DROID *psDroid, UDWORD damage, UDWORD weaponClass, UDWORD weapo
     /* now check for scripted run-away based on health */
     orderHealthCheck(psDroid);
 
-#ifdef WIN32
     //only overwrite if the last weapon to hit was not an EMP - need the time value for this
     if (psDroid->lastHitWeapon != WSC_EMP)
     {
     	psDroid->timeLastHit = gameTime;
 	    psDroid->lastHitWeapon = weaponSubClass;
     }
-#endif
 	return FALSE;
 
 }
 
 
-#endif
 
 void droidDeleteName(DROID *psDroid)
 {
@@ -664,13 +468,7 @@ void	removeDroidBase(DROID *psDel)
 	DROID_GROUP	*psGroup;
 	STRUCTURE	*psStruct;
 
-#ifdef PSX
-	intDestroyDroid(psDel);		// Tell the interface it's gone
-#endif
 	if(!driveDroidKilled(psDel)) {	// Tell the driver system it's gone.
-#ifdef PSX
-		intAddReticule();	// driving mode canceled so ensure reticule is up.
-#endif
 	}
 
 	//tell the power system its gone
@@ -682,7 +480,6 @@ void	removeDroidBase(DROID *psDel)
 		return;
 	}
 
-#ifdef WIN32	
 	//ajl, inform others of destruction.
 	if(bMultiPlayer)					
 	{
@@ -691,7 +488,6 @@ void	removeDroidBase(DROID *psDel)
 			SendDestroyDroid(psDel);
 		}
 	}
-#endif
 
 	/* remove animation if present */
 	if ( psDel->psCurAnim != NULL )
@@ -871,43 +667,18 @@ void	removeDroidFX(DROID *psDel)
 			if(psDel->visible[selectedPlayer])
 			{
 // The babarian has been run over ...
-#ifdef WIN32
 				audio_PlayStaticTrack( psDel->x, psDel->y, ID_SOUND_BARB_SQUISH );
-#else
-				// Play the squish 80%
-				if ( (rand()&0xf) <12)
-				{
-					DBPRINTF(("baba squish\n"));
-					audio_PlayStaticTrack( psDel->x, psDel->y, ID_SOUND_BARB_SQUISH );
-				}
-#define SCREAMRANGE (511)
-				// Play the scream 50%
-				if ( (rand()&0xf) <6)
-				{
-					SDWORD ScreamPitch = (rand()&SCREAMRANGE);	
-					audio_PlayStaticTrackPitch( psDel->x, psDel->y, ID_SOUND_BARB_SCREAM, ScreamPitch-(SCREAMRANGE/2) );
-				}
-#endif
-
 			}
 		}
 	}
 	else if(psDel->visible[selectedPlayer])
 	{
 		destroyFXDroid(psDel);
-#ifdef WIN32		// this sounds a bit crap on the psx
 		pos.x = psDel->x;
 		pos.z = psDel->y;
 		pos.y = psDel->z;
 		addEffect(&pos,EFFECT_DESTRUCTION,DESTRUCTION_TYPE_DROID,FALSE,NULL,0);
 		audio_PlayStaticTrack( psDel->x, psDel->y, ID_SOUND_EXPLOSION );
-#endif
-#if defined(PSX) && defined(LIBPAD)
-		if(EnableVibration) {
-			DBPRINTF(("SetVibro1\n"));
-			SetVibro1(0,100,512);
-		}
-#endif
 	}
 
 }
@@ -962,13 +733,7 @@ void destroyDroid(DROID *psDel)
 	DROID_GROUP	*psGroup;
 	STRUCTURE	*psStruct;
 
-#ifdef PSX
-	intDestroyDroid(psDel);		// Tell the interface it's gone
-#endif
 	if(!driveDroidKilled(psDel)) {	// Tell the driver system it's gone.
-#ifdef PSX
-		intAddReticule();	// driving mode canceled so ensure reticule is up.
-#endif
 	}
 
 	if (psDel->died)
@@ -977,13 +742,11 @@ void destroyDroid(DROID *psDel)
 		return;
 	}
 
-#ifdef WIN32	
 	//ajl, inform others of destruction.
 	if(bMultiPlayer)					
 	{	
 		SendDestroyDroid(psDel);
 	}
-#endif
 
 	/* if baba and not running (on fire) then squish */
 	if( psDel->droidType == DROID_PERSON )
@@ -993,23 +756,7 @@ void destroyDroid(DROID *psDel)
 			if(psDel->visible[selectedPlayer])
 			{
 // The babarian has been run over ...
-#ifdef WIN32
 				audio_PlayStaticTrack( psDel->x, psDel->y, ID_SOUND_BARB_SQUISH );
-#else
-				// Play the squish 80%
-				if ( (rand()&0xf) <12)
-				{
-					DBPRINTF(("baba squish\n"));
-					audio_PlayStaticTrack( psDel->x, psDel->y, ID_SOUND_BARB_SQUISH );
-				}
-#define SCREAMRANGE (511)
-				// Play the scream 50%
-				if ( (rand()&0xf) <6)
-				{
-					SDWORD ScreamPitch = (rand()&SCREAMRANGE);	
-					audio_PlayStaticTrackPitch( psDel->x, psDel->y, ID_SOUND_BARB_SCREAM, ScreamPitch-(SCREAMRANGE/2) );
-				}
-#endif
 
 			}
 		}
@@ -1041,20 +788,12 @@ void destroyDroid(DROID *psDel)
 		}			
 
 		
-#ifdef WIN32		// this sounds a bit crap on the psx
 		/* And then a destruction sequence...*/
 		pos.x = psDel->x;
 		pos.z = psDel->y;
 		pos.y = psDel->z;
 		addEffect(&pos,EFFECT_DESTRUCTION,DESTRUCTION_TYPE_DROID,FALSE,NULL,0);
 		audio_PlayStaticTrack( psDel->x, psDel->y, ID_SOUND_EXPLOSION );
-#endif
-#if defined(PSX) && defined(LIBPAD)
-		if(EnableVibration) {
-			DBPRINTF(("SetVibro1\n"));
-			SetVibro1(0,100,512);
-		}
-#endif
 	}
 
 	/* remove animation if present */
@@ -1175,11 +914,8 @@ BOOL droidRemove(DROID *psDroid, DROID *pList[MAX_PLAYERS])
 {
 //	BOOL	bRet;
 
-#ifdef PSX
-	intDestroyDroid(psDroid);	// Tell the interface it's gone.
-#endif
 	if(!driveDroidKilled(psDroid)) {	// Tell the driver system it's gone.
-#ifdef PSX
+#ifdef DRIVE_MODE
 		intAddReticule();	// driving mode canceled so ensure reticule is up.
 #endif
 	}
@@ -1319,11 +1055,7 @@ void droidBurn( DROID * psDroid )
 
 	/* add scream */
 DBPRINTF(("baba burn\n"));
-#ifdef WIN32
 	audio_PlayObjDynamicTrack( psDroid, ID_SOUND_BARB_SCREAM+(rand()%3), NULL );
-#else
-	audio_PlayObjDynamicTrack( psDroid, ID_SOUND_BARB_SCREAM, NULL );
-#endif
 
 	/* set droid running */
 	orderDroid( psDroid, DORDER_RUNBURN );
@@ -1453,10 +1185,6 @@ void droidGetNaybors(DROID *psDroid)
 	CurrentNaybors = psDroid;
 	nayborTime = gameTime;
 
-#ifdef PSX
-	PROFILE_START(1);
-#endif
-
 	// reset the naybor array
 	numNaybors = 0;
 #ifdef DEBUG
@@ -1502,9 +1230,6 @@ void droidGetNaybors(DROID *psDroid)
 		}
 	}
 
-#ifdef PSX
-	PROFILE_END(1);
-#endif
 }
 
 
@@ -1529,10 +1254,8 @@ void displayNaybors(void)
 			pType = "FEATURE";
 			break;
 		}
-#ifdef WIN32
 		screenTextOut(450, y, "%s %d", pType,
 			asDroidNaybors[count].psObj->id);
-#endif
 		y+= 15;
 	}
 }
@@ -1549,10 +1272,6 @@ void droidUpdate(DROID *psDroid)
 	BASE_OBJECT	*psBeingTargetted = NULL;
 	SDWORD	damageToDo;
 
-#ifdef PSX
-	static DROID *psTmpDroid;
-	psTmpDroid = psDroid;
-#endif
 	ASSERT((PTRVALID(psDroid, sizeof(DROID)),
 		"unitUpdate: Invalid unit pointer"));
 
@@ -1564,10 +1283,8 @@ void droidUpdate(DROID *psDroid)
 	// Find all the objects close to the droid
 //	droidGetNaybors(psTmpDroid);	// Now done when needed.
 
-#ifdef WIN32
 	/* Clear down every droid as attacker could get killed */
 //	psDroid->bTargetted = FALSE;
-#endif
 	// update the cluster of the droid
 	if (psDroid->id % 20 == frameGetFrameNumber() % 20)
 	{
@@ -1594,16 +1311,7 @@ void droidUpdate(DROID *psDroid)
     }
 
 	// ai update droid
-//#ifdef WIN32
 	aiUpdateDroid(psDroid);
-//#else
-//	PROFILE_START(4);
-//	psTmpDroid = psDroid;
-//	SetSpDCache();
-//	aiUpdateDroid(psTmpDroid);
-//	SetSpNormal();
-//	PROFILE_END(4);
-//#endif
 
 	// update the droids order
 	orderUpdateDroid(psDroid);
@@ -1611,17 +1319,8 @@ void droidUpdate(DROID *psDroid)
 	// update the action of the droid
 	actionUpdateDroid(psDroid);
 
-//#ifdef WIN32
 	// update the move system
 	moveUpdateDroid(psDroid);
-//#else
-//	PROFILE_START(5);
-//	psTmpDroid = psDroid;
-//	SetSpDCache();
-//	moveUpdateDroid(psTmpDroid);
-//	SetSpNormal();
-//	PROFILE_END(5);
-//#endif
 
 	/* Only add smoke if they're visible */
 	if((psDroid->visible[selectedPlayer]) AND psDroid->droidType != DROID_PERSON)
@@ -1675,7 +1374,6 @@ void droidUpdate(DROID *psDroid)
 					((STRUCTURE*)psBeingTargetted)->targetted = 1;
 				}
 			}
-#ifdef WIN32	// ffs AM
 			else
 			if(psBeingTargetted->type == OBJ_DROID)
 			{
@@ -1694,7 +1392,6 @@ void droidUpdate(DROID *psDroid)
 					((FEATURE*)psBeingTargetted)->bTargetted = TRUE;
 				}
 			}
-#endif
 		}
 	}
 	// -----------------
@@ -1728,11 +1425,7 @@ void droidUpdate(DROID *psDroid)
 				{
 					psDroid->burnDamage += damageToDo;
 					//psDroid->damage(psDroid, damageToDo, WC_HEAT);
-#ifdef WIN32
 					(void)droidDamage(psDroid, damageToDo, WC_HEAT,WSC_FLAME);
-#else
-					(void)droidDamage(psDroid, damageToDo, WC_HEAT);
-#endif
 				}
 			}
 		}
@@ -1747,9 +1440,7 @@ void droidUpdate(DROID *psDroid)
 
 	droidUpdateRecoil(psDroid);
 
-#ifdef WIN32	// on the psx version, we do this in DisplayCompObj() in component.c
 	calcDroidIllumination(psDroid);
-#endif
 
     //check the resistance level of the droid
 	if (psDroid->id % 50 == frameGetFrameNumber() % 50)
@@ -1766,22 +1457,10 @@ void droidUpdate(DROID *psDroid)
 //		"unitUpdate (end): Unit at (0,0)"));
 }
 
-//#ifdef WIN32
 //void droidUpdate(DROID *psDroid)
 //{
 //	droidUpd(psDroid);
 //}
-//#else
-//void droidUpdate(DROID *psDroid)
-//{
-//	static DROID *psTmpDroid;
-//	psTmpDroid = psDroid;
-//
-//	SetSpDCache();
-//	droidUpd(psTmpDroid);
-//	SetSpNormal();
-//}
-//#endif
 
 // calculate the experience level of a droid
 /*SDWORD droidCalcExp(DROID *psDroid)
@@ -1887,7 +1566,6 @@ BOOL droidStartFoundation(DROID *psDroid)
 }
 
 
-#ifdef WIN32
 BOOL
 droidCheckBuildStillInProgress( AUDIO_SAMPLE *psSample )
 {
@@ -1941,7 +1619,6 @@ droidBuildStartAudioCallback( AUDIO_SAMPLE *psSample )
 
 	return TRUE;
 }
-#endif
 
 /* Set up a droid to build a structure - returns true if successful */
 BOOL droidStartBuild(DROID *psDroid)
@@ -2010,7 +1687,6 @@ BOOL droidStartBuild(DROID *psDroid)
 		//ASSERT((droidNextToStruct(psDroid, (BASE_OBJECT *)psStruct),
 		//	"droidStartBuild: did not build structure next to droid"));
 
-#ifdef WIN32
 		if (bMultiPlayer)
 		{
 //			psStruct->id = psDroid->buildingId;// Change the id to the constructor droids required id. 
@@ -2020,7 +1696,6 @@ BOOL droidStartBuild(DROID *psDroid)
 				sendBuildStarted(psStruct, psDroid);
 			}
 		}
-#endif
 	}
 	else
 	{
@@ -2042,13 +1717,11 @@ BOOL droidStartBuild(DROID *psDroid)
 		psDroid->psActionTarget = (BASE_OBJECT *)psStruct;
 	}
 
-#ifdef WIN32
 	if ( psStruct->visible[selectedPlayer] )
 	{
 		audio_PlayObjStaticTrackCallback( psDroid, ID_SOUND_CONSTRUCTION_START,
 										droidBuildStartAudioCallback );
 	}
-#endif
 
 	return TRUE;
 }
@@ -2077,8 +1750,6 @@ static void addConstructorEffect(STRUCTURE *psStruct)
 {
 	UDWORD		widthRange,breadthRange;
 	iVector		temp;
-
-// We definitly still want this called on the PSX.
 
 	//FIXME
 	if((ONEINTEN) AND (psStruct->visible[selectedPlayer]))
@@ -2194,11 +1865,6 @@ BOOL droidUpdateBuild(DROID *psDroid)
 
 	if (current != prev)
 	{
-#ifdef PSX
-		FRACT divisor1,divisor2;
-		divisor1= (MAKEFRACT(FOUNDATION_ILLUMIN + prev) - ((MAKEFRACT(FOUNDATION_ILLUMIN * prev))/100))/100;
-		divisor2= (MAKEFRACT(FOUNDATION_ILLUMIN + current) - ((MAKEFRACT(FOUNDATION_ILLUMIN * current))/100))/100;
-#endif
 		//set the illumination of the tiles back to original value as building is completed
 
 		mapX = (psStruct->x - psStruct->pStructureType->baseWidth * 
@@ -2212,7 +1878,6 @@ BOOL droidUpdateBuild(DROID *psDroid)
 		{
 			for (j = 0; j < psStruct->pStructureType->baseBreadth+1; j++)
 			{
-#ifdef WIN32
 				FRACT	divisor,illumin, currentIllumin;
 
 				divisor = (FOUNDATION_ILLUMIN + prev - 
@@ -2225,14 +1890,6 @@ BOOL droidUpdateBuild(DROID *psDroid)
 				illumin = illumin * divisor;
 				mapTile(mapX+i, mapY+j)->illumination = (UBYTE)illumin;
 
-#else
-				FRACT	illumin;
-				MAPTILE *map;
-
-				map=mapTile(mapX+i,mapY+j);
-				illumin = FRACTdiv_1(MAKEFRACT(map->illumination),divisor1);	// Calculate the old illumination before we built
-				map->illumination = (UBYTE)MAKEINT(FRACTmul_1(illumin,divisor2)); // new calculate the new adjust illumination
-#endif
 			}
 		}
 		prev = current;
@@ -2269,12 +1926,10 @@ BOOL droidUpdateBuild(DROID *psDroid)
 			psStruct->psCurAnim = animObj_Add( psStruct, ID_ANIM_DERIK, 0, 0 );
 		}*/
 
-#ifdef WIN32
 		if((bMultiPlayer) && myResponsibility(psStruct->player))
 		{
 			SendBuildFinished(psStruct);
 		}
-#endif
 
 		//only play the sound if selected player
 		if ((psStruct->player == selectedPlayer) &&
@@ -2288,9 +1943,7 @@ BOOL droidUpdateBuild(DROID *psDroid)
 		}
 		structureCompletedCallback(psStruct->pStructureType);
 
-#ifdef WIN32
 		audio_StopObjTrack( psDroid, ID_SOUND_CONSTRUCTION_LOOP );
-#endif
 		return FALSE;
 	}
 	else
@@ -2544,12 +2197,10 @@ BOOL droidUpdateDemolishing( DROID *psDroid )
 	/* check if structure is demolished */
 	if ( psStruct->currentBuildPts <= 0 )
 	{
-#ifdef WIN32
 		if(bMultiPlayer)
 		{
 			SendDemolishFinished(psStruct,psDroid);
 		}
-#endif
 
 		if(psStruct->pStructureType->type == REF_POWER_GEN)
 		{
@@ -3161,10 +2812,8 @@ BOOL loadDroidTemplates(SBYTE *pDroidData, UDWORD bufferSize)
 		pDroidDesign->aName[DROID_MAXNAME-1] = 0;
 #endif
 
-		//store the unique template id - NOT ON PSX
-#ifdef WIN32
+		//store the unique template id
 		pDroidDesign->multiPlayerID = templateID;
-#endif
 
 		//read in Body Name
 		componentName[0] = '\0';
@@ -3347,10 +2996,6 @@ BOOL loadDroidTemplates(SBYTE *pDroidData, UDWORD bufferSize)
 		//read in player id - Access decides the order -crap hey?
 		sscanf(pDroidData, "%d,%n", &player,&cnt);
                 pDroidData += cnt;
-
-#ifdef PSX
-		player=RemapPlayerNumber(player);	// remap player id for PSX version
-#endif
 
 	
 		//read in Propulsion Name
@@ -3782,18 +3427,16 @@ BOOL loadDroidWeapons(SBYTE *pWeaponData, UDWORD bufferSize)
 		sscanf(pWeaponData,"%[^','],%[^','],%d", &TemplateName, &WeaponName, &player);
 		//loop through each droid to compare the name
 
-		player=RemapPlayerNumber(player);	// for psx ...
+		player=RemapPlayerNumber(player);
 
 		/*if (!getResourceName(TemplateName))
 		{
 			return FALSE;
 		}*/
-#ifdef WIN32
 		if (!getDroidResourceName(TemplateName))
 		{
 			return FALSE;
 		}
-#endif
 		if (!getResourceName(WeaponName))
 		{
 			return FALSE;
@@ -3881,11 +3524,7 @@ BOOL loadDroidWeapons(SBYTE *pWeaponData, UDWORD bufferSize)
 
 	if (SkippedWeaponCount > 0)
 	{
-#ifdef PSX
-		DBPRINTF(("Illegal player number in %d droid weapons\n",SkippedWeaponCount));
-#else
 		DBERROR(("Illegal player number in %d droid weapons",SkippedWeaponCount));
-#endif
 	}
 
 //	FREE(pStartWeaponData);
@@ -4825,9 +4464,6 @@ void templateSetParts(DROID *psDroid,DROID_TEMPLATE *psTemplate)
 {
 //	UDWORD inc;
 
-#ifdef PSX
-	psTemplate->NameHash=0;
-#endif
 	psTemplate->droidType = psDroid->droidType;
 
     //can only have one weapon now
@@ -4942,13 +4578,8 @@ UDWORD fillTemplateList(DROID_TEMPLATE **ppList, STRUCTURE *psFactory, UDWORD li
 	return count;
 }
 
-#ifdef WIN32
 #define DROIDPLAYER1 (6)
 #define DROIDPLAYER2 (7)
-#else
-#define DROIDPLAYER1 (3)
-#define DROIDPLAYER2 (4)	// not used on psx
-#endif
 //determines the best IMD to draw for the droid - A TEMP MEASURE!
 /*void setDroidIMD(DROID *psDroid)
 {
@@ -5045,12 +4676,10 @@ UDWORD fillTemplateList(DROID_TEMPLATE **ppList, STRUCTURE *psFactory, UDWORD li
 		}
 	}
 	//fail safe in case haven't managed to work out a valid number!
-#ifdef WIN32		// currently psx only has 2 droid imds .. so this check will not work
 	if (imdNum > NUM_DROID_TYPES - 1)
 	{
 		imdNum = 0;
 	}
-#endif
 	psDroid->sDisplay.imd = BODY_IMD(psDroid, psDroid->player);
 	psDroid->imdNum = imdNum; // use the imdnum to define which body and which turret
 }*/
@@ -5414,10 +5043,6 @@ BOOL calcDroidMuzzleLocation(DROID *psDroid, iVector *muzzle)
 
 	if(psShape AND psShape->nconnectors)
 	{
-
-
-#ifdef WIN32
-		// This code has not been translated to the PSX Yet !!!!                                     (sorry)
 		pie_MatBegin();
 
 		pie_TRANSLATE(psDroid->x,-(SDWORD)psDroid->z,psDroid->y);
@@ -5451,48 +5076,7 @@ BOOL calcDroidMuzzleLocation(DROID *psDroid, iVector *muzzle)
 		muzzle->z = -muzzle->z;
 
 		pie_MatEnd();
-
-#else
-
-// THIS NEEDS FINISHING/MAKEING WORK....
- 
- 		// psx version of the code
- 		psxiV_MatrixBegin();
- 
- 		psxiV_TRANSLATE(psDroid->x,psDroid->y,psDroid->z);
-
-		geomRotateMatrixYXZ(DEG(psDroid->roll),DEG(psDroid->pitch),DEG(- (SDWORD) psDroid->direction));
-//		psxiV_MatrixRotateY(DEG(psDroid->pitch));
-//		psxiV_MatrixRotateX(DEG(psDroid->roll));
-//		psxiV_MatrixRotateZ(DEG(- (SDWORD) psDroid->direction));
- 		
- 		scaleMatrix(DROID_SCALE);
-
- 		psxiV_TRANSLATE( psShape->connectors->x, psShape->connectors->y,
- 					  psShape->connectors->z );
- 
-		geomRotateMatrixYXZ(DEG(psDroid->turretPitch),DEG(-(SDWORD)psDroid->turretRotation),DEG(0));
-//		psxiV_MatrixRotateY(DEG(-(SDWORD)psDroid->turretRotation));
-//		psxiV_MatrixRotateX(DEG(psDroid->turretPitch));
-//		psxiV_MatrixRotateZ(DEG(0));
- 
- 		psxIV_GetTranslate(&muzzle->x,&muzzle->y,&muzzle->z);
- 
- /*	// hmm
- 		barrel.x = 0;
- 		barrel.y = 0;
- 		barrel.z = 0;
- 		psxiV_ROTATE_TRANSLATE(barrel.x, barrel.y, barrel.z, muzzle->x, muzzle->y, muzzle->z);
- 		psxiV_MatrixEnd();
- */
-
-
-#endif
-
-
 	}
-		
-
   else
 	{
 		muzzle->x = psDroid->x;
@@ -5502,25 +5086,6 @@ BOOL calcDroidMuzzleLocation(DROID *psDroid, iVector *muzzle)
   return TRUE;
 }
 
-#ifdef PSX 
-void dumpDroids( void )
-{
-DROID	*psDroid;
-UDWORD	clan;
-	
-	/* Need to go through all the droid lists */
-	for(clan = 0; clan < MAX_PLAYERS; clan++)
-	{
-		for(psDroid = apsDroidLists[clan]; psDroid != NULL;
-			psDroid = psDroid->psNext)
-		{
-			DBPRINTF(("clan %d - droid [%p] height =%d\n",clan,psDroid,psDroid->z));
-			if (PTRVALID(psDroid,sizeof(DROID))!=TRUE) DBPRINTF((" ... non valid pointer\n"));
-
-		} // end for
-	} // end for clan
-} // end Fn
-#endif
 
 /* IF YOU USE THIS FUNCTION - NOTE THAT selectedPlayer's TEMPLATES ARE NOT USED!!!!
    gets a template from its name - relies on the name being unique (or it will 
@@ -5542,11 +5107,9 @@ DROID_TEMPLATE * getTemplateFromName(STRING *pName)
 	}
 
 #endif
-#ifdef WIN32
 	/*all droid and template names are now stored as the translated 
 	name regardless of RESOURCE_NAMES and STORE_RESOURCE_ID! - AB 26/06/98*/
 	getDroidResourceName(pName);
-#endif
 
 	for (player = 0; player < MAX_PLAYERS; player++)
 	{
@@ -5575,9 +5138,7 @@ DROID_TEMPLATE * getTemplateFromName(STRING *pName)
 #endif
 			{
                 //if template is selectedPlayers' it must be a CYBORG or we ignore it
-#ifdef WIN32
                 if (!bMultiPlayer)
-#endif
                 {
                     //if (player == selectedPlayer AND psCurr->droidType != DROID_CYBORG)
                     if (player == selectedPlayer AND
@@ -6576,7 +6137,6 @@ STRING* getTemplateName(DROID_TEMPLATE *psTemplate)
 	STRING *NewName;
 /*  - Performed in 	GetDefaultTemplateName   - with other droids 
 
-	// On the PSX the NameHash entry points to the name for database generated templates
 	// - user generated templates are NULL'ed
 	// We only want database name if it's a cyborg.
 	if(psTemplate->droidType == DROID_CYBORG) {
@@ -6650,7 +6210,6 @@ BOOL	droidIsDamaged(DROID *psDroid)
 	}
 }
 
-#ifdef WIN32
 BOOL getDroidResourceName(STRING *pName)
 {
 	UDWORD		id;
@@ -6666,7 +6225,6 @@ BOOL getDroidResourceName(STRING *pName)
 	
 	return TRUE;
 }
-#endif
 
 /*checks to see if an electronic warfare weapon is attached to the droid*/
 BOOL electronicDroid(DROID *psDroid)

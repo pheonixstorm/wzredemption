@@ -68,27 +68,6 @@ extern BOOL seq_AnySeqLeft(void);
 extern void seq_SetSubtitles(BOOL bNewState);
 extern BOOL seq_GetSubtitles(void);
 
-
-
-#ifdef WIN32
 /*returns the next sequence in the list to play*/
 extern void seq_StartNextFullScreenVideo(void);
-#else
-
-// PlayStream return values.
-typedef enum _stre
-{
-	PLAYSTR_END,
-	PLAYSTR_USER,		// user selected exit
-	PLAYSTR_ERROR,
-} STREAM_RETURN;
-
-
-STREAM_RETURN seq_StartFullScreenVideo(char* videoFile, char* pAudio, char *pText);
-
-#endif
-
- 
 #endif	//SeqDisp.h
-
-

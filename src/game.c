@@ -1,7 +1,3 @@
-/*
-	ALL PSX, HASH_NAMES AND WIN32 excluded stuff removed - Alex M.
-*/
-
 /* Standard library headers */
 #include <stdio.h>
 #include <direct.h>	   
@@ -1216,7 +1212,7 @@ static BOOL loadSaveFeatureV14(UBYTE *pFileData, UDWORD filesize, UDWORD numFeat
 static BOOL loadSaveFeatureV(UBYTE *pFileData, UDWORD filesize, UDWORD numFeatures, UDWORD version);
 static BOOL writeFeatureFile(STRING *pFileName);
 
-BOOL loadTerrainTypeMap(UBYTE *pFileData, UDWORD filesize);		// now used in gamepsx.c aswell
+BOOL loadTerrainTypeMap(UBYTE *pFileData, UDWORD filesize);	
 static BOOL writeTerrainTypeMapFile(STRING *pFileName);
 
 static BOOL loadSaveCompList(UBYTE *pFileData, UDWORD filesize);
@@ -1284,10 +1280,10 @@ char *getSaveStructNameV(SAVE_STRUCTURE *psSaveStructure)
 /*This just loads up the .gam file to determine which level data to set up - split up
 so can be called in levLoadData when starting a game from a load save game*/
 
-// GameIsLevelStart is TRUE when we are starting a new level from the game data (i.e. WDG data not memcard on PSX)
+// GameIsLevelStart is TRUE when we are starting a new level from the game data
 
 //
-// GameIsLevelStart is always TRUE on both PC & PSX versions !!!
+// GameIsLevelStart is always TRUE !!!
 //
 
 // -----------------------------------------------------------------------------------------
@@ -1332,7 +1328,7 @@ error:
 
 
 // -----------------------------------------------------------------------------------------
-// Load a file from a save game into the psx. 
+// Load a file from a save game. 
 // This is divided up into 2 parts ...
 //
 // if it is a level loaded up from CD then UserSaveGame will by false
@@ -2057,8 +2053,6 @@ BOOL loadGame(STRING *pGameToLoad, BOOL keepObjects, BOOL freeMem, BOOL UserSave
 			goto error;
 		}
 
-		// on the PSX we check for a fail ... in case we run out of mem (likely!)
-		// well if it is good enough for the PSX it's good enough for the PC - John.
 		if (!mapLoad(pFileData, fileSize))
 		{
 			DBPRINTF(("loadgame: Fail7\n"));
@@ -2070,16 +2064,12 @@ BOOL loadGame(STRING *pGameToLoad, BOOL keepObjects, BOOL freeMem, BOOL UserSave
 /*		aFileName[fileExten] = '\0';
 		strcat(aFileName, "gates.txt");
 		// Load in the chosen file data
-#ifdef WIN32
 		pFileData = DisplayBuffer;
 		if (!loadFileToBuffer(aFileName, pFileData, displayBufferSize, &fileSize))
 		{
 			DBPRINTF(("loadgame: Failed to load gates.txt\n"));
 			goto error;
 		}
-#else
-		if (!LoadGameLoad(aFileName,&pFileData,&fileSize,UserSaveGame)) goto error;
-#endif
 
 		if (!gwLoadGateways(pFileData, fileSize))
 		{
@@ -2118,16 +2108,12 @@ BOOL loadGame(STRING *pGameToLoad, BOOL keepObjects, BOOL freeMem, BOOL UserSave
 		aFileName[fileExten] = '\0';
 		strcat(aFileName, "resState.bjo");
 		// Load in the chosen file data 
-//#ifdef WIN32
 		pFileData = DisplayBuffer;
 		if (!loadFileToBuffer(aFileName, pFileData, displayBufferSize, &fileSize))
 		{
 			DBPRINTF(("loadgame: Fail32\n"));
 			goto error;
 		}
-//#else
-//		if (!LoadGameLoad(aFileName,&pFileData,&fileSize,UserSaveGame)) goto error;
-//#endif
 
 		//load the research status data
 		if (pFileData)
@@ -3254,7 +3240,6 @@ BOOL gameLoad(UBYTE *pFileData, UDWORD filesize)
 
 
 // -----------------------------------------------------------------------------------------
-// Get campaign number stuff is not needed in this form on the PSX (thank you very much)
 BOOL getCampaignV(UBYTE *pFileData, UDWORD filesize, UDWORD version)
 {
 	SAVE_GAME		*psSaveGame;
@@ -3333,7 +3318,6 @@ BOOL getCampaignV(UBYTE *pFileData, UDWORD filesize, UDWORD version)
 
 // -----------------------------------------------------------------------------------------
 // Returns the campaign number  --- apparently this is does alot less than it look like
-    /// it now does even less than it looks like on the psx ... cause its pc only
 UDWORD getCampaign(STRING *pGameToLoad, BOOL *bSkipCDCheck)
 {
 	UBYTE			*pFileData = NULL;

@@ -17,11 +17,6 @@
 #include "text.h"
 #define WEAPON_TIME		100
 
-
-#ifdef PSX
-int sscanf(char *,char*, ...);
-#endif
-
 /* The stores for the different stats */
 BODY_STATS			*asBodyStats;
 BRAIN_STATS			*asBrainStats;
@@ -2537,7 +2532,6 @@ BOOL loadBodyPropulsionIMDs(SBYTE *pData, UDWORD bufferSize)
 }
 
 
-#ifdef WIN32
 static BOOL
 statsGetAudioIDFromString( STRING *szStatName, STRING *szWavName, SDWORD *piWavID )
 {
@@ -2564,22 +2558,15 @@ statsGetAudioIDFromString( STRING *szStatName, STRING *szWavName, SDWORD *piWavI
 
 	return TRUE;
 }
-#endif
 
 
 /*Load the weapon sounds from the file exported from Access*/
 BOOL loadWeaponSounds(SBYTE *pSoundData, UDWORD bufferSize)
 {
-//#ifdef PSX
-//#warning "loadWeaponSounds : NOT IMPLEMENTED ON PSX"
-//	return TRUE;
-//#else
 	//SBYTE			*pData;
 	SDWORD			NumRecords = 0, i, weaponSoundID, explosionSoundID, inc, iDum;
 	STRING			WeaponName[MAX_NAME_SIZE];
-#ifdef WIN32
 	STRING			szWeaponWav[MAX_NAME_SIZE],	szExplosionWav[MAX_NAME_SIZE];
-#endif
 
 #ifdef HASH_NAMES
 	UDWORD			HashedName;
@@ -3165,19 +3152,6 @@ UDWORD getSpeedFactor(UDWORD type, UDWORD propulsionType)
 	
 	pTerrainTable += (type * NUM_PROP_TYPES + propulsionType);
 
-#ifdef PSX
-	{
-		// Limit min speed factor on PSX.
-		UWORD Factor = pTerrainTable->speedFactor;
-
-		if(Factor < 100) {
-			Factor = 100;
-		}
-
-		return Factor;
-	}
-#endif
-
 	return pTerrainTable->speedFactor;
 }
 
@@ -3453,18 +3427,6 @@ void getStatsDetails(UDWORD compType, BASE_STATS **ppsStats, UDWORD *pnumStats, 
 }
 
 
-
-#ifdef PSX
-SDWORD	getCompFromName(UDWORD compType, STRING *pName)
-{
-//	DBPRINTF(("getcompfromname [%s]\n",pName));
-	return(getCompFromHash(compType,HashString(pName)));
-}
-#else
-
-
-
-
 //get the component Inc for a stat based on the name and type
 //returns -1 if record not found
 SDWORD	getCompFromName(UDWORD compType, STRING *pName)
@@ -3492,10 +3454,6 @@ SDWORD	getCompFromName(UDWORD compType, STRING *pName)
 	//return -1 if record not found or an invalid component type is passed in
 	return -1;
 }
-
-
-#endif
-
 
 #ifdef HASH_NAMES
 //get the component Inc for a stat based on the name and type

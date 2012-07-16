@@ -21,15 +21,13 @@
 #include "pieFunc.h"
 #include "rendMode.h"
 #include "bspfunc.h"
-#include "E3Demo.h"	// on the psx?
+#include "E3Demo.h"	// DELETEME ?
 #include "Loop.h"
-#ifdef WIN32					
 #include "Atmos.h"
 #include "RayCast.h"
 #include "Levels.h"
 #ifdef JEREMY
 #include "groundMist.h"
-#endif
 #endif
 /* Includes from PUMPKIN stuff */
 #include "Frame.h"

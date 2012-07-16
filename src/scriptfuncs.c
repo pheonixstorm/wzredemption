@@ -65,10 +65,6 @@
 #include "projectile.h"
 #include "Cluster.h"
 
-#ifdef PSX
-#include "dcache.h"
-#endif
-
 //used in the set nogoArea and LandingZone functions - use the ones defined in Map.h
 //#define MAX_MAP_WIDTH		192
 //#define MAX_MAP_HEIGHT		128
@@ -3089,12 +3085,6 @@ BOOL scrGameOverMessage(void)
 	return TRUE;
 }
 
-
-#ifdef PSX
-UBYTE OutroMovie[] = "misc\\outro.str";
-UBYTE OutroText[] = "misc\\outro.txa";
-#endif
-
 // -----------------------------------------------------------------------------------------
 //function to call when the game is over
 BOOL scrGameOver(void)
@@ -3108,10 +3098,8 @@ BOOL scrGameOver(void)
 
     /*this function will only be called with gameOver = TRUE when at the end of 
     the game so we'll just hard-code what happens!*/
-#ifdef WIN32
     //don't want this in multiplayer...
     if (!bMultiPlayer)
-#endif
     {
         if (gameOver == TRUE AND !bInTutorial)
         {
@@ -3119,18 +3107,8 @@ BOOL scrGameOver(void)
 		    setScriptWinLoseVideo(PLAY_WIN);
 
     	    seq_ClearSeqList();
-#ifdef WIN32
 	        seq_AddSeqToList("outro.rpl",NULL,"outro.txa", FALSE,0);
 	        seq_StartNextFullScreenVideo();
-#else
-			// Set the stack pointer to point to the alternative stack which is'nt limited to 1k.
-//	        seq_AddSeqToList("misc\\outro.str",NULL,"misc\\outro.txa", FALSE,0);
-		
-			SetSpAlt();
-	        seq_AddSeqToList(OutroMovie,NULL,OutroText, FALSE,0);
-	        seq_StartNextFullScreenVideo();
-			SetSpAltNormal();
-#endif
         }
     }
 
@@ -3240,10 +3218,7 @@ BOOL scrPlayBackgroundAudio(void)
 		return FALSE;
 	}
 
-#ifdef WIN32
 	cdspan_PlayInGameAudio(pText, iVol);
-#endif
-
 	return TRUE;
 	
 }
@@ -3259,45 +3234,29 @@ BOOL scrPlayCDAudio(void)
 		return FALSE;
 	}
 
-#ifdef WIN32
-
-#if defined(WIN32) && !defined(I_LIKE_LISTENING_TO_CDS)
 	cdAudio_PlayTrack( iTrack );	
-#endif
-//#ifdef PSX
-//	cdAudio_PlayTrack( iTrack );	
-//
-//#endif
-#endif	// Playstation CD audio no hardcoded.
+
 	return TRUE;
 }
 
 // -----------------------------------------------------------------------------------------
 BOOL scrStopCDAudio(void)
 {
-#ifdef WIN32
-#if defined(WIN32) && !defined(I_LIKE_LISTENING_TO_CDS)
 	cdAudio_Stop();
-#endif
-#endif	// Playstation CD audio no hardcoded.
 	return TRUE;
 }
 
 // -----------------------------------------------------------------------------------------
 BOOL scrPauseCDAudio(void)
 {
-#if defined(WIN32) && !defined(I_LIKE_LISTENING_TO_CDS)
 	cdAudio_Pause();
-#endif
 	return TRUE;
 }
 
 // -----------------------------------------------------------------------------------------
 BOOL scrResumeCDAudio(void)
 {
-#if defined(WIN32) && !defined(I_LIKE_LISTENING_TO_CDS)
 	cdAudio_Resume();
-#endif
 	return TRUE;
 }
 
@@ -4602,19 +4561,12 @@ BOOL scrSetRadarZoom(void)
 		return TRUE;
 	}
 
-	// MAX_RADARZOOM is different on PC and PSX
+	// MAX_RADARZOOM
 	if (level < 0 || level > 2)
 	{
 		ASSERT((FALSE, "scrSetRadarZoom: zoom level out of range"));
 		return FALSE;
 	}
-
-#ifdef PSX
-	if (level == 2)
-	{
-		level = 1;
-	}
-#endif
 
 	SetRadarZoom((UWORD)level);
 
@@ -4645,9 +4597,7 @@ BOOL scrSetMissionTime(void)
 	}
 	//store the value
 	mission.time = time;
-#ifdef WIN32		// ffs ab    ... but shouldn't this be on the psx ?
     setMissionCountDown();
-#endif
 
 	//add the timer to the interface
 	if (mission.time >= 0)
@@ -4730,9 +4680,7 @@ BOOL scrSetReinforcementTime(void)
     //make sure the timer is not there if the reinforcement time has been set to < 0
     if (time < 0)
     {
-#ifdef WIN32
         intRemoveTransporterTimer();
-#endif
         /*only remove the launch if haven't got a transporter droid since the 
         scripts set the time to -1 at the between stage if there are not going 
         to be reinforcements on the submap  */
@@ -4791,9 +4739,7 @@ BOOL scrSetAllStructureLimits(void)
 	for (i = 0; i < numStructureStats; i++)
 	{
 		psStructLimits[i].limit = (UBYTE)limit;
-#ifdef WIN32
 		psStructLimits[i].globalLimit = (UBYTE)limit;
-#endif
 	}
 
 	return TRUE;
@@ -5093,7 +5039,6 @@ UDWORD	tileNum;
 		return(FALSE);
 	}
 
-#ifdef WIN32
 	if(tileNum > 96)
 	{
 		ASSERT((FALSE,"SCRIPT : Water tile number too high in scrSetWaterTile"));
@@ -5101,7 +5046,6 @@ UDWORD	tileNum;
 	}
 
 	setUnderwaterTile(tileNum);
-#endif
 	return(TRUE);
 }
 // -----------------------------------------------------------------------------------------
@@ -5115,7 +5059,6 @@ UDWORD	tileNum;
 		return(FALSE);
 	}
 
-#ifdef WIN32
 	if(tileNum > 96)
 	{
 		ASSERT((FALSE,"SCRIPT : Rubble tile number too high in scrSetWaterTile"));
@@ -5123,7 +5066,6 @@ UDWORD	tileNum;
 	}
 
 	setRubbleTile(tileNum);
-#endif
 	return(TRUE);
 }
 // -----------------------------------------------------------------------------------------
@@ -5137,19 +5079,15 @@ UDWORD	campaignNumber;
 		return(FALSE);
 	}
 
-#ifdef WIN32
 	setCampaignNumber(campaignNumber);
-#endif
 	return(TRUE);
 }
 // -----------------------------------------------------------------------------------------
-#ifdef WIN32
 BOOL	scrGetUnitCount( void )
 {
 	return TRUE;
 }
 
-#endif
 // -----------------------------------------------------------------------------------------
 // Tests whether a structure has a certain module for a player. Tests whether any structure
 // has this module if structure is null
@@ -5401,10 +5339,6 @@ BOOL scrAddTemplate(void)
 	{
 		return FALSE;
 	}
-#ifdef PSX
-	ASSERT((FALSE,"ScrAddTemplate: Not on PSX"));
-	stackPushResult(VAL_BOOL,FALSE);
-#else
 	if (player >= MAX_PLAYERS)
 	{
 		ASSERT((FALSE, "scrAddTemplate:player number is too high"));
@@ -5427,7 +5361,6 @@ BOOL scrAddTemplate(void)
 			return FALSE;
 		}
 	}
-#endif
 	return TRUE;
 }
 
@@ -5679,9 +5612,6 @@ BOOL scrGetGameStatus(void)
 
 		case STATUS_BattleMapViewEnabled:
 //			if (driveTacticalActive()==TRUE) result=TRUE;
-#ifdef PSX
-			if (driveWasDriving()==TRUE) result=TRUE;
-#endif 
 
 			if (result==TRUE)
 			{
