@@ -58,7 +58,7 @@
 #include "multistat.h"
 #include "netplay.h"
 
-#define VERSION_STRING	"VER 1.10.0.22"
+#define VERSION_STRING	"VER 1.10.0.25"
 
 extern BOOL bSubtitles;
 
