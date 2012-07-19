@@ -1,7 +1,12 @@
-/*
- * WinMain.c
- *
- */
+// Warzone 2100 . Pumpkin Studios
+
+// Quick Note on defines
+//
+// covermount		- Single Player Demo
+//		noninteract	- incomplete. used with covermount to stop player input
+//		multidemo	- used with covermount to make a multiplayer demo.
+//
+
 #include <direct.h>
 #include "Frame.h"
 #include "Widget.h"
@@ -40,15 +45,6 @@
 #include "wdg.h"
 #include "MultiWDG.h"
 
-
-// Warzone 2100 . Pumpkin Studios
-
-// Quick Note on defines
-//
-// covermount		- Single Player Demo
-//		noninteract	- incomplete. used with covermount to stop player input
-//		multidemo	- used with covermount to make a multiplayer demo.
-//
 
 UDWORD	gameStatus = GS_TITLE_SCREEN;	// Start game in title mode.
 UDWORD	lastStatus = GS_TITLE_SCREEN;
@@ -273,19 +269,11 @@ init://jump here from the end if re_initialising
 
 	if (war_GetRendMode() == REND_MODE_GLIDE)
 	{
-#ifdef COVERMOUNT
-		pie_LoadBackDrop(SCREEN_COVERMOUNT,TRUE);
-#else
 		pie_LoadBackDrop(SCREEN_RANDOMBDROP,TRUE);
-#endif
 	}
 	else
 	{
-#ifdef COVERMOUNT
-		pie_LoadBackDrop(SCREEN_COVERMOUNT,FALSE);
-#else
 		pie_LoadBackDrop(SCREEN_RANDOMBDROP,FALSE);
-#endif
 	}
 	pie_SetFogStatus(FALSE);
 	pie_ScreenFlip(CLEAR_BLACK);
@@ -540,17 +528,15 @@ init://jump here from the end if re_initialising
 								DBPRINTF(("GAMECODE_QUITGAME\n"));
 								gameStatus = GS_TITLE_SCREEN;
 								Restart = TRUE;
-#ifdef NON_INTERACT
+/*#ifdef NON_INTERACT
 								quit = TRUE;
-#endif
+#endif*/
 
-#ifdef WIN32
 								if(NetPlay.bLobbyLaunched)
 								{
 //									changeTitleMode(QUIT);
 									quit = TRUE;
 								}
-#endif
 								break;
 							case GAMECODE_FASTEXIT:
 								DBPRINTF(("GAMECODE_FASTEXIT\n"));

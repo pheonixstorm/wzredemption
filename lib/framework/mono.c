@@ -5,8 +5,6 @@
  *
  */
 
-#ifdef WIN32
-
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
@@ -487,4 +485,3 @@ static UBYTE	DBug_CheckFormatChar(UBYTE	ub_percentchar)
 	return (ub_isformatchar);
 }
 
-#endif

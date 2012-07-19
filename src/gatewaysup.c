@@ -3,7 +3,6 @@
  * Only needed for map preprocessing.
  *
  */
-#ifdef WIN32
 // segment printf's
 //#define DEBUG_GROUP1
 // stack printf's
@@ -506,11 +505,7 @@ BOOL gwCreateBlankZoneMap(void)
 	}
 	for(i=0; i< gwMapHeight(); i++)
 	{
-#ifdef WIN32
 		apRLEZones[i] = MALLOC(gwMapWidth() * 2);
-#else
-		apRLEZones[i] = MALLOC(1 * 2);		// we need to get some memory back
-#endif
 		if (apRLEZones[i] == NULL)
 		{
 			DBERROR(("gwCreateBlankZoneMap: Out of memory"));
@@ -653,4 +648,3 @@ BOOL gwFloodBlock(SDWORD x, SDWORD y)
 
 
 
-#endif

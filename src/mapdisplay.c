@@ -18,10 +18,8 @@
 #include "ivisdef.h"
 #include "piedef.h"
 #include "piestate.h"
-#ifdef WIN32
 #include "piemode.h"
 #include "pietexture.h"
-#endif
 #include "pieMatrix.h"
 #include "vid.h"
 
@@ -148,13 +146,11 @@ void	releaseMapSurface(iSurface *pSurface)
 	/* Free up old alloaction if necessary */
 	if(pSurface!=NULL)
 	{
-#ifdef WIN32
 		/* Free up old buffer if necessary */
 		if(pSurface->buffer!=NULL)
 		{
 			FREE(pSurface->buffer);
 		}
-#endif
 		FREE(pSurface);
 	}
 }
@@ -262,7 +258,6 @@ void	drawMapTile(SDWORD i, SDWORD j)
 {
 	UDWORD		surfaceWidth, extraWidth, height, width;
 	UDWORD		*toClear;
-#ifdef WIN32
 	toClear = (UDWORD *)surface->buffer;
 	//make sure width is multiple of 4
 	surfaceWidth = surface->width & 0xfffc;
@@ -281,7 +276,6 @@ void	drawMapTile(SDWORD i, SDWORD j)
 		toClear += extraWidth;
 	}
 
-#endif
 }
 */
 /*fills the map buffer with intelColours prior to drawing in it*/
@@ -532,7 +526,6 @@ void	tileLayouts(int texture)
 // Render a Map Surface to display memory.
 void renderMapSurface(iSurface *pSurface, UDWORD x, UDWORD y, UDWORD width, UDWORD height)
 {
-#ifdef WIN32
 	if (!pie_Hardware())
 	{
 		pie_LocalRenderBegin();
@@ -541,7 +534,6 @@ void renderMapSurface(iSurface *pSurface, UDWORD x, UDWORD y, UDWORD width, UDWO
 
 		pie_LocalRenderEnd();
 	}
-#endif
 }
 
 /* renders up to two IMDs into the surface - used by message display in Intelligence Map 

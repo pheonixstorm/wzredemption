@@ -60,12 +60,8 @@ typedef struct _fp_node
 FP_NODE		*psOpen;
 
 // Size of closed hash table
-#ifdef WIN32
 //#define FPATH_TABLESIZE		20671
 #define FPATH_TABLESIZE		4091
-#else
-#define FPATH_TABLESIZE		4091
-#endif
 
 
 #if OPEN_LIST == 2

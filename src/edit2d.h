@@ -1,6 +1,5 @@
 #ifdef DISP2D
 
-#ifdef WIN32		// only needed on PC
 /*
  * Edit2D.h
  *
@@ -35,6 +34,5 @@ extern BOOL writeMapFile(STRING *pFileName);
 
 #endif
 
-#endif
 
 #endif

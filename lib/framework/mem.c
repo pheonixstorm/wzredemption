@@ -34,13 +34,8 @@
 #define SHOW_KB_LIMIT	(0x400)
 
 /* What functions to use for the real malloc and free */
-#ifdef WIN32
 #define RMALLOC		malloc
 #define RFREE		free
-#else
-#define RMALLOC		malloc3
-#define RFREE		free3
-#endif
 
 /* The root of the memory treap */
 static MEM_NODE		*psMemRoot = NULL;

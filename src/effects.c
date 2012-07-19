@@ -682,13 +682,11 @@ void	updateWaypoint(EFFECT *psEffect)
 // ----------------------------------------------------------------------------------------
 void	updateFirework(EFFECT *psEffect)
 {
-#ifdef WIN32
-UDWORD	height;
-UDWORD	xDif,yDif,radius,val;
-iVector	dv;
-UDWORD	dif;
-UDWORD	drop;
-
+    UDWORD	height;
+    UDWORD	xDif,yDif,radius,val;
+    iVector	dv;
+    UDWORD	dif;
+    UDWORD	drop;
 	
 	/* Move it */
 	psEffect->position.x += (psEffect->velocity.x * fraction);
@@ -807,7 +805,6 @@ UDWORD	drop;
 	}
 
 
-#endif
 }
 // ----------------------------------------------------------------------------------------
 void	updateSatLaser(EFFECT *psEffect)
@@ -855,21 +852,11 @@ LIGHT	light;
 
 
 		/* Now, add the column of light */
-#ifdef WIN32
 		for(i=startHeight; i<endHeight; i+=56)
-#else
-		for(i=startHeight; i<endHeight; i+=56*4)
-#endif
 		{
-#ifdef WIN32
 			radius = 80;
 			/* Add 36 around in a circle..! */
 			for(val = 0; val<=180; val+=30)
-#else
-			radius = 40;
-//			for(val = 0; val<=180; val+=180)
-			val = 0;
-#endif
 			{
    				xDif = radius * (SIN(DEG(val)));
    				yDif = radius * (COS(DEG(val)));
@@ -1823,7 +1810,6 @@ UDWORD	timeSlice;
 /* Renders the standard explosion effect */
 void	renderExplosionEffect(EFFECT *psEffect)
 {
-#ifdef WIN32
 	iVector		dv;
 	SDWORD		rx,rz;
 	SDWORD	percent;
@@ -1907,59 +1893,17 @@ void	renderExplosionEffect(EFFECT *psEffect)
 
 
 	iV_MatrixEnd();
-#else
-	PIE PieParams;
-	int Size = psEffect->size;
-
-
-	if(psEffect->type == EXPLOSION_TYPE_LAND_LIGHT)
-	{
-		if(rejectLandLight(psEffect->specific))
-		{
-			return;
-		}
-	}
-
-
-	PieParams.Flags = PIE_COLOURED | PIE_TRANSPARENT;
-	if(psEffect->type == EXPLOSION_TYPE_LASER) {
-		PieParams.ColourRGB[0] = rand()&255;
-		PieParams.ColourRGB[1] = rand()&255;
-		PieParams.ColourRGB[2] = rand()&255;
-	} else if(psEffect->type == EXPLOSION_TYPE_POWERMODULE) {
-		PieParams.ColourRGB[0] = 32;
-		PieParams.ColourRGB[1] = 32;
-		PieParams.ColourRGB[2] = 128;
-	} else if(psEffect->type == EXPLOSION_TYPE_RESEARCHMODULE) {
-		PieParams.ColourRGB[0] = 32;
-		PieParams.ColourRGB[1] = 128;
-		PieParams.ColourRGB[2] = 32;
-	} else if(psEffect->type == EXPLOSION_TYPE_LAND_LIGHT) {
-		PieParams.ColourRGB[0] = 		//64; 
-		PieParams.ColourRGB[1] = 		//0;
-		PieParams.ColourRGB[2] = 64;	//0;
-		Size /= 4;
-	} else {
-		PieParams.ColourRGB[0] = 
-		PieParams.ColourRGB[1] = 
-		PieParams.ColourRGB[2] = 64;
-	}
-	PieParams.TransMode = TRANSMODE_ADDITIVE;
-
-	rendEffect(psEffect,Size,&PieParams);
-#endif
 }
 
 // ----------------------------------------------------------------------------------------
 void	renderGravitonEffect(EFFECT *psEffect)
 {
-#ifdef WIN32
-iVector	vec;
-SDWORD	rx,rz;
-UDWORD  brightness, specular;
-//SDWORD	centreX,centreZ;
-  //	centreX = ( player.p.x + ((visibleXTiles/2)<<TILE_SHIFT) );
-  //	centreZ = ( player.p.z + ((visibleYTiles/2)<<TILE_SHIFT) );
+    iVector	vec;
+    SDWORD	rx,rz;
+    UDWORD  brightness, specular;
+    //SDWORD	centreX,centreZ;
+    //	centreX = ( player.p.x + ((visibleXTiles/2)<<TILE_SHIFT) );
+    //	centreZ = ( player.p.z + ((visibleYTiles/2)<<TILE_SHIFT) );
 
 	/* Establish world position */
 	vec.x = ((UDWORD)MAKEINT(psEffect->position.x) - player.p.x) - terrainMidX * TILE_UNITS;
@@ -2000,14 +1944,6 @@ UDWORD  brightness, specular;
 
 	/* Pop the matrix */
 	iV_MatrixEnd();
-#else
-	PIE PieParams;
-
-	PieParams.Flags=PIE_PALETTEID;
-	PieParams.PaletteID = psEffect->frameNumber&3;
-
-	rendEffect(psEffect,100,&PieParams);	//NULL);
-#endif
 }
 
 // ----------------------------------------------------------------------------------------

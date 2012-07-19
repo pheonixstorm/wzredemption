@@ -28,9 +28,7 @@
 #include "Trig.h"
 #include "FrameResource.h"
 #include "StrRes.h"
-#ifdef WIN32
 #include "DXInput.h"
-#endif
 #include "Block.h"
 #include "ListMacs.h"
 
@@ -129,7 +127,6 @@ BOOL loadFile2(STRING *pFileName, UBYTE **ppFileData, UDWORD *pFileSize, BOOL Al
 /* Save the data in the buffer into the given file */
 extern BOOL saveFile(STRING *pFileName, UBYTE *pFileData, UDWORD fileSize);
 
-#ifdef WIN32
 // load a file from disk into a fixed memory buffer
 extern BOOL loadFileToBuffer(STRING *pFileName, UBYTE *pFileBuffer, UDWORD bufferSize, UDWORD *pSize);
 // as above but returns quietly if no file found
@@ -138,7 +135,6 @@ extern BOOL loadFileToBufferNoError(STRING *pFileName, UBYTE *pFileBuffer, UDWOR
 extern SDWORD ftol(float f);
 extern BOOL	bRunningUnderGlide;
 
-#endif
 
 UINT HashString( char *String );
 UINT HashStringIgnoreCase( char *String );

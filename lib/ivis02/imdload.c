@@ -51,8 +51,6 @@ iIMDShape *iV_ProcessIMD(UBYTE **ppFileData, UBYTE *FileDataEnd, UBYTE *IMDpath,
 BOOL CheckColourKey( iIMDShape *psShape );
 
 /* Section removed. Obsolete and unsupported after VC8
-#ifdef WIN32
-// psx version is in sscanf.c
 
 int __cdecl _input (FILE *infile, const char *format, va_list arglist );
 
@@ -90,7 +88,6 @@ int __cdecl sscanf1 (
 
         return(retval);
 }
-#endif
 
 char GetCh1(UBYTE **data)
 {

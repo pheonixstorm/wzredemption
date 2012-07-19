@@ -12,13 +12,8 @@
 #define IDINTMAP_MSGVIEW		6002	//The message 3D view for the intelligence screen
 
 /*dimensions for PIE view section relative to IDINTMAP_MSGVIEW*/
-#ifdef WIN32
 #define	INTMAP_PIEWIDTH			238
 #define INTMAP_PIEHEIGHT		169
-#else
-#define	INTMAP_PIEWIDTH			238
-#define INTMAP_PIEHEIGHT		(169-24)
-#endif
 
 #define	INTMAP_TEXTWINDOWHEIGHT	(30)
 

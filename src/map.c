@@ -175,18 +175,9 @@ static int orth_pixinc[4];
 /* Look up table that returns the terrain type of a given tile texture */
 UBYTE terrainTypes[MAX_TILE_TEXTURES];
 
-
-#ifdef WIN32
 #define GETTILE_TEXTURE(tile) (tile->texture)
-#else
-#define GETTILE_TEXTURE(tile) (GetDword(&tile->texture))
-#endif
 
-#ifdef WIN32
 #define GETTILE_TEXTURE2(tile) (tile->texture)
-#else
-#define GETTILE_TEXTURE2(tile) (GetWord(&tile->texture))
-#endif
 
 /* pointer to a load map function - depends on version */
 BOOL (*pLoadMapFunc)(UBYTE *pFileData, UDWORD fileSize);
@@ -296,13 +287,8 @@ BOOL mapNew(UDWORD width, UDWORD height)
 		psTile++;
 	}
 	*/
-#ifdef WIN32
 	//environInit();
     environReset();
-#else
-	//initLighting();
-    initLighting(0, 0, mapWidth, mapHeight);
-#endif
 	/*set up the scroll mins and maxs - set values to valid ones for a new map*/
 	scrollMinX = scrollMinY = 0;
 	scrollMaxX = mapWidth;
@@ -366,18 +352,7 @@ BOOL mapLoadV2(UBYTE *pFileData, UDWORD fileSize)
 	psTileData = (MAP_SAVETILEV2 *)(pFileData + SAVE_HEADER_SIZE);
 	for(i=0; i< mapWidth * mapHeight; i++)
 	{
-#ifdef WIN32
 		psMapTiles[i].texture = GETTILE_TEXTURE2(psTileData);  
-#else
-		{
-			UWORD Texture;
-
-			Texture= (((UWORD)(psTileData->textureByte[1]))<<8);
-			Texture|= ((UWORD)(psTileData->textureByte[0]));
-			psMapTiles[i].texture=Texture;
-		}
-
-#endif
 
 
 //		psMapTiles[i].type = psTileData->type;
@@ -425,18 +400,7 @@ BOOL mapLoadV3(UBYTE *pFileData, UDWORD fileSize)
 	psTileData = (MAP_SAVETILEV2 *)(pFileData + SAVE_HEADER_SIZE);
 	for(i=0; i< mapWidth * mapHeight; i++)
 	{
-#ifdef WIN32
 		psMapTiles[i].texture = GETTILE_TEXTURE2(psTileData);  
-#else
-		{
-			UWORD Texture;
-
-			Texture= (((UWORD)(psTileData->textureByte[1]))<<8);
-			Texture|= ((UWORD)(psTileData->textureByte[0]));
-			psMapTiles[i].texture=Texture;
-		}
-
-#endif
 
 
 //		psMapTiles[i].type = psTileData->type;
@@ -467,7 +431,6 @@ BOOL mapLoadV3(UBYTE *pFileData, UDWORD fileSize)
 		psGate++;
 	}
 
-//#ifdef WIN32
 //	if (!gwProcessMap())
 //	{
 //		return FALSE;
@@ -478,7 +441,6 @@ BOOL mapLoadV3(UBYTE *pFileData, UDWORD fileSize)
 //	{
 //		return FALSE;
 //	}
-//#else
 	psZoneHeader = (ZONEMAP_SAVEHEADER*)psGate;
 
 	ASSERT(( (psZoneHeader->version == 1) || (psZoneHeader->version == 2),
@@ -540,7 +502,6 @@ BOOL mapLoadV3(UBYTE *pFileData, UDWORD fileSize)
 		DBERROR(("mapLoadV3: unexpected end of file"));
 		return FALSE;
 	}
-//#endif
 
 	LOADBARCALLBACK();	//	loadingScreenCallback();
 
@@ -789,16 +750,8 @@ BOOL mapSave(UBYTE **ppFileData, UDWORD *pFileSize)
 	psTile = psMapTiles;
 	for(i=0; i<mapWidth*mapHeight; i++)
 	{
-#ifdef WIN32
 		// don't save the noblock flag as it gets set again when the objects are loaded
 		psTileData->texture = (UWORD)(psTile->texture & (UWORD)~TILE_NOTBLOCKING);
-#else
-		{
-			UWORD Texture=psTile->texture;
-			psTileData->textureByte[0]=(UBYTE)(Texture&0xff);			
-			psTileData->textureByte[1]=(UBYTE)((Texture&0xff00)>>8);			
-		}
-#endif
 		psTileData->height = psTile->height;
 
 		psTileData = (MAP_SAVETILE *)((UBYTE *)psTileData + SAVE_TILE_SIZE);
@@ -913,15 +866,7 @@ BOOL mapSaveMission(UBYTE **ppFileData, UDWORD *pFileSize)
 	psTile = psMapTiles;
 	for(i=0; i<mapWidth*mapHeight; i++)
 	{
-#ifdef WIN32
 		psTileData->texture = psTile->texture;
-#else
-		{
-			UWORD Texture=psTile->texture;
-			psTileData->textureByte[0]=(UBYTE)(Texture&0xff);			
-			psTileData->textureByte[1]=(UBYTE)((Texture&0xff00)>>8);			
-		}
-#endif
 		psTileData->height = psTile->height;
 
 		psTileData = (MAP_SAVETILE *)((UBYTE *)psTileData + SAVE_TILE_SIZE);
@@ -1372,7 +1317,6 @@ extern SWORD map_Height(UDWORD x, UDWORD y)
 	ox = (x & (TILE_UNITS-1));
 	oy = (y & (TILE_UNITS-1));
 
-#ifdef WIN32
 	if(TERRAIN_TYPE(mapTile(tileX,tileY)) == TER_WATER)
 	{
 		bWaterTile = TRUE;
@@ -1390,7 +1334,6 @@ extern SWORD map_Height(UDWORD x, UDWORD y)
 		return((SEA_LEVEL + (dy*ELEVATION_SCALE)));
 		*/
 	}
-#endif
 
 	tileYOffset = (tileY * mapWidth);
 
@@ -1569,7 +1512,6 @@ UDWORD GetHeightOfMap(void)
 	return mapHeight;
 }
 
-#ifdef WIN32
 // -----------------------------------------------------------------------------------
 /* This will save out the visibility data */
 BOOL	writeVisibilityData( STRING *pFileName )
@@ -1696,5 +1638,3 @@ UBYTE				*pVisData;
 	return(TRUE);
 }
 // -----------------------------------------------------------------------------------
-#endif
-

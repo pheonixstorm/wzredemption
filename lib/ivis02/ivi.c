@@ -7,9 +7,7 @@
 //#include "ivi.h"
 //#include "v3d.h"
 #include "rendmode.h"
-#ifdef WIN32
 #include "pieMode.h"
-#endif
 //#include "geo.h"
 #include "bug.h"
 //#include "pio.h"
@@ -54,10 +52,10 @@ void iV_ShutDown(void)
 #endif
 
 	iV_DEBUG0("4\n");
-#ifdef WIN32
-	pie_ShutDown();
-#endif
-	iV_DEBUG0("5\n");
+
+    pie_ShutDown();
+
+    iV_DEBUG0("5\n");
 
 	iV_VideoMemoryUnlock();
 

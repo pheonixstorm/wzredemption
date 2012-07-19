@@ -1,4 +1,3 @@
-#ifdef WIN32
 /* Texture stuff. Calls 3dfxText functions in the 3dfx cases */
 /* Alex McLean, Pumpkin Studios, EIDOS Interactive, 1997 */
 
@@ -525,4 +524,3 @@ iColour		*psCurrentPalette;
 
 
 
-#endif

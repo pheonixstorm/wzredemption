@@ -41,9 +41,6 @@ LRESULT APIENTRY cdAudio_CheckTrackFinished( HWND hWnd, UINT uMsg,
 BOOL
 cdAudio_Open( void )
 { 
-#ifndef WIN32
-	return TRUE;
-#else
 	DWORD				dwReturn;
 	MCI_OPEN_PARMS		mciOpenParms;
 	MCI_SET_PARMS		mciSetParms;
@@ -73,7 +70,6 @@ cdAudio_Open( void )
 								(LPARAM) cdAudio_CheckTrackFinished );
 	
 	return TRUE;
-#endif
 } 
 
 /***************************************************************************/
@@ -81,14 +77,12 @@ cdAudio_Open( void )
 BOOL
 cdAudio_Close( void )
 { 
-#ifdef WIN32
 	MCI_GENERIC_PARMS	mciParams;
 
 	mciSendCommand( g_wDeviceID, MCI_CLOSE, 0, (DWORD) &mciParams );
 
 	/* unsubclass window */
 	SetWindowLong( GetActiveWindow(), GWL_WNDPROC, (LPARAM) fnOldWinProc );
-#endif
 
 	return TRUE;
 } 
@@ -98,9 +92,6 @@ cdAudio_Close( void )
 BOOL
 cdAudio_PlayTrack( SDWORD iTrack )
 { 
-#ifndef WIN32
-	return TRUE;
-#else
 	DWORD				dwReturn;
 	MCI_PLAY_PARMS		mciPlayParms;
 	MCI_GENERIC_PARMS	mciParams;
@@ -156,7 +147,6 @@ CDPlayError:
 
 	mciSendCommand( g_wDeviceID, MCI_CLOSE, 0, (DWORD) &mciParams );
 	return FALSE;
-#endif
 } 
 
 /***************************************************************************/
@@ -164,9 +154,6 @@ CDPlayError:
 BOOL
 cdAudio_Stop( void )
 { 
-#ifndef WIN32
-	return TRUE;
-#else
 	DWORD				dwReturn;
 	MCI_GENERIC_PARMS	mciParams;
 
@@ -178,7 +165,6 @@ cdAudio_Stop( void )
 	}
 
 	return TRUE;
-#endif
 } 
 
 /***************************************************************************/
@@ -186,9 +172,6 @@ cdAudio_Stop( void )
 BOOL
 cdAudio_Pause( void )
 { 
-#ifndef WIN32
-	return TRUE;
-#else
 	DWORD				dwReturn;
 	MCI_GENERIC_PARMS	mciParams;
 	MCI_STATUS_PARMS	mciStatusParams;
@@ -216,7 +199,6 @@ cdAudio_Pause( void )
 	
 	return TRUE;
 
-#endif
 } 
 
 /***************************************************************************/
@@ -224,9 +206,6 @@ cdAudio_Pause( void )
 BOOL
 cdAudio_Resume( void )
 { 
-#ifndef WIN32
-	return TRUE;
-#else
 	DWORD			dwReturn;
 	MCI_PLAY_PARMS	mciPlayParams;
 
@@ -246,7 +225,6 @@ cdAudio_Resume( void )
 	}
 
 	return TRUE;
-#endif
 } 
 
 /***************************************************************************/

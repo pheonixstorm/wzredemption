@@ -9,11 +9,7 @@
 
 
 // maximum number of WRF/WDG files
-#ifdef WIN32
 #define LEVEL_MAXFILES	9
-#else
-#define LEVEL_MAXFILES	8
-#endif
 
 // types of level datasets
 
@@ -23,19 +19,15 @@ enum _level_type
 	LDS_COMPLETE,		// all data required for a stand alone level
 	LDS_CAMPAIGN,		// the data set for a campaign (no map data)
 	LDS_CAMSTART,		// mapdata for the start of a campaign
-#ifndef COVERMOUNT
 	LDS_CAMCHANGE,		// data for changing between levels
 	LDS_EXPAND,			// extra data for expanding a campaign map
-#endif
 
 	LDS_BETWEEN,		// pause between missions
 	LDS_MKEEP,			// off map mission (extra map data)
 
-#ifndef COVERMOUNT
 	LDS_MCLEAR,			// off map mission (extra map data)
     LDS_EXPAND_LIMBO,   // expand campaign map using droids held in apsLimboDroids
     LDS_MKEEP_LIMBO,    // off map saving any droids (selectedPlayer) at end into apsLimboDroids
-#endif
 	LDS_NONE,			//flags when not got a mission to go back to or when 
 						//already on one - ****LEAVE AS LAST ONE****
 };

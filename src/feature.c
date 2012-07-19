@@ -673,12 +673,10 @@ BOOL featureDamage(FEATURE *psFeature, UDWORD damage, UDWORD weaponClass,
 			psFeature->body -= 1;
 		}
 	}
-#ifdef WIN32
 //	if(psFeature->sDisplay.imd->ymax > 300)
 //	{
 		psFeature->timeLastHit = gameTime;
 //	}
-#endif
 	return FALSE;
 
 }
@@ -783,13 +781,9 @@ FEATURE * buildFeature(FEATURE_STATS *psStats, UDWORD x, UDWORD y,BOOL FromSave)
 	//psFeature->subType = psStats->subType;
 	psFeature->body = psStats->body;
 	psFeature->player = MAX_PLAYERS+1;	//set the player out of range to avoid targeting confusions
-#ifdef WIN32
 	psFeature->bTargetted = FALSE;
 	psFeature->timeLastHit = 0;
-#endif
 
-
-#ifdef WIN32	
 	if(getRevealStatus())
 	{
 		vis = 0;
@@ -806,7 +800,6 @@ FEATURE * buildFeature(FEATURE_STATS *psStats, UDWORD x, UDWORD y,BOOL FromSave)
 			vis = 0;
 		}
 	}
-#endif
 	for(i=0; i<MAX_PLAYERS; i++)
 	{
 		psFeature->visible[i] = 0;//vis;

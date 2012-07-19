@@ -18,9 +18,7 @@
 #include "Message.h"
 #include "ResearchDef.h"
 #include "Audio.h"
-#ifdef WIN32
 #include "Multiplay.h"
-#endif
 #include "Text.h"
 #include "Levels.h"
 #include "ScriptVals.h"

@@ -16,10 +16,8 @@
 #include "pcx.h"
 #include "bitimage.h"
 
-#ifdef WIN32
 #include "texture.h"
 #include "warzoneConfig.h"
-#endif
 #include "tex.h"
 #include "textdraw.h"
 

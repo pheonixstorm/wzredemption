@@ -1408,17 +1408,7 @@ static void addGameOptions(BOOL bRedo)
 
 	}
 
-	//disable demo options
-#ifdef MULTIDEMO
-//	widgSetButtonState(psWScreen, MULTIOP_MAP,WEDBS_DISABLE);	
-//	widgSetButtonState(psWScreen, MULTIOP_MAP_ICON,WBUT_DISABLE);	
-
-	widgSetButtonState(psWScreen, MULTIOP_DEFENCE,WBUT_DISABLE);	
-//	widgSetButtonState(psWScreen, MULTIOP_ARENA,WBUT_DISABLE);
-	widgSetButtonState(psWScreen, MULTIOP_SKIRMISH,WBUT_DISABLE);
-#endif
-
-		return;
+	return;
 }
 
 // ////////////////////////////////////////////////////////////////////////////
@@ -1934,19 +1924,11 @@ VOID	stopJoining(void)
 
 			if (pie_GetRenderEngine() == ENGINE_GLIDE)
 			{
-#ifdef COVERMOUNT
-				pie_LoadBackDrop(SCREEN_COVERMOUNT,TRUE);
-#else
 				pie_LoadBackDrop(SCREEN_RANDOMBDROP,TRUE);
-#endif	
 			}
 			else
 			{
-#ifdef COVERMOUNT
-				pie_LoadBackDrop(SCREEN_COVERMOUNT,FALSE);
-#else
 				pie_LoadBackDrop(SCREEN_RANDOMBDROP,FALSE);
-#endif
 			}
 		}
 

@@ -82,7 +82,6 @@ void keyScanToString(KEY_CODE code, STRING *ascii, UDWORD maxStringSize)
 	GetKeyNameText((UDWORD)((UWORD)code<<16),ascii,maxStringSize);
 }
 
-
 /* Initialise the input module */
 void inputInitialise(void)
 {
@@ -134,14 +133,12 @@ void inputAddBuffer(UDWORD code, UDWORD count)
 	}
 }
 
-
 /* Clear the input buffer */
 void inputClearBuffer(void)
 {
 	pStartBuffer = pInputBuffer;
 	pEndBuffer = pInputBuffer;
 }
-
 
 /* Return the next key press or 0 if no key in the buffer.
  * The key returned will have been remaped to the correct ascii code for the
@@ -501,6 +498,7 @@ SDWORD mouseY(void)
 	return mouseYPos;
 }
 
+
 /* The next three are mutually exclusive */
 
 /* True if mouse wheel moved forward in last frame */
@@ -520,7 +518,6 @@ BOOL	mouseWheelStatic( void)
 {
 	return(bMouseWheelStatic);
 }
-
 
 /* This returns true if the mouse key is currently depressed */
 BOOL mouseDown(MOUSE_KEY_CODE code)

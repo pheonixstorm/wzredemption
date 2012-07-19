@@ -1946,37 +1946,18 @@ DBPRINTF(("INT_QUIT 1\n"));
 	{
 		retCode = INT_INTELNOSCROLL;
 	}*/
-#ifdef WIN32
 	else if (retID || intMode == INT_EDIT || intMode == INT_MISSIONRES || widgOverID != 0)
 	{
 		retCode = INT_INTERCEPT;
 	}
-#else
-	else if (retID || intMode == INT_MISSIONRES ||
-			 ((widgOverID != 0) && AllowWidgetIntercept(widgOverID)) )
-	{
-		retCode = INT_INTERCEPT;
-	}
-#endif
 
-//#ifdef WIN32
 //	else if (retID || intMode == INT_EDIT || intMode == INT_MISSIONRES || widgGetMouseOver(psWScreen) != 0)
 //	{
 //		retCode = INT_INTERCEPT;
 //	}
-//#else
-//	else if (retID || intMode == INT_MISSIONRES || widgGetMouseOver(psWScreen) != 0)
-//	{
-//		retCode = INT_INTERCEPT;
-//	}
-//#endif
 
-#ifdef WIN32
 	if(	(testPlayerHasLost() OR (testPlayerHasWon() AND !bMultiPlayer)) AND // yeah yeah yeah - I know....
         (intMode != INT_MISSIONRES) AND !getDebugMappingStatus())	
-#else
-	if(	(testPlayerHasLost() OR testPlayerHasWon()) AND (intMode != INT_MISSIONRES) )
-#endif
 	{
 		DBPRINTF(("PlayerHasLost Or Won\n"));
 		intResetScreen(TRUE);
@@ -2143,7 +2124,6 @@ void intAddEditStructures(void)
 }
 
 
-#ifdef WIN32
 /* Process return codes from the Options screen */
 static void intProcessOptions(UDWORD id)
 {
@@ -2162,7 +2142,6 @@ static void intProcessOptions(UDWORD id)
 		switch (id)
 		{
 #ifdef EDIT_OPTIONS
-#ifdef WIN32
 		case IDOPT_MAPLOAD:
 #ifdef DISP2D
 			if (ed2dLoadMapFile())
@@ -2183,7 +2162,6 @@ static void intProcessOptions(UDWORD id)
 				intMode = INT_NORMAL;
 			}
 			break;
-#endif
 		case IDOPT_MAPNEW:
 			intGetMapSize();
 			if (mapNew(newMapWidth,newMapHeight))
@@ -2291,7 +2269,6 @@ static void intProcessOptions(UDWORD id)
 		}
 	}
 }
-#endif
 
 /* Process return codes from the object placement stats screen */
 static void intProcessEditStats(UDWORD id)
@@ -3975,12 +3952,12 @@ BOOL intReticuleIsUp(void)
 
 void intRemoveReticule(void)
 {
-#ifndef NON_INTERACT
+//#ifndef NON_INTERACT
 	if(ReticuleUp == TRUE) {
 		widgDelete(psWScreen,IDRET_FORM);		// remove reticule
 		ReticuleUp = FALSE;
 	}
-#endif
+//#endif
 }
 
 	
@@ -4005,9 +3982,9 @@ BOOL intAddPower(void)
 {
 	W_BARINIT	sBarInit;
 
-#ifdef NON_INTERACT
-	return(TRUE);
-#endif
+//#ifdef NON_INTERACT
+//	return(TRUE);
+//#endif
 
 	memset(&sBarInit, 0, sizeof(W_BARINIT));
 
@@ -4596,11 +4573,9 @@ static BOOL _intAddObjectWindow(BASE_OBJECT *psObjects, BASE_OBJECT *psSelected,
 				psSelected = psFirst;
 			}
 		}
-//#ifdef WIN32
 		//make sure this matches in game once decided - DON'T!
 		//clearSelection();
 		//psSelected->selected = TRUE;
-//#endif
 	}
 
 	/* Reset the current object and store the current list */
@@ -8260,9 +8235,9 @@ BOOL intAddOptions(void)
 
 BOOL intAddReticule(void)
 {
-#ifdef NON_INTERACT
-	return TRUE;
-#endif
+//#ifdef NON_INTERACT
+//	return TRUE;
+//#endif
 	return _intAddReticule();
 }
 

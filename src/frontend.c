@@ -80,11 +80,11 @@ STRING	strTrans[MAX_STR_LENGTH];
 // iPalette			titlePalette;
 int				FEFont;
 //int				FEBigFont;
-#ifndef NON_INTERACT
+//#ifndef NON_INTERACT
 char			pLevelName[MAX_LEVEL_NAME_SIZE+1];	//256];			// vital! the wrf file to use.
-#else
+/*#else
 char			pLevelName[]="ROCKIES";
-#endif
+#endif*/
 BOOL			bForceEditorLoaded = FALSE;
 BOOL			bUsingKeyboard = FALSE;		// to disable mouse pointer when using keys.
 BOOL			bUsingSlider   = FALSE;
@@ -330,28 +330,16 @@ BOOL startTitleMenu(VOID)
 	addTopForm();
 	addBottomForm();
 
-	#ifdef COVERMOUNT	// no multiplayer								
-		addTextButton(FRONTEND_TUTORIAL,	FRONTEND_POS2X,FRONTEND_POS2Y, "Demo" ,FALSE,FALSE);
-	#ifdef  MULTIDEMO
+	addTextButton(FRONTEND_SINGLEPLAYER,FRONTEND_POS2X,FRONTEND_POS2Y, strresGetString(psStringRes, STR_FE_SINGLE),FALSE,FALSE);
+	if(!bDisableLobby)
+	{
 		addTextButton(FRONTEND_MULTIPLAYER,	FRONTEND_POS3X,FRONTEND_POS3Y, strresGetString(psStringRes, STR_FE_MULTI)   ,FALSE,FALSE);	
-	#else
+	}else{
 		addTextButton(FRONTEND_MULTIPLAYER,	FRONTEND_POS3X,FRONTEND_POS3Y, strresGetString(psStringRes, STR_FE_MULTI)   ,FALSE,TRUE);	
-	#endif	
-		addTextButton(FRONTEND_SINGLEPLAYER,FRONTEND_POS4X,FRONTEND_POS4Y, strresGetString(psStringRes, STR_FE_SINGLE),FALSE,TRUE);
-		addTextButton(FRONTEND_OPTIONS,		FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_OPTIONS) ,FALSE,FALSE);
-		addTextButton(FRONTEND_PLAYINTRO,	FRONTEND_POS6X,FRONTEND_POS6Y, strresGetString(psStringRes, STR_FE_INTRO),FALSE,TRUE);		
-	#else		// normal
-		addTextButton(FRONTEND_SINGLEPLAYER,FRONTEND_POS2X,FRONTEND_POS2Y, strresGetString(psStringRes, STR_FE_SINGLE),FALSE,FALSE);
-		if(!bDisableLobby)
-		{
-			addTextButton(FRONTEND_MULTIPLAYER,	FRONTEND_POS3X,FRONTEND_POS3Y, strresGetString(psStringRes, STR_FE_MULTI)   ,FALSE,FALSE);	
-		}else{
-			addTextButton(FRONTEND_MULTIPLAYER,	FRONTEND_POS3X,FRONTEND_POS3Y, strresGetString(psStringRes, STR_FE_MULTI)   ,FALSE,TRUE);	
-		}
-		addTextButton(FRONTEND_TUTORIAL,	FRONTEND_POS4X,FRONTEND_POS4Y, strresGetString(psStringRes, STR_FE_TUT) ,FALSE,FALSE);
-		addTextButton(FRONTEND_OPTIONS,		FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_OPTIONS) ,FALSE,FALSE);
-		addTextButton(FRONTEND_PLAYINTRO,	FRONTEND_POS6X,FRONTEND_POS6Y, strresGetString(psStringRes, STR_FE_INTRO),FALSE,FALSE);
-	#endif
+	}
+	addTextButton(FRONTEND_TUTORIAL,	FRONTEND_POS4X,FRONTEND_POS4Y, strresGetString(psStringRes, STR_FE_TUT) ,FALSE,FALSE);
+	addTextButton(FRONTEND_OPTIONS,		FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_OPTIONS) ,FALSE,FALSE);
+	addTextButton(FRONTEND_PLAYINTRO,	FRONTEND_POS6X,FRONTEND_POS6Y, strresGetString(psStringRes, STR_FE_INTRO),FALSE,FALSE);
 
 	addTextButton(FRONTEND_QUIT,		FRONTEND_POS7X,FRONTEND_POS7Y, strresGetString(psStringRes, STR_FE_QUIT),FALSE,FALSE);
 
@@ -521,13 +509,8 @@ VOID startSinglePlayerMenu(VOID)
 	addTopForm();
 	addBottomForm();
 
-#ifdef COVERMOUNT						// reduce single player options
-	addTextButton(FRONTEND_NEWGAME,  FRONTEND_POS5X,FRONTEND_POS5Y,	strresGetString(psStringRes,STR_FE_NEW) ,FALSE,TRUE);
-	addTextButton(FRONTEND_LOADGAME, FRONTEND_POS6X,FRONTEND_POS6Y, strresGetString(psStringRes,STR_FE_LOAD),FALSE,TRUE);
-#else
 	addTextButton(FRONTEND_LOADGAME, FRONTEND_POS4X,FRONTEND_POS4Y, strresGetString(psStringRes,STR_FE_LOAD),FALSE,FALSE);
 	addTextButton(FRONTEND_NEWGAME,  FRONTEND_POS3X,FRONTEND_POS3Y,strresGetString(psStringRes,STR_FE_NEW) ,FALSE,FALSE);
-#endif
 	addSideText	 (FRONTEND_SIDETEXT ,FRONTEND_SIDEX,FRONTEND_SIDEY,strresGetString(psStringRes,STR_FE_SIDESINGLE1));
 	SetCurrentSnapID(&InterfaceSnap,FRONTEND_LOADGAME);
 	addMultiBut(psWScreen,FRONTEND_BOTFORM,FRONTEND_QUIT,10,10,30,29, STR_FE_RETURN,IMAGE_RETURN,IMAGE_RETURN_HI,TRUE);			 
@@ -665,13 +648,8 @@ BOOL startMultiPlayerMenu(VOID)
 	addTextButton(FRONTEND_HOST,     FRONTEND_POS3X,FRONTEND_POS3Y, strresGetString(psStringRes, STR_FE_HOST),FALSE,FALSE);
 	addTextButton(FRONTEND_JOIN,     FRONTEND_POS4X,FRONTEND_POS4Y, strresGetString(psStringRes, STR_FE_JOIN),FALSE,FALSE);
 
-#ifdef MULTIDEMO
-	addTextButton(FRONTEND_FORCEEDIT,FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_FORCEEDIT),FALSE,TRUE);
-	addTextButton(FRONTEND_SKIRMISH, FRONTEND_POS6X,FRONTEND_POS6Y, strresGetString(psStringRes, STR_FE_SKIRMISH ),FALSE,TRUE);
-#else
 	addTextButton(FRONTEND_FORCEEDIT,FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_FORCEEDIT),FALSE,FALSE);
 	addTextButton(FRONTEND_SKIRMISH, FRONTEND_POS6X,FRONTEND_POS6Y, strresGetString(psStringRes, STR_FE_SKIRMISH ),FALSE,FALSE);
-#endif
 	addMultiBut(psWScreen,FRONTEND_BOTFORM,FRONTEND_QUIT,10,10,30,29, STR_FE_RETURN,IMAGE_RETURN,IMAGE_RETURN_HI,TRUE);
 
 	SetMousePos(0,320,FRONTEND_BOTFORMY+FRONTEND_POS3Y);
@@ -826,7 +804,6 @@ BOOL runOptionsMenu(VOID)
 // ////////////////////////////////////////////////////////////////////////////
 // Graphics Options Menu
 /*
-#ifdef WIN32
 BOOL startGraphicsOptionsMenu(VOID)
 {
 	addBackdrop();
@@ -945,12 +922,10 @@ BOOL runGraphicsOptionsMenu(VOID)
 
 	return TRUE;
 }
-#endif
 
 // ////////////////////////////////////////////////////////////////////////////
 // Video Options Menu
 
-#ifdef WIN32
 BOOL startVideoOptionsMenu(VOID)
 {
 	addBackdrop();
@@ -1046,7 +1021,6 @@ BOOL runVideoOptionsMenu(VOID)
 
 	return TRUE;
 }
-#endif
 */
 
 // ////////////////////////////////////////////////////////////////////////////

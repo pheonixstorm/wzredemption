@@ -113,7 +113,6 @@ extern BOOL bRender3DOnly;
 
 extern UDWORD visibleXTiles;
 extern UDWORD visibleYTiles;
-#ifdef WIN32
 
 // Expanded PIEVERTEX.
 typedef struct {
@@ -126,7 +125,6 @@ typedef struct {
 } SVMESH;
 
 extern SVMESH tileScreenInfo[LAND_YGRD][LAND_XGRD];
-#endif
 
 /* load IMDs AFTER RESOURCE FILE */
 extern BOOL loadExtraIMDs(void);
@@ -138,7 +136,6 @@ extern UDWORD  getDroidRankGraphic(DROID *psDroid);
 #define	BASE_MUZZLE_FLASH_DURATION	(GAME_TICKS_PER_SEC/10)
 #define	EFFECT_MUZZLE_ADDITIVE		128
 
-#ifdef WIN32	
 #define CLOSING_TIME	800
 #define LINE_TIME		600
 #define DOT_TIME		200
@@ -147,7 +144,6 @@ extern UDWORD  getDroidRankGraphic(DROID *psDroid);
 #define SC_CLOSING_IN	3
 #define SC_WAITING		4
 #define SC_DOT_KILL		5
-#endif
 
 #define BAR_FULL	0
 #define BAR_BASIC	1

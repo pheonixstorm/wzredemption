@@ -18,7 +18,6 @@ extern UDWORD getResearchRadius(BASE_STATS *Stat);
 extern UDWORD getStructureSize(STRUCTURE *psStructure);
 extern UDWORD getStructureStatSize(STRUCTURE_STATS *Stats);
 
-//#ifdef WIN32
 #define OBJECT_RADIUS				(128)
 #define COMPONENT_RADIUS			(64)
 #define DESIGN_DROID_SCALE			(200)
@@ -29,7 +28,6 @@ extern UDWORD getStructureStatSize(STRUCTURE_STATS *Stats);
 #define SMALL_STRUCT_SCALE			(55)
 #define MED_STRUCT_SCALE			(25)//reduced from 30 to fit command centre in window
 #define LARGE_STRUCT_SCALE			(25)
-//#endif
 
 #define TOWER_HEIGHT    100
 extern UDWORD getStructureStatHeight(STRUCTURE_STATS *psStat);

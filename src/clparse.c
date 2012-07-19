@@ -65,9 +65,7 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 #ifdef	_DEBUG
 			clStartWindowed = TRUE;
 #else
-#ifndef COVERMOUNT
 			clStartWindowed = TRUE;
-#endif
 #endif
 		}
 		else if ( stricmp( tokenType, "-intro" ) == 0 )
@@ -107,45 +105,30 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 
 		else if ( stricmp( tokenType, "-MMX" ) == 0 )
 		{
-#ifndef COVERMOUNT
 			war_SetRendMode(REND_MODE_RGB);
 			pie_SetDirect3DDeviceName("RGB Emulation");
 			pie_SetVideoBufferWidth(640);
 			pie_SetVideoBufferHeight(480);
-#else
-			war_SetRendMode(REND_MODE_SOFTWARE);
-			war_SetFog(FALSE);
-#endif
 		}
 		else if ( stricmp( tokenType, "-RGB" ) == 0 )
 		{
-#ifndef COVERMOUNT
 			war_SetRendMode(REND_MODE_RGB);
 			pie_SetDirect3DDeviceName("RGB Emulation");
 			pie_SetVideoBufferWidth(640);
 			pie_SetVideoBufferHeight(480);
-#else
-			war_SetRendMode(REND_MODE_SOFTWARE);
-			war_SetFog(FALSE);
-#endif
 		}
 		else if ( stricmp( tokenType, "-REF" ) == 0 )
 		{
-#ifndef COVERMOUNT
 			war_SetRendMode(REND_MODE_REF);
 			pie_SetDirect3DDeviceName("Reference Rasterizer");
 			pie_SetVideoBufferWidth(640);
 			pie_SetVideoBufferHeight(480);
-#else
-			war_SetRendMode(REND_MODE_SOFTWARE);
-			war_SetFog(FALSE);
-#endif
 		}
 		else if ( stricmp( tokenType, "-title" ) == 0 )
 		{
 			SetGameMode(GS_TITLE_SCREEN);
 		}
-#ifndef NON_INTERACT
+// #ifndef NON_INTERACT // FIXME
 		else if ( stricmp( tokenType, "-game" ) == 0 )
 		{
 			// find the game name
@@ -171,7 +154,7 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 			strncat(saveGameName, token, 240);
 			SetGameMode(GS_SAVEGAMELOAD);
 		}
-#endif
+// #endif FIXME
 		else if ( stricmp( tokenType, "-datapath" ) == 0 )
 		{
 			// find the quoted path name
@@ -189,12 +172,10 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 			}
 		}
 
-//#ifndef COVERMOUNT
 		else if( stricmp( tokenType,cl2) == 0)
 		{
 			bAllowDebugMode =TRUE;
 		}
-//#endif
 		else if( stricmp( tokenType,"-640") == 0)// Temporary - this will be switchable in game
 		{
 			pie_SetVideoBufferWidth(640);
@@ -310,15 +291,12 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 	}
 
 	// look for any gamespy flags in the command line.
-#ifdef NON_INTERACT
+/*#ifdef NON_INTERACT
 	SetGameMode(GS_NORMAL);
-#endif
+#endif*/
 
 	return TRUE;
 }
-
-
-
 
 
 // ////////////////////////////////////////////////////////
@@ -328,11 +306,6 @@ BOOL scanGameSpyFlags(LPSTR gflag,LPSTR value)
 	static UBYTE count = 0;
 //	UDWORD val;
 	LPVOID finalconnection;	 
-
-//#ifdef COVERMOUNT
-//	return TRUE;
-//#endif
-
 
 #if 0
 	// check for gamespy flag...
@@ -381,16 +354,6 @@ BOOL scanGameSpyFlags(LPSTR gflag,LPSTR value)
 		strcpy(game.name,value);
 	}
 
-/*not used from here on..
-+ip
-+maxplayers
-+game
-+team
-+skin
-+playerid
-+password
-tokenType = strtok( NULL, seps );
-*/
 	return TRUE;
 }
 

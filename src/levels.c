@@ -208,7 +208,6 @@ BOOL levParse(UBYTE *pBuffer, SDWORD size)
 				case LTK_MKEEP:
 					psDataSet->type = LDS_MKEEP;
 					break;
-#ifndef COVERMOUNT
 				case LTK_CAMCHANGE:
 					psDataSet->type = LDS_CAMCHANGE;
 					break;
@@ -224,7 +223,6 @@ BOOL levParse(UBYTE *pBuffer, SDWORD size)
 				case LTK_MKEEP_LIMBO:
 					psDataSet->type = LDS_MKEEP_LIMBO;
 					break;
-#endif
 				default:
 					ASSERT((FALSE,"eh?"));
 					break;
@@ -302,13 +300,11 @@ BOOL levParse(UBYTE *pBuffer, SDWORD size)
 			{
 				if (psDataSet->type == LDS_CAMSTART ||
 					psDataSet->type == LDS_MKEEP 
-#ifndef COVERMOUNT
 					||psDataSet->type == LDS_CAMCHANGE ||
 					psDataSet->type == LDS_EXPAND ||
 					psDataSet->type == LDS_MCLEAR ||
                     psDataSet->type == LDS_EXPAND_LIMBO ||
                     psDataSet->type == LDS_MKEEP_LIMBO
-#endif
 					)
 				{
 					levError("Missing dataset command");
@@ -337,7 +333,6 @@ BOOL levParse(UBYTE *pBuffer, SDWORD size)
 		case LTK_IDENT:
 			if (state == LP_LEVEL)
 			{
-#ifndef COVERMOUNT
 				if (psDataSet->type == LDS_CAMCHANGE)
 				{
 					// campaign change dataset - need to find the full data set
@@ -354,7 +349,6 @@ BOOL levParse(UBYTE *pBuffer, SDWORD size)
 					}
 					psFoundData->psChange = psDataSet;
 				}
-#endif
 				// store the level name
 				psDataSet->pName = MALLOC(strlen(pLevToken) + 1);
 				if (!psDataSet->pName)
@@ -473,13 +467,10 @@ BOOL levReleaseMissionData(void)
 				resReleaseBlockData(i + CURRENT_DATAID);
 			}
 		}
-//#ifndef COVERMOUNT
 		if (psCurrLevel->type == LDS_BETWEEN)
 		{
 			BLOCK_RESET(psMissionHeap);
 		}
-//#endif
-
 	}
 
 	return TRUE;
@@ -591,12 +582,10 @@ BOOL levLoadBaseData(STRING *pName)
 
 	if (psNewLevel->type != LDS_CAMSTART &&
 		psNewLevel->type != LDS_MKEEP 
-#ifndef COVERMOUNT
 		&& psNewLevel->type != LDS_EXPAND &&
 		psNewLevel->type != LDS_MCLEAR &&
         psNewLevel->type != LDS_EXPAND_LIMBO &&
         psNewLevel->type != LDS_MKEEP_LIMBO
-#endif
 		)
 	{
 		DBERROR(("levLoadBaseData: incorect level type"));
@@ -793,7 +782,6 @@ BOOL levLoadData(STRING *pName, STRING *pSaveName, SDWORD saveType)
 			}
 		}
 	}
-#ifndef COVERMOUNT
 	if (psNewLevel->type == LDS_CAMCHANGE)
 	{
 		if (!campaignReset())
@@ -801,14 +789,10 @@ BOOL levLoadData(STRING *pName, STRING *pSaveName, SDWORD saveType)
 			return FALSE;
 		}
 	}
-#endif
 	if (psNewLevel->game == -1)  //no .gam file to load - BETWEEN missions (for Editor games only)
 	{
-//#ifndef COVERMOUNT
-
 		ASSERT((psNewLevel->type == LDS_BETWEEN,
 			"levLoadData: only BETWEEN missions do not need a .gam file"));
-//#endif
 		DBP0(("levLoadData: no .gam file for level: BETWEEN mission\n"));
 		if (pSaveName != NULL)
 		{
@@ -928,10 +912,8 @@ iV_Reset(FALSE);//unload font, to avoid crash on 8th load... ajl 15/sep/99
 
 			// missions with a seperate map have to use the mission heap now
 			if ((psNewLevel->type == LDS_MKEEP 
-#ifndef COVERMOUNT
 				 ||psNewLevel->type == LDS_MCLEAR
                  ||psNewLevel->type == LDS_MKEEP_LIMBO
-#endif
 				  ) &&
 				pSaveName == NULL)
 			{
@@ -1008,7 +990,6 @@ iV_Reset(FALSE);//unload font, to avoid crash on 8th load... ajl 15/sep/99
 						return FALSE;
 					}
 					break;
-#ifndef COVERMOUNT
 				case LDS_CAMCHANGE:
 					DBPRINTF(("CAMCHANGE\n"));
 					//if (!startMission(MISSION_CAMPSTART, psNewLevel->apDataFiles[i]))
@@ -1051,7 +1032,6 @@ iV_Reset(FALSE);//unload font, to avoid crash on 8th load... ajl 15/sep/99
 						return FALSE;
 					}
 					break;
-#endif
 				default:
 					ASSERT((psNewLevel->type >= MULTI_TYPE_START,
 						"levLoadData: Unexpected mission type"));
@@ -1068,10 +1048,8 @@ iV_Reset(FALSE);//unload font, to avoid crash on 8th load... ajl 15/sep/99
 			// set the view position if necessary
 			if ((pSaveName != NULL)
 				 ||(psNewLevel->type != LDS_BETWEEN)
-#ifndef COVERMOUNT
 				 &&(psNewLevel->type != LDS_EXPAND) 
 				 &&(psNewLevel->type != LDS_EXPAND_LIMBO)
-#endif
 				)
 			{
 				if (!newMapInitialise())

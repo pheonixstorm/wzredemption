@@ -1490,17 +1490,11 @@ void actionUpdateDroid(DROID *psDroid)
 		{
 			if (actionInRange(psDroid, psDroid->psActionTarget))
 			{
-
-
-#ifdef WIN32
-#ifndef COVERMOUNT
 				if ( psDroid->player == selectedPlayer )
 				{
 					audio_QueueTrackMinDelay( ID_SOUND_COMMENCING_ATTACK_RUN2,
 												VTOL_ATTACK_AUDIO_DELAY );
 				}
-#endif
-#endif
 
 				if (actionTargetTurret((BASE_OBJECT*)psDroid, psDroid->psActionTarget,
 										&(psDroid->turretRotation), &(psDroid->turretPitch),
@@ -3000,12 +2994,10 @@ void moveToRearm(DROID *psDroid)
 		orderDroid( psDroid, DORDER_RTB );
 		chosen =3;
 	}
-#ifdef WIN32
 	if(bMultiPlayer)
 	{
 		sendVtolRearm(psDroid,psStruct,chosen);
 	}
-#endif
 }
 
 

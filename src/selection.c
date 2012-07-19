@@ -269,8 +269,6 @@ DROID	*psDroid;
 // Selects all units the same as the one(s) selected
 UDWORD	selSelectAllSame( UDWORD player, BOOL bOnScreen)
 {
-#ifdef WIN32
-
 DROID	*psDroid;
 UDWORD	count;
 
@@ -283,17 +281,11 @@ UDWORD	count;
 			}
 		}
 	return(selNumSelected(player));
-#else
-	return 0;
-#endif
-
-
 }
 // ---------------------------------------------------------------------
 // sub-function - selects all units with same name as one passed in
 UDWORD	selNameSelect( STRING *droidName, UDWORD player, BOOL bOnScreen )
 {
-#ifdef WIN32
 DROID	*psDroid;
 UDWORD	count;
 
@@ -317,11 +309,8 @@ UDWORD	count;
 		return(count+1); 
 	else 
 		return(count);
-#else
-	return 0;
-#endif
 }
-#ifdef WIN32
+
 // ffs am
 // ---------------------------------------------------------------------
 void	selNextSpecifiedUnit(UDWORD unitType)
@@ -705,7 +694,6 @@ void selCommander(SDWORD n)
 
 				// this horrible bit of code is taken from activateGroupAndMove
 				// and sets the camera position to that of the commander
-#ifdef WIN32
 				if(getWarCamStatus())
 				{
 					camToggleStatus();			 // messy - fix this
@@ -718,18 +706,9 @@ void selCommander(SDWORD n)
 					/* Centre display on him if warcam isn't active */
 					setViewPos(psCurr->x>>TILE_SHIFT,psCurr->y>>TILE_SHIFT,TRUE);
 				}
-#else
-				if(!getWarCamStatus() || camGetMode() == CAMMODE_PANTOLOCATION) {
-					setViewPos(psCurr->x>>TILE_SHIFT,psCurr->y>>TILE_SHIFT,TRUE);
-				}
-#endif
 			}
 			setSelectedCommander((UDWORD)n);
 			return;
 		}
 	}
 }
-
-// ---------------------------------------------------------------------
-
-#endif

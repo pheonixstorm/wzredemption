@@ -260,7 +260,6 @@ static STRING winErrorString[255];
 // Return a string for a windows error code
 STRING *winErrorToString(SDWORD error)
 {
-#ifdef WIN32
 	LPVOID lpMsgBuf;
  
 	FormatMessage( 
@@ -279,9 +278,6 @@ STRING *winErrorToString(SDWORD error)
 
 	// Free the buffer.
 	LocalFree( lpMsgBuf );
-#else
-	winErrorString[0] = '0';
-#endif
 
 	return winErrorString;
 }
@@ -1029,8 +1025,6 @@ BOOL loadFile2(STRING *pFileName, UBYTE **ppFileData, UDWORD *pFileSize, BOOL Al
 	return TRUE;
 }
 
-#ifdef WIN32
-
 // load a file from disk into a fixed memory buffer
 BOOL loadFileToBuffer(STRING *pFileName, UBYTE *pFileBuffer, UDWORD bufferSize, UDWORD *pSize)
 {
@@ -1147,9 +1141,6 @@ BOOL loadFileToBufferNoError(STRING *pFileName, UBYTE *pFileBuffer, UDWORD buffe
 
 	return TRUE;
 }
-#endif
-
-
 
 /* Save the data in the buffer into the given file */
 BOOL saveFile(STRING *pFileName, UBYTE *pFileData, UDWORD fileSize)
@@ -1166,11 +1157,7 @@ BOOL saveFile(STRING *pFileName, UBYTE *pFileData, UDWORD fileSize)
 
 	if (fwrite(pFileData, fileSize, 1, pFile) != 1)
 	{
-#ifdef WIN32	// ffs
 		DBERROR(("Write failed for %s: %s", pFileName, winErrorToString(GetLastError()) ));
-#else
-		DBERROR(("Write failed for %s", pFileName ));
-#endif	
 		return FALSE;
 	}
 
@@ -1182,10 +1169,6 @@ BOOL saveFile(STRING *pFileName, UBYTE *pFileData, UDWORD fileSize)
 	
 	return TRUE;
 }
-
-
-
-
 
 static UBYTE *WDGCacheStart=NULL;
 static UDWORD WDGCacheSize=0;

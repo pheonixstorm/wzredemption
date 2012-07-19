@@ -13,9 +13,7 @@ extern void					*g_ElementToBeRemoved;
 
 /***************************************************************************/
 
-#ifdef WIN32	// ffs 
 static CRITICAL_SECTION		critSecAudio;
-#endif
 /***************************************************************************/
 
 static void	ptrList_Init( PTRLIST *ptrList );
@@ -48,9 +46,7 @@ ptrList_Create( PTRLIST **ppsList, UDWORD udwInitElements,
 	(*ppsList)->udwElementSize = udwElementSize;
 
 	ptrList_Init( *ppsList );
-#ifdef WIN32	//ffs
 	InitializeCriticalSection( &critSecAudio );
-#endif
 	return TRUE;
 }
 
@@ -70,9 +66,7 @@ ptrList_Destroy( PTRLIST *ptrList )
 
 	/* free struct */
 	FREE( ptrList );
-#ifdef WIN32		// ffs
 	DeleteCriticalSection( &critSecAudio );
-#endif
 }
 
 /***************************************************************************/
@@ -187,9 +181,7 @@ ptrList_InsertElement( PTRLIST *ptrList, void *psElement, SDWORD sdwKey )
 
 	psPrevNode = NULL;
 	psCurNode = ptrList->psNode;
-#ifdef WIN32	//ffs
 	EnterCriticalSection( &critSecAudio );
-#endif
 
 	/* find correct position to insert node */
 	while ( psCurNode != NULL )
@@ -218,9 +210,7 @@ ptrList_InsertElement( PTRLIST *ptrList, void *psElement, SDWORD sdwKey )
 		psPrevNode->psNext = psNode;
 		psNode->psNext = psCurNode;
 	}
-#ifdef WIN32		// ffs
 	LeaveCriticalSection( &critSecAudio );
-#endif
 
 }
 
@@ -237,9 +227,7 @@ ptrList_RemoveElement( PTRLIST *ptrList, void *psElement, SDWORD sdwKey )
 
 	psPrevNode = NULL;
 	psCurNode = ptrList->psNode;
-#ifdef WIN32	// ffs 
 	EnterCriticalSection( &critSecAudio );
-#endif
 
 	/* find correct position to insert node */
 	while ( psCurNode != NULL &&
@@ -301,9 +289,7 @@ ASSERT( (psCurNode->psElement == psElement,
 
 		bOK = TRUE;
 	}
-#ifdef WIN32	// ffs 
 	LeaveCriticalSection( &critSecAudio );
-#endif
 	return bOK;
 }
 
@@ -313,9 +299,7 @@ void *
 ptrList_GetNext( PTRLIST *ptrList )
 {
 	void	*pElement = NULL;
-#ifdef WIN32	// ffs 
 	EnterCriticalSection( &critSecAudio );
-#endif
 	if ( ptrList == NULL )
 	{
 		pElement = NULL;
@@ -345,9 +329,7 @@ ptrList_GetNext( PTRLIST *ptrList )
 			pElement = ptrList->psCurNode->psElement;
 		}
 	}
-#ifdef WIN32	// ffs 
 	LeaveCriticalSection( &critSecAudio );
-#endif
 	return pElement;
 }
 
@@ -357,9 +339,7 @@ void *
 ptrList_GetFirst( PTRLIST *ptrList )
 {
 	void	*pElement = NULL;
-#ifdef WIN32	// ffs 
 	EnterCriticalSection( &critSecAudio );
-#endif
 	ptrList->bDontGetNext = FALSE;
 	ptrList->psCurNode = ptrList->psNode;
 
@@ -371,9 +351,7 @@ ptrList_GetFirst( PTRLIST *ptrList )
 	{
 		pElement = ptrList->psCurNode->psElement;
 	}
-#ifdef WIN32	// ffs 
 	LeaveCriticalSection( &critSecAudio );
-#endif
 	return pElement;
 }
 

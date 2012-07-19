@@ -1,4 +1,3 @@
-#ifdef WIN32
 /***************************************************************************/
 /*
  * pieBlitFunc.h
@@ -75,30 +74,9 @@ typedef enum _screenType
 	SCREEN_SLIDE3,
 	SCREEN_SLIDE4,
 	SCREEN_SLIDE5,
-	SCREEN_COVERMOUNT,
+//	SCREEN_COVERMOUNT,
 } SCREENTYPE;
 
 extern void pie_LoadBackDrop(SCREENTYPE screenType, BOOL b3DFX);
 extern void pie_ResetBackDrop(void);
 #endif // 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#endif

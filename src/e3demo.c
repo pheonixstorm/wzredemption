@@ -55,13 +55,13 @@ static	UDWORD	lastSelectedPlayer;
 static	DROID	*getDroidForDemo( UDWORD player );
 // -------------------------------------------------------------------------
 /* Sets up the system */
-void	initDemoCamera( void )
+void	initDemoCamera( void ) // FIXME can this and its .h file be removed?
 {
-#ifdef NON_INTERACT
+/*#ifdef NON_INTERACT
 	presentStatus = DC_ISACTIVE;
-#else if
+#else if*/
 	presentStatus = DC_INACTIVE;
-#endif
+//#endif
 	lastCameraMove = 0;
 	lastDroidMove = 0;
 	droidMoveInterval = DROID_MOVE_INTERVAL;

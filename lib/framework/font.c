@@ -143,16 +143,8 @@ void fontPrint(SDWORD x, SDWORD y, STRING *pFormat, ...)
 	UDWORD		px,py, bit;
 	PROP_CHAR	*psChar;
 
-
-#ifdef WIN32
 	va_start(pArgs, pFormat);
 	vsprintf(aTxtBuff, pFormat, pArgs);
-#else
-	strcpy(aTxtBuff,pFormat);	// playstation does not support parameters
-
-//	fontSet(psWFont);	// always use this font on playstation
-
-#endif
 
 	ASSERT((PTRVALID(psCurrFont, sizeof(PROP_FONT)),
 		"fontPrint: Invalid font pointer"));
@@ -551,13 +543,8 @@ BOOL fontLoad(UBYTE *pFileData, UDWORD fileSize, PROP_FONT **ppsFont)
 		psLoadC = (PROP_CHAR *)pLoad;
 
 		// These are word width ... accessed on a odd-byte boundry ... the Playstation does not like this at all ... so we have to write special code
-#ifdef WIN32
 		psCurrC->width = psLoadC->width;
 		psCurrC->pitch = psLoadC->pitch;
-#else
-		psCurrC->width = GetWord(&psLoadC->width);
-		psCurrC->pitch = GetWord(&psLoadC->pitch);
-#endif
 
 //		DBPRINTF(("(%dof%d) font data size %d\n",	i,(*ppsFont)->numChars,(*ppsFont)->height * psCurrC->pitch));
 		psCurrC->pData = (UBYTE *)MALLOC((*ppsFont)->height * psCurrC->pitch);

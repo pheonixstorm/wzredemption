@@ -578,10 +578,5 @@ heap_dump(char *caller );
 #pragma aux ( Streamer_GetVideoPitch, __cdecl);
 #pragma aux ( Streamer_SetVideoPitch, __cdecl);
 
-#ifndef WIN32
-#ifdef DEBUG
-	#pragma aux (heap_dump, __cdecl);
-#endif // DEBUG
-#endif // WIN32
 #endif
 #endif

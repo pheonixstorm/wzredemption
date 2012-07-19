@@ -11,11 +11,9 @@
 #include "pieState.h"
 #include "textdraw.h" //ivis text code
 
-#ifdef WIN32
 #include "piemode.h"
 #include "pieMatrix.h"
 #include "pieFunc.h"
-#endif
 
 #include "hci.h"		// access to widget screen.
 #include "widget.h"
@@ -140,9 +138,7 @@ TITLECODE titleLoop(void)
 
 	if(firstcall)
 	{	
-#ifndef COVERMOUNT
 		if ( playIntroOnInstall() == FALSE )
-#endif
 		{
 			startTitleMenu();
 			titleMode = TITLE;
@@ -431,11 +427,7 @@ UDWORD lastChange = 0;
 // fill buffers with the static screen
 void startCreditsScreen( BOOL bRenderActive)
 {
-#ifdef COVERMOUNT
-	SCREENTYPE	screen = SCREEN_SLIDE1;
-#else
 	SCREENTYPE	screen = SCREEN_CREDITS;
-#endif
 
 	lastChange = gameTime;
 	// fill buffers
@@ -467,9 +459,6 @@ void startCreditsScreen( BOOL bRenderActive)
 void	runCreditsScreen( void )
 {
 	static UBYTE quitstage=0;
-#ifdef COVERMOUNT
-	SCREENTYPE	screen;
-#endif
 	// Check for key presses now.
 
 	if(keyReleased(KEY_ESC) 
@@ -479,46 +468,7 @@ void	runCreditsScreen( void )
 	   )
 	{
 		lastChange = gameTime;
-#ifdef COVERMOUNT
-		quitstage++;		
-		switch(quitstage)
-		{
-		case 1:
-			screen = SCREEN_SLIDE2;
-			break;
-		case 2:
-			screen = SCREEN_SLIDE3;
-			break;
-		case 3:
-			screen = SCREEN_SLIDE4;
-			break;
-//		case 4:
-//			screen = SCREEN_SLIDE5;
-//			break;		
-		case 4:
-			screen = SCREEN_CREDITS;
-			break;
-		case 5:
-			default:
-			changeTitleMode(QUIT);
-			return;
-			break;
-		}		
-		if (pie_GetRenderEngine() == ENGINE_GLIDE)
-		{
-			pie_LoadBackDrop(screen,TRUE);
-		}
-		else
-		{
-			pie_LoadBackDrop(screen,FALSE);
-		}
-		pie_SetFogStatus(FALSE);
-		pie_ScreenFlip(CLEAR_BLACK);//flip to set back buffer
-		pie_ScreenFlip(CLEAR_BLACK);//init loading
-#else
 		changeTitleMode(QUIT);
-#endif	
-
 	}
 	return;
 }

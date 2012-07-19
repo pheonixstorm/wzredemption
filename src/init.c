@@ -32,23 +32,19 @@
 
 #include "piedef.h"
 #include "pieState.h" 
-#ifdef WIN32
 #include "config.h"
 #include "pieMode.h"
 #include "tex.h"
-#endif
 #include "resource.h"
 #include "rendmode.h"
 #include "ivi.h"
 #include "Group.h"
 #include "wrappers.h"
 #include "display3D.h"
-#ifdef WIN32
 #include "Atmos.h"
 #include "Environ.h"
 #include "warzoneConfig.h"
 #include "multiplay.h"
-#endif
 #include "Script.h"
 #include "ScriptTabs.h"
 #include "ScriptVals.h"
@@ -969,7 +965,7 @@ init_ObjectDead( void * psObj )
 
 // ////////////////////////////////////////////////////////////////////////////
 // ////////////////////////////////////////////////////////////////////////////
-// WIN32 Version. Called At Frontend Startup.
+// Called At Frontend Startup.
 BOOL frontendInitialise(char *ResourceFile)
 {
 	DBPRINTF(("Initialising frontend : %s\n",ResourceFile));
@@ -1078,7 +1074,7 @@ BOOL frontendInitialise(char *ResourceFile)
 
 // ////////////////////////////////////////////////////////////////////////////
 // ////////////////////////////////////////////////////////////////////////////
-// WIN32 version. Called at frontend Shutdown, before game runs.
+// Called at frontend Shutdown, before game runs.
 //
 BOOL frontendShutdown(void)
 {
@@ -1781,7 +1777,6 @@ BOOL newMapInitialise(void)
 //	initViewPosition();
 
 // initialise the gateway stuff
-//#ifdef WIN32
 	// this no longer necessary when RLE map zones are loaded
 //	gwProcessMap();	// now loaded with map.
 
@@ -1791,9 +1786,6 @@ BOOL newMapInitialise(void)
 		return FALSE;
 	}
 */
-//#endif
-
-
 
 	return TRUE;
 }
@@ -1802,11 +1794,11 @@ BOOL newMapInitialise(void)
 void	initMiscVars( void )
 {
 	selectedPlayer = 0;
-#ifndef NON_INTERACT
+//#ifndef NON_INTERACT
 	godMode = FALSE;
-#else
-	godMode = TRUE;
-#endif
+//#else
+//	godMode = TRUE;
+//#endif
 
 	setBlipDraw(TRUE);
 	setProximityDraw(TRUE);

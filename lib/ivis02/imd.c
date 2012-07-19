@@ -45,17 +45,10 @@
 
 
 //*************************************************************************
-#ifdef WIN32
 void iV_IMDDrawTextureRaise(iIMDShape *shape, float scale);
 void iV_IMDDrawTexturedHeightScaled(iIMDShape *shape, float scale);
-#endif
 void iV_IMDDrawTexturedShade(iIMDShape *shape, int32 lightLevel);
-
-
-
-
-
-			  
+		  
 
 // Output BSP Tree to a file
 
@@ -429,7 +422,6 @@ iBool iV_IMDSave(char *filename, iIMDShape *s, BOOL PieIMD)
 
 void iV_IMDDebug(iIMDShape *s)
 {
-#ifdef WIN32
 	iIMDShape *sp;
 	iIMDPoly *poly;
 	int nlevel, i, j, d;
@@ -489,7 +481,6 @@ void iV_IMDDebug(iIMDShape *s)
 			iV_DEBUG0("\n");
 		}
 	}
-#endif
 }
 
 

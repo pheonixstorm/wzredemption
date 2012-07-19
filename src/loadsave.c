@@ -1,4 +1,3 @@
-#ifdef WIN32
 /*
  * loadsave.c
  * load and save Popup screens.
@@ -12,7 +11,6 @@
 #include "rendMode.h"		// for boxfill
 #include "hci.h"
 #include "loadsave.h"
-#ifdef WIN32
 #include "multiplay.h"
 #include "game.h"
 #include "audio_id.h"
@@ -20,7 +18,6 @@
 #include "winmain.h"
 #include "display3d.h"
 #include "display.h"
-#endif
 #include "netplay.h"
 #include "loop.h"
 #include "intdisplay.h"
@@ -131,14 +128,10 @@ static BOOL _addLoadSave(BOOL bLoad,CHAR *sSearchPath,CHAR *sExtension, CHAR *ti
 	static STRING	sSlots[10][64];
 	STRING			sTemp[255];
 
-#ifdef WIN32
 	WIN32_FIND_DATA	found;	
 	HANDLE			dir;
-#endif
-	
 	mode = bLoad;
 
-#ifdef WIN32
 	if(GetCurrentDirectory(255,(char*)&sTemp) == 0)
 	{
 		return FALSE;										// failed, directory probably didn't exist.
@@ -180,7 +173,6 @@ static BOOL _addLoadSave(BOOL bLoad,CHAR *sSearchPath,CHAR *sExtension, CHAR *ti
 	}
 
 	CreateDirectory(sSearchPath,NULL);			// create the directory required... fails if already there, so no problem.
-#endif
 	widgCreateScreen(&psRequestScreen);			// init the screen.
 	widgSetTipFont(psRequestScreen,WFont);
 
@@ -225,21 +217,12 @@ static BOOL _addLoadSave(BOOL bLoad,CHAR *sSearchPath,CHAR *sExtension, CHAR *ti
 
 	// add cancel.
 	memset(&sButInit, 0, sizeof(W_BUTINIT));
-#ifdef WIN32
 	sButInit.formID = LOADSAVE_BANNER;
 	sButInit.x = 4;
 	sButInit.y = 3;
 	sButInit.width		= iV_GetImageWidth(IntImages,IMAGE_NRUTER);
 	sButInit.height		= iV_GetImageHeight(IntImages,IMAGE_NRUTER);
 	sButInit.pUserData	= (void*)PACKDWORD_TRI(0,IMAGE_NRUTER , IMAGE_NRUTER);
-#else
-	sButInit.formID = LOADSAVE_FORM;
-	sButInit.x = 6;
-	sButInit.y = 6;
-	sButInit.width = CLOSE_WIDTH;
-	sButInit.height = CLOSE_HEIGHT;
-	sButInit.pUserData = (void*)PACKDWORD_TRI(0,IMAGE_CLOSEHILIGHT , IMAGE_CLOSE);
-#endif
 	sButInit.id = LOADSAVE_CANCEL;
 	sButInit.style = WBUT_PLAIN;
 	sButInit.pTip = strresGetString(psStringRes, STR_MISC_CLOSE);
@@ -359,7 +342,6 @@ BOOL runLoadSave(BOOL bResetMissionWidgets)
 
 
 // ////////////////////////////////////////////////////////////////////////////
-#ifdef WIN32
 void deleteSaveGame(char* saveGameName)
 {
 	CHAR			sTemp2[MAX_STR_LENGTH],	sToDel[MAX_STR_LENGTH];
@@ -397,7 +379,6 @@ void deleteSaveGame(char* saveGameName)
 	RemoveDirectory(saveGameName);
 	return;
 }
-#endif
 
 // ////////////////////////////////////////////////////////////////////////////
 // Returns TRUE if cancel pressed or a valid game slot was selected.
@@ -666,13 +647,8 @@ static void displayLoadBanner(struct _widget *psWidget, UDWORD xOffset, UDWORD y
 		col = COL_RED;
 	}
 
-#ifdef WIN32
 	iV_BoxFill(x,y,x+psWidget->width,y+psWidget->height,col);
 	iV_BoxFill(x+2,y+2,x+psWidget->width-2,y+psWidget->height-2,COL_BLUE);
-#else
-	iV_BoxFill(x+2,y+2,x+psWidget->width-2,y+psWidget->height-2,COL_BLUE);
-	iV_BoxFill(x,y,x+psWidget->width,y+psWidget->height,col);
-#endif
 
 }
 // ////////////////////////////////////////////////////////////////////////////
@@ -686,9 +662,7 @@ static void displayLoadSlot(struct _widget *psWidget, UDWORD xOffset, UDWORD yOf
 	STRING  butString[64];
 
 	UNUSEDPARAMETER(pColours);
-#ifdef WIN32
 	drawBlueBox(x,y,psWidget->width,psWidget->height);	//draw box
-#endif
 	if(((W_BUTTON *)psWidget)->pTip )
 	{
 		strcpy(butString,((W_BUTTON *)psWidget)->pTip);
@@ -729,4 +703,3 @@ void drawBlueBox(UDWORD x,UDWORD y, UDWORD w, UDWORD h)
 	pie_BoxFillIndex(x-1,y-1,x+w+1,y+h+1,light);	
 	pie_BoxFillIndex(x,y,x+w,y+h,dark);
 }
-#endif

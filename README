@@ -1,2 +1,22 @@
 Warzone 2100 Redemption forked from 1.10 retail release
 Current engine Deliverance (assumed based on source)
+
+1.1 "Sin"
+Major changes: 	None yet
+
+Base code removal of demo and PSX related code. No branch 
+will be created under this heading though a binary release will 
+be made to make an attempt to fix bugs.
+
+1.2 "Deliverance"
+Major Changes: 	Migration to DirectX 9
+				C++ code addition.
+				OpenGL Integration tests
+				32bit graphics update (tga or dds?)
+
+There may be additional changes that will be added in during this
+milestone. Any major changes will be documented here.
+
+1.X "Absolution"
+Major Changes:	TBA
+

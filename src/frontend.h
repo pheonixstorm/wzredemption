@@ -26,7 +26,6 @@ typedef enum _title_mode {
 		GAME2,						// 17 second options menu.
 //		GRAPHICS,					// 5
 //		VIDEO,
-//	DEMOMODE,					// demo mode. remove for release?
 } tMode;
 
 //typedef enum _titlemode tMode;	// define the type
@@ -55,7 +54,7 @@ extern BOOL runMultiPlayerMenu		(VOID);
 //extern BOOL runVideoOptionsMenu		(VOID);
 //extern BOOL runGraphicsOptionsMenu	(VOID);
 extern BOOL runGameOptionsMenu		(VOID);
-extern BOOL runDemoMenu				(VOID);
+//extern BOOL runDemoMenu				(VOID); DELETEME
 extern BOOL runOptionsMenu			(VOID);
 extern BOOL runTutorialMenu			(VOID);
 
@@ -86,17 +85,10 @@ BOOL addIGTextButton(UDWORD id,UWORD y,UDWORD StringID,UDWORD Style);
 #define FRONTEND_BACKDROP		20000
 
 #define FRONTEND_TOPFORM		20001
-#ifdef WIN32
 #define FRONTEND_TOPFORMX		80
 #define FRONTEND_TOPFORMY		10
 #define FRONTEND_TOPFORMW		480
 #define FRONTEND_TOPFORMH		150
-#else
-#define FRONTEND_TOPFORMX		80
-#define FRONTEND_TOPFORMY		(10+20)
-#define FRONTEND_TOPFORMW		480
-#define FRONTEND_TOPFORMH		(150-8-6)
-#endif
 
 #define FRONTEND_TOPFORM_WIDEX	28
 #define FRONTEND_TOPFORM_WIDEY	10
@@ -201,6 +193,7 @@ BOOL addIGTextButton(UDWORD id,UWORD y,UDWORD StringID,UDWORD Style);
 //#define FRONTEND_OPENGL			20054
 //#define FRONTEND_GLIDE			20055
 
+// Should this section survive? FIXME
 #define FRONTEND_DEMO			20056
 #define FRONTEND_DEMO1			20057
 #define FRONTEND_DEMO2			20058

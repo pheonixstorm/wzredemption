@@ -228,7 +228,6 @@ UDWORD getResearchRadius(BASE_STATS *Stat)
 }
 
 
-//#ifdef WIN32
 UDWORD getStructureSize(STRUCTURE *psStructure)
 {
 	UDWORD size;
@@ -241,7 +240,7 @@ UDWORD getStructureSize(STRUCTURE *psStructure)
 	}
 	return (size);
 }
-//#else
+
 UDWORD getStructureRadius(STRUCTURE *psStructure)
 {
 	iIMDShape *baseImd;
@@ -256,10 +255,7 @@ UDWORD getStructureRadius(STRUCTURE *psStructure)
 
 	return Radius;
 }
-//#endif
 
-
-//#ifdef WIN32
 UDWORD getStructureStatSize(STRUCTURE_STATS *Stats)
 {
 	UDWORD size;
@@ -272,7 +268,7 @@ UDWORD getStructureStatSize(STRUCTURE_STATS *Stats)
 	}
 	return (size);
 }
-//#else
+
 UDWORD getStructureStatRadius(STRUCTURE_STATS *Stats,UDWORD Player)
 {
 	iIMDShape *baseImd;
@@ -289,7 +285,6 @@ UDWORD getStructureStatRadius(STRUCTURE_STATS *Stats,UDWORD Player)
 
 	return Radius;
 }
-//#endif
 
 UDWORD getStructureHeight(STRUCTURE *psStructure)
 {

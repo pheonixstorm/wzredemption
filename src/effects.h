@@ -87,9 +87,9 @@ FIREWORK_TYPE_LAUNCHER,
 /* Is the slot currently being used and is it active? */
 typedef enum
 {
-ES_INACTIVE,
-ES_ACTIVE,
-ES_DORMANT
+    ES_INACTIVE,
+    ES_ACTIVE,
+    ES_DORMANT
 }EFFECT_STATUS;
 
 typedef enum
@@ -99,11 +99,7 @@ typedef enum
 	LL_OUTER
 }LAND_LIGHT_SPEC;
 
-#ifdef WIN32
 #define MAX_EFFECTS	2500
-#else
-#define MAX_EFFECTS	150
-#endif
 #define	GRAVITON_GRAVITY	((FRACT)-800)
 #define	EFFECT_X_FLIP		0x1
 #define	EFFECT_Y_FLIP		0x2
@@ -176,24 +172,24 @@ typedef enum
 
 typedef struct	_effect_def
 {
-UBYTE			status;			// what status is the present effect - active/inactive/dormant
-UBYTE			control;		// Controls the bits above - essential,flips etc
-UBYTE			group;			// what	group is it - explosion, building effect etc....
-UBYTE			type;			// what type is it within the group?
-UBYTE			frameNumber;	// what frame number is the imd on?
-UWORD			size;			// Size in terms of percent of original imd.
-UBYTE			baseScale;		// if scaled, what's bottom line?
-UBYTE			specific;		// how many times has it bounced?
-PIEVECTORF		position;		// world coordinates of the effect - floats on the PC.
-PIEVECTORF		velocity;		// movement values per update
-iVector			rotation;		// current rotation - only for gravitons
-iVector			spin;			// rotation info for spinning things.
-UDWORD			birthTime;		// what time was it introduced into the world?
-UDWORD			lastFrame;		// when did we last update the frame?
-UWORD			frameDelay;		// how many game ticks between each frame?
-UWORD			lifeSpan;		// what is it's life expectancy?
-UWORD			radius;			// Used for area effects
-struct iIMDShape		*imd;			// pointer to the imd the effect uses.
+    UBYTE			status;			// what status is the present effect - active/inactive/dormant
+    UBYTE			control;		// Controls the bits above - essential,flips etc
+    UBYTE			group;			// what	group is it - explosion, building effect etc....
+    UBYTE			type;			// what type is it within the group?
+    UBYTE			frameNumber;	// what frame number is the imd on?
+    UWORD			size;			// Size in terms of percent of original imd.
+    UBYTE			baseScale;		// if scaled, what's bottom line?
+    UBYTE			specific;		// how many times has it bounced?
+    PIEVECTORF		position;		// world coordinates of the effect - floats on the PC.
+    PIEVECTORF		velocity;		// movement values per update
+    iVector			rotation;		// current rotation - only for gravitons
+    iVector			spin;			// rotation info for spinning things.
+    UDWORD			birthTime;		// what time was it introduced into the world?
+    UDWORD			lastFrame;		// when did we last update the frame?
+    UWORD			frameDelay;		// how many game ticks between each frame?
+    UWORD			lifeSpan;		// what is it's life expectancy?
+    UWORD			radius;			// Used for area effects
+    struct iIMDShape		*imd;	// pointer to the imd the effect uses.
 } EFFECT;
 
 #define KILL_EFFECT(x)	(x)->status = ES_INACTIVE; \

@@ -232,12 +232,7 @@ int iV_GetTextWidth(unsigned char *String)
 		if(Index != ASCII_COLOURMODE) {
 			if(Index != ASCII_SPACE) {
 				ImageID = (UWORD)Font->AsciiTable[Index];
-	#ifdef WIN32
 				MaxX += iV_GetImageWidth(Font->FontFile,ImageID) + 1;
-	#else
-				MaxX += iV_GetImageWidth(Font->FontFile,ImageID) + 2;
-	#endif
-
 			} else {
 				MaxX += Font->FontSpaceSize;
 			}
@@ -264,23 +259,9 @@ BOOL iV_GetTextDetails(unsigned char Char, UWORD *Width, UWORD *Height, SWORD *Y
 	if(Index != ASCII_COLOURMODE) {
 		if(Index != ASCII_SPACE) {
 			ImageID = (UWORD)Font->AsciiTable[Index];
-
-	#ifdef WIN32
 			*Width = iV_GetImageWidth(Font->FontFile,ImageID) ;
 			*Height = iV_GetImageHeight(Font->FontFile,ImageID);
 			*YOffset = iV_GetImageYOffset(Font->FontFile,ImageID);
-	#else
-			{
-				IMAGEDEF *Image;
-				Image=	  &( Font->FontFile->ImageDefs[ImageID]);
-				*Width = Image->Width;
-				*Height = Image->Height;
-				*YOffset = Image->YOffset;
-				*U=	  Image->Tu;
-				*V=	Image->Tv;
-				*TpageID=Image->TPageID;
-			}
-	#endif
 			return TRUE;
 		}
 		else 
@@ -313,12 +294,7 @@ int iV_GetCharWidth(unsigned char Char)
 	if(Index != ASCII_COLOURMODE) {
 		if(Index != ASCII_SPACE) {
 			ImageID = (UWORD)Font->AsciiTable[Index];
-
-	#ifdef WIN32
 			Width = iV_GetImageWidth(Font->FontFile,ImageID) + 1;
-	#else
-			Width = iV_GetImageWidth(Font->FontFile,ImageID) + 2;
-	#endif
 		} else {
 		   Width = Font->FontSpaceSize;
 		}
@@ -820,7 +796,6 @@ void pie_DrawText(unsigned char *string, UDWORD x, UDWORD y)
 //				for the front end and one for in game. We can start to use an
 //				array index if we need more. 
 //			*/
-//#ifdef WIN32
 //			if(Font->bGameFont)
 //			{
 //				imageID = textJumpTableGame[presChar];	// Presently only for in game
@@ -831,22 +806,13 @@ void pie_DrawText(unsigned char *string, UDWORD x, UDWORD y)
 //				// will ultimately be...
 //				// imageID = textJumpTableFrontEnd[presChar];
 //			}
-//#else
-//				// 
-//				imageID = (UWORD)(Font->FontStartID + presChar - '!');
-//#endif
 //
 //
 //			/* Draw the character */
 //			pie_TextRender(Font->FontFile,imageID,x,y);
-//#ifdef WIN32
 // 			x += iV_GetImageWidth(Font->FontFile,imageID) + 1;
-//#else
-// 			x += iV_GetImageWidth(Font->FontFile,imageID) + 2;	// legacy?
-//#endif																
 //			
 //		}
-//#ifdef WIN32
 //		/* New bit to make text wrap */
 //		if(x > (pie_GetVideoBufferWidth() - Font->FontSpaceSize) )
 //		{
@@ -854,7 +820,6 @@ void pie_DrawText(unsigned char *string, UDWORD x, UDWORD y)
 //			x = 0;
 //			y += iV_GetTextLineSize();
 //		}
-//#endif
 //		/* Jump along to the next character */
 //		string++;
 //	}
@@ -886,12 +851,7 @@ void pie_DrawText(unsigned char *String,int XPos,int YPos)
 			{
 				ImageID = (UWORD)(Font->FontStartID + Index);
 				pie_TextRender(Font->FontFile,ImageID,XPos,YPos);
-
-	#ifdef WIN32
 				XPos += iV_GetImageWidth(Font->FontFile,ImageID) + 1;
-	#else
-				XPos += iV_GetImageWidth(Font->FontFile,ImageID) + 2;
-	#endif
 			}
 			else if(Index!=-1)	// unknown character code!!!!
 			{
@@ -900,19 +860,10 @@ void pie_DrawText(unsigned char *String,int XPos,int YPos)
 				ImageID = (UWORD)(Font->FontStartID + Index);
 
 				pie_TextRender(Font->FontFile,ImageID,XPos,YPos);
-
-	#ifdef WIN32
 				XPos += iV_GetImageWidth(Font->FontFile,ImageID) + 1;
-	#else
-				XPos += iV_GetImageWidth(Font->FontFile,ImageID) + 2;
-	#endif
 			}
 			else if(Index == -1) {
-	//#ifdef WIN32
 				XPos += Font->FontSpaceSize;
-	//#else
-	//			XPos += Font->FontSpaceSize*2;
-	//#endif
 			}
 
 			String++;
@@ -1140,9 +1091,7 @@ void pie_DrawText270(unsigned char *String,int XPos,int YPos)
 //	int Index;
 //	IVIS_FONT *Font = &iVFonts[ActiveFontID];
 //
-//#ifdef WIN32
 //	if (pie_Hardware())
-//#endif
 //	{
 //		YPos += (iV_GetImageWidth(Font->FontFile,(UWORD)(Font->FontStartID)) + 1) ;
 //	}
@@ -1157,21 +1106,12 @@ void pie_DrawText270(unsigned char *String,int XPos,int YPos)
 //		{			
 //			pie_TextRender270(Font->FontFile,(UWORD)(Index+Font->FontStartID),XPos,YPos);
 //
-//#ifdef WIN32
 //			YPos -= (iV_GetImageWidth(Font->FontFile,(UWORD)(Index+Font->FontStartID)) +1) ;
-//#else
-//			YPos -= (iV_GetImageWidth(Font->FontFile,(UWORD)(Index+Font->FontStartID)) +2) ;
-////			YPos -= (iV_GetImageWidth(Font->FontFile,Index+Font->FontStartID)+1)*2 ;
-//#endif
 //
 //		}
 //		else if(Index == -1)
 //		{
-////#ifdef WIN32
 //			YPos -= (Font->FontSpaceSize);
-////#else
-////			YPos -= (Font->FontSpaceSize)*2;
-////#endif
 //		}
 //		String++;
 //	}

@@ -7,9 +7,7 @@
 #include "frame.h"
 #include "ivisdef.h"
 #include "pieState.h"
-#ifdef WIN32
 #include "dx6TexMan.h"
-#endif
 #include "tex.h"
 #include "rendmode.h"
 #include "pcx.h"
@@ -377,7 +375,6 @@ SBYTE GetTextureNumber(char *Name)
 void pie_TexShutDown(void)
 
 {
-#ifdef WIN32
 	int i,j;
 
 	i = 0;
@@ -405,12 +402,10 @@ void pie_TexShutDown(void)
 
 
 	DBPRINTF(("pie_TexShutDown successful - freed %d texture pages\n",j));
-#endif
 }
 
 void pie_TexInit(void)
 {
-#ifdef WIN32
 	int i;
 
 	i = 0;
@@ -423,7 +418,6 @@ void pie_TexInit(void)
 		_TEX_PAGE[i].tex.xshift = 0;
 		i++;
 	}
-#endif
 }
 
 // Check that a texture is  <= 256x256 and 2^n x 2^n in size.

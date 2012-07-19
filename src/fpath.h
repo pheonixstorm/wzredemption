@@ -9,17 +9,12 @@
 
 // limit the number of iterations for astar
 #define FPATH_MAX_ROUTE_INIT	400
-#ifdef WIN32
 extern SDWORD	astarMaxRoute;
 #  ifdef DEBUG
 #    define FPATH_LOOP_LIMIT	(astarMaxRoute / 2)
 #  else
 #    define FPATH_LOOP_LIMIT	astarMaxRoute
 #  endif
-#else
-#  define FPATH_LOOP_LIMIT	100
-#endif
-
 
 // return values for routing
 typedef enum _fpath_retval
@@ -66,20 +61,7 @@ extern void fpathSetDirectRoute( BASE_OBJECT *psObj,
 							SDWORD targetX, SDWORD targetY );
 
 /*
-#ifdef WIN32
 #define FPATH_INLINE _inline
-#else
-
-#undef FPATH_INLINE
-#ifdef DEFINE_MAPINLINE
-#define FPATH_INLINE 
-#else
-#define FPATH_INLINE __inline extern
-#endif
-
-#endif
-
-
 
 // Check if the map tile at a location blocks a droid
 FPATH_INLINE BOOL fpathBlockingTile(SDWORD x, SDWORD y)
@@ -115,5 +97,3 @@ FPATH_INLINE BOOL fpathBlockingTile(SDWORD x, SDWORD y)
 
 
 #endif
-
-

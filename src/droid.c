@@ -41,9 +41,7 @@
 #include "function.h"
 #include "Lighting.h"
 #include "Gateway.h"
-#ifdef WIN32
 #include "MultiPlay.h"		//ajl
-#endif
 #include "FormationDef.h"
 #include "Formation.h"
 #include "WarCam.h"
@@ -1114,28 +1112,11 @@ void droidResetNaybors(void)
 	CurrentNaybors = NULL;
 }
 
-
-//#ifdef WIN32
-//
 //void droidGetNaybors(DROID *psDroid)
 //{
 //	droidGetNayb(psDroid);
 //}
 //
-//#else
-//
-//void droidGetNaybors(DROID *psDroid)
-//{
-//	static DROID *psTmpDroid;
-//	psTmpDroid = psDroid;
-//
-//	SetSpDCache();
-//	droidGetNayb(psTmpDroid);
-//	SetSpNormal();
-//}
-//
-//#endif
-
 
 // macro to see if an object is in NAYBOR_RANGE
 // used by droidGetNayb
@@ -1729,20 +1710,7 @@ BOOL droidStartBuild(DROID *psDroid)
 static void droidAddWeldSound( iVector iVecEffect )
 {
 	SDWORD		iAudioID;
-
-#if WIN32
 	iAudioID = ID_SOUND_CONSTRUCTION_1 + (rand()%4);
-#else
-	if(ONEINTWO)
-	{
-		iAudioID = ID_SOUND_WELD_1;
-	}
-	else
-	{
-		iAudioID = ID_SOUND_WELD_2;
-	}
-#endif
-	
 	audio_PlayStaticTrack( iVecEffect.x, iVecEffect.z, iAudioID );
 }
 
@@ -3204,9 +3172,7 @@ BOOL loadDroidTemplates(SBYTE *pDroidData, UDWORD bufferSize)
 
 		pDroidDesign->ref = REF_TEMPLATE_START + i;
 /*	Loaded in from the database now AB 29/10/98
-#ifdef WIN32
 			pDroidDesign->multiPlayerID = i;			// another unique number, just for multiplayer stuff.
-#endif
 */
 		/* store global default design if found else
 		 * store in the appropriate array
@@ -3502,11 +3468,7 @@ BOOL loadDroidWeapons(SBYTE *pWeaponData, UDWORD bufferSize)
                 //check valid weapon/propulsion
                 if (!checkValidWeaponForProp(pTemplate))
                 {
-#ifdef WIN32			// ffs
                     DBERROR(("Weapon is invalid for air propulsion for template %s",pTemplate->aName));
-#else
-                    DBERROR(("Weapon is invalid for air propulsion for template %p",pTemplate));
-#endif
 					return FALSE;
                 }
 
@@ -3573,12 +3535,10 @@ BOOL loadDroidWeapons(SBYTE *pWeaponData, UDWORD bufferSize)
 		//{
 		//	return FALSE;
 		//}
-#ifdef WIN32
 		if (!getDroidResourceName(TemplateName))
 		{
 			return FALSE;
 		}
-#endif
 		if (!getResourceName(ProgramName))
 		{
 			return FALSE;
@@ -4002,7 +3962,6 @@ DROID* buildDroid(DROID_TEMPLATE *pTemplate, UDWORD x, UDWORD y, UDWORD player,
 //	BOOL			gotPos;
 //	UDWORD			numIts;
 
-#ifdef WIN32
 	/*
 	if(bMultiPlayer)
 	{
@@ -4020,7 +3979,6 @@ DROID* buildDroid(DROID_TEMPLATE *pTemplate, UDWORD x, UDWORD y, UDWORD player,
 		}
 	}
 	*/
-#endif
 
 	//don't worry if not on homebase cos not being drawn yet
 // this check no longer required coz John says so JPS 7Jan99
@@ -4122,13 +4080,11 @@ DROID* buildDroid(DROID_TEMPLATE *pTemplate, UDWORD x, UDWORD y, UDWORD player,
 	psDroid->actionY = 0;
 	psDroid->psActionTarget = NULL;
 
-#ifdef WIN32		// ffs je 
 	psDroid->listSize = 0;
 	memset(psDroid->asOrderList, 0, sizeof(ORDER_LIST)*ORDER_LIST_MAX);
 
 	psDroid->iAudioID = NO_SOUND;
 	psDroid->lastSync = 0;
-#endif
 
 //	psDroid->activeWeapon = -1;
 	//psDroid->activeProg = -1;
@@ -4207,11 +4163,9 @@ DROID* buildDroid(DROID_TEMPLATE *pTemplate, UDWORD x, UDWORD y, UDWORD player,
 	psDroid->turretPitch = 0;
 	psDroid->selected = FALSE;
 	psDroid->lastEmission = 0;
-#ifdef WIN32		// ffs AM
 	psDroid->bTargetted = FALSE;
 	psDroid->timeLastHit = UDWORD_MAX;
 	psDroid->lastHitWeapon = UDWORD_MAX;	// no such weapon
-#endif	
 	//allocate 'easy-access' data!
 	//psDroid->sensorRange = (asSensorStats + pTemplate->asParts
 	//	[COMP_SENSOR])->range;
@@ -4330,7 +4284,6 @@ DROID* buildDroid(DROID_TEMPLATE *pTemplate, UDWORD x, UDWORD y, UDWORD player,
 		*/
 	}
 
-#ifdef WIN32
 	// ajl. droid will be created, so inform others
 	if(bMultiPlayer)		
 	{
@@ -4339,7 +4292,6 @@ DROID* buildDroid(DROID_TEMPLATE *pTemplate, UDWORD x, UDWORD y, UDWORD player,
 			return NULL;
 		}
 	}
-#endif
 
 	/* transporter-specific stuff */
 	if (psDroid->droidType == DROID_TRANSPORTER)
@@ -4372,9 +4324,7 @@ void initDroidMovement(DROID *psDroid)
 
 	psDroid->sMove.fx = MAKEFRACT(psDroid->x);
 	psDroid->sMove.fy = MAKEFRACT(psDroid->y);
-#ifdef WIN32
 	psDroid->sMove.fz = MAKEFRACT(psDroid->z);
-#endif
 }
 
 // Set the asBits in a DROID structure given it's template.
@@ -4875,7 +4825,6 @@ FLAG_POSITION	*psFlagPos;
 
 			Selected = TRUE;
 			if(!driveModeActive()) {
-#ifdef WIN32
 				if(getWarCamStatus())
 				{
 					camToggleStatus();			 // messy - fix this
@@ -4888,17 +4837,8 @@ FLAG_POSITION	*psFlagPos;
 				{
 	//				camToggleStatus();
 					/* Centre display on him if warcam isn't active */
-//#ifdef WIN32
-					setViewPos(psCentreDroid->x>>TILE_SHIFT,psCentreDroid->y>>TILE_SHIFT,TRUE);
-//#else
-//					camPanToLocation(psCentreDroid->x, psCentreDroid->y);
-//#endif
-				}
-#else
-				if(!getWarCamStatus() || camGetMode() == CAMMODE_PANTOLOCATION) {
 					setViewPos(psCentreDroid->x>>TILE_SHIFT,psCentreDroid->y>>TILE_SHIFT,TRUE);
 				}
-#endif
 			}
 		}
 	}
@@ -4966,31 +4906,26 @@ FLAG_POSITION	*psFlagPos;
 
 void	groupConsoleInformOfSelection( UDWORD groupNumber )
 {
-#ifdef WIN32		// ffs am
 char	groupInfo[255];
 //	if(!getWarCamStatus())
 //	{
 		sprintf(groupInfo,strresGetString(psStringRes,STR_GP_SELECTED),groupNumber,selNumSelected(selectedPlayer));
 		addConsoleMessage(groupInfo,RIGHT_JUSTIFY);
 //	}
-#endif
 }
 
 void	groupConsoleInformOfCreation( UDWORD groupNumber )
 {
-#ifdef WIN32
 char	groupInfo[255];
 	if(!getWarCamStatus())
 	{
 		sprintf(groupInfo,strresGetString(psStringRes,STR_GP_ASSIGNED),selNumSelected(selectedPlayer),groupNumber);
 		addConsoleMessage(groupInfo,RIGHT_JUSTIFY);
 	}
-#endif
 }
 
 void	groupConsoleInformOfCentering( UDWORD groupNumber )
 {
-#ifdef WIN32
 char	groupInfo[255];
 	if(!getWarCamStatus())
 	{
@@ -5001,7 +4936,6 @@ char	groupInfo[255];
 		sprintf(groupInfo,strresGetString(psStringRes,STR_GP_ALLIGN),groupNumber,selNumSelected(selectedPlayer));
 	}
 		addConsoleMessage(groupInfo,RIGHT_JUSTIFY);
-#endif
 }
    	 
    
@@ -5118,9 +5052,8 @@ DROID_TEMPLATE * getTemplateFromName(STRING *pName)
         //don't use selectedPlayer's templates if not multiplayer
         //this was written for use in the scripts and we don't want the scripts to use 
         //selectedPlayer's templates because we cannot guarentee they will exist!
-/*#ifdef WIN32
+/*        
         if (!bMultiPlayer)
-#endif
         {
             if (player == selectedPlayer)
             {
@@ -5262,7 +5195,6 @@ UDWORD	getDroidLevel(DROID *psDroid)
 
 STRING	*getDroidNameForRank(UDWORD rank)
 {
-#ifdef WIN32
 switch(rank)
 {
 	case 0:
@@ -5284,19 +5216,10 @@ switch(rank)
 	case 8:
 		return strresGetString(psStringRes, STR_DL_LEVEL_ACE);
 	}
-#else
-	// Return rank string, assumes strings are in accending order of rank from rookie thro to ace.
-	if(rank <= 8) {
-		return strresGetString(psStringRes, STR_DL_LEVEL_ROOKIE+rank);
-	} else {
-		return strresGetString(psStringRes, STR_DL_LEVEL_ACE);
-	}
-#endif
 }
 
 STRING	*getDroidLevelName(DROID *psDroid)
 {
-//#ifdef WIN32
 	return(getDroidNameForRank(getDroidLevel(psDroid)));
 	/*
 	switch (getDroidLevel(psDroid))
@@ -5321,9 +5244,6 @@ STRING	*getDroidLevelName(DROID *psDroid)
 		return strresGetString(psStringRes, STR_DL_LEVEL_ACE);
 	}
 	*/
-//#else
-//		return "Rank";
-//#endif
 }
 
 UDWORD	getNumDroidsForLevel(UDWORD	level)
@@ -5471,10 +5391,6 @@ UDWORD	calcDroidSystemPoints(DROID *psDroid)
 
 	return system;
 }
-
-
-
-#ifdef WIN32
 // Get the name of a droid from it's DROID structure.
 //
 STRING *droidGetName(DROID *psDroid)
@@ -5498,24 +5414,6 @@ STRING *droidGetName(DROID *psDroid)
 #endif
 }
 
-#else
-
-STRING *droidGetName(DROID *psDroid)
-{
-	STRING *ret;
-	DROID_TEMPLATE sTemplate;
-
-	templateSetParts(psDroid,&sTemplate);
-
-	// This line was put here to pick up the name for droid that have the name passed through (like cyborgs)
-	// 
-//	sTemplate.NameHash = psDroid->HashedDroidName;
-	ret = getTemplateName(&sTemplate);
-//	DBPRINTF(("droidGetName : %s\n",ret));
-	return ret;
-}
-
-#endif
 
 //
 // Set the name of a droid in it's DROID structure.
@@ -6682,7 +6580,6 @@ DROID * giftSingleDroid(DROID *psD, UDWORD to)
     bMultiPlayer = TRUE;
 #endif
 
-#ifdef WIN32
     if (bMultiPlayer)
     {
         //reset order
@@ -6776,16 +6673,13 @@ DROID * giftSingleDroid(DROID *psD, UDWORD to)
         return NULL;
     }
     else
-#endif
     {
         //got to destroy the droid and build another since there are too many complications re order/action!
 
         //create a template based on the droid
         templateSetParts(psD, &sTemplate);
-#ifdef WIN32
         //copy the name across
         strcpy(sTemplate.aName, psD->aName);
-#endif
         x = psD->x;
         y = psD->y;
         body = psD->body;
@@ -6799,11 +6693,7 @@ DROID * giftSingleDroid(DROID *psD, UDWORD to)
         if ((psD->player == selectedPlayer) AND (to != selectedPlayer))
         {
             scoreUpdateVar(WD_UNITS_LOST);
-#ifdef WIN32
 	        audio_QueueTrackPos( ID_SOUND_NEXUS_UNIT_ABSORBED, x, y, psD->z );
-#else
-			BeepMessage(STR_GAM_UNITABSORBED);
-#endif
         }
         //make the old droid vanish
         vanishDroid(psD);
@@ -7041,7 +6931,6 @@ UWORD repairPowerPoint(DROID *psDroid)
         REPAIR_POWER_FACTOR);
 }
 
-#ifdef WIN32
 BOOL droidAudioTrackStopped( AUDIO_SAMPLE *psSample )
 {
 	DROID	*psDroid;
@@ -7063,7 +6952,6 @@ BOOL droidAudioTrackStopped( AUDIO_SAMPLE *psSample )
 
 	return TRUE;
 }
-#endif
 
 /*returns TRUE if droid type is one of the Cyborg types*/
 BOOL cyborgDroid(DROID *psDroid)

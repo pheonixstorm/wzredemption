@@ -20,11 +20,9 @@
 /* Includes direct access to render library */
 #include "ivisdef.h"
 #include "pieState.h"
-#ifdef WIN32
 #include "pieMode.h"			// ffs
 #include "pieClip.h"			// ffs 
 #include "pieBlitFunc.h"
-#endif
 #include "vid.h"
 #include "geo.h"
 
@@ -1973,7 +1971,6 @@ void intDisplayTab(struct _widget *psWidget,UDWORD TabType, UDWORD Position,
 //
 //	Number = Number%4;	// Make sure number never gets bigger than 3.
 //
-//#ifdef WIN32
 //	if(TabType == TAB_MAJOR) 
 //	{
 //		iV_DrawTransImage(IntImages,(UWORD)(Tab->MajorUp+Number),x,y);
@@ -2001,41 +1998,6 @@ void intDisplayTab(struct _widget *psWidget,UDWORD TabType, UDWORD Position,
 //			iV_DrawTransImage(IntImages,Tab->MinorSelected,x,y);
 //		}
 //	}
-//#else
-//	if(TabType == TAB_MAJOR) 
-//	{
-//		if(Hilight) 
-//		{
-//			iV_DrawTransImage(IntImages,Tab->MajorHilight,x,y);
-//		} 
-//		else if(Selected) 
-//		{
-//			iV_DrawTransImage(IntImages,(UWORD)(Tab->MajorSelected+Number),x,y);
-//		}
-//
-//		ImageID = (UWORD)(Tab->MajorUp+Number);
-//		iV_DrawTransImage(IntImages,ImageID,x,y);
-//	}
-//	else
-//	{
-//		if(Hilight) 
-//		{
-//			iV_DrawTransImage(IntImages,Tab->MinorHilight,x,y);
-//		} 
-//		else if(Selected) 
-//		{
-//			iV_DrawTransImage(IntImages,Tab->MinorSelected,x,y);
-//		}
-//
-//		ImageID = (UWORD)(Tab->MinorUp);
-//		iV_DrawTransImage(IntImages,ImageID,x,y);
-//	}
-//
-//	AddCursorSnap(&InterfaceSnap,
-//					x+(iV_GetImageXOffset(IntImages,ImageID))+iV_GetImageWidth(IntImages,ImageID)/2,
-//					y+(iV_GetImageYOffset(IntImages,ImageID))+iV_GetImageHeight(IntImages,ImageID)/2,
-//					psWidget->formID,psWidget->id,NULL);
-//#endif
 //}
 
 //static void intUpdateSliderCount(struct _widget *psWidget, struct _w_context *psContext)
@@ -3753,10 +3715,10 @@ void drawRadarBlips()
 		bGlide = FALSE;
 	}
 
-/*#ifdef WIN32
+/*
 	SDWORD				radarX,radarY;		// for multiplayer blips
 	//FEATURE				*psFeature;			// ditto. Needed always now!
-#endif*/
+*/
 
 	VisWidth = RADWIDTH;
 	VisHeight = RADHEIGHT;

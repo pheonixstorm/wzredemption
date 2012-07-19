@@ -20,9 +20,7 @@
  */
 /***************************************************************************/
 #define BSPIMD	// now defined for all versions (optional BSP handled on all formats)
-#ifdef WIN32
-	#define iV_DDX
-#endif
+#define iV_DDX
 
 #define iV_SCANTABLE_MAX	1024
 
@@ -69,12 +67,8 @@ typedef struct iSurface {
 	int xpshift;
 	int ypshift;
 	iClip clip;
-#ifdef WIN32
 	uint8 *buffer;
 	int32 scantable[iV_SCANTABLE_MAX];	// currently uses 4k per structure (!)
-#else
-	RECT VRAMLocation;	// where in the PlayStation Video Memory is this surface allocated its memory
-#endif
 	int width;
 	int height;
 	int32 size;

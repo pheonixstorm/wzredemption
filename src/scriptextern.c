@@ -12,9 +12,7 @@
 #include "ScriptTabs.h"
 #include "ScriptExtern.h"
 
-#ifdef WIN32
 #include "multiplay.h"
-#endif
 
 #include "WinMain.h"
 #include "HCI.h"
@@ -114,9 +112,6 @@ BOOL scrGenExternGet(UDWORD index)
 		type=VAL_BOOL;
 		val=bExtraFailFlag;
 		break;
-
-
-#ifdef WIN32
 	case EXTID_MULTIGAMETYPE:		// multiplayer variable..
 		type = VAL_INT;
 		val = game.type;
@@ -129,8 +124,7 @@ BOOL scrGenExternGet(UDWORD index)
 		type = VAL_INT;
 		val	= game.base;
 		break;
-#endif					 
-		default:
+	default:
 		ASSERT((FALSE, "scrGenExternGet: unknown variable index"));
 		return FALSE;
 		break;
@@ -202,4 +196,3 @@ BOOL scrGenExternSet(UDWORD index)
 
 	return TRUE;
 }
-

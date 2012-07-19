@@ -12,10 +12,9 @@
 #include "Map.h"
 #include "Disp2D.h"
 #include "Loop.h"
-#ifdef WIN32
 #include "Atmos.h"	// temporary only for here
 #include "CSnap.h"
-#endif
+
 /* Includes direct access to render library */
 #include "piedef.h"
 #include "pieState.h"
@@ -285,9 +284,7 @@ SDWORD	screenShakeTable[100] =
 1,0,-1,-1,-2,-1,1,0,1,0
 };
 
-#ifdef WIN32
 PALETTEENTRY	gamePalette[255];		// another game palette (yawn)
-#endif
 
 #define TESTLEVEL_ID (0)
 
@@ -339,7 +336,6 @@ void	setShakeStatus( BOOL val )
 
 void shakeStart(void)
 {
-#ifdef WIN32
 	if(bShakingPermitted)
 	{
 		if(!bScreenShakeActive)
@@ -349,23 +345,6 @@ void shakeStart(void)
 			screenShakeLength = SHAKE_TIME;//1500;
 		}
 	}
-#else
-	if(!bScreenShakeActive)
-	{
-		if(bShakingPermitted)
-		{
-			bScreenShakeActive = TRUE;
-			screenShakeStarted = gameTime;
-			screenShakeLength = SHAKE_TIME;//1500;
-		}
-
-	#ifdef LIBPAD
-		if(EnableVibration) {
-			SetVibro1(0,150,512);
-		}
-	#endif
-	}
-#endif
 }
 
 
@@ -409,12 +388,7 @@ void shakeUpdate(void)
 
 BOOL LoadLevelGraphics(UBYTE LevelNumber)
 {
-
-#ifdef WIN32
 	(void)LevelNumber;
-#else
-//	InstallLevelTextures(LevelNumber);	// Playstation texture for level load & install into VRAM
-#endif
 
 	return TRUE;
 }
@@ -476,11 +450,6 @@ void ProcessRadarInput(void)
 	int y = mouseY();
 	UDWORD	temp1,temp2;
 
-#ifdef COVERMOUNT
-#ifdef NON_INTERACT
-	return;
-#endif
-#endif
 	/* Only allow jump-to-area-of-map if radar is on-screen */
 	mouseOverRadar = FALSE;
 	if(radarOnScreen AND  getHQExists(selectedPlayer))
@@ -598,13 +567,6 @@ void processInput(void)
 
 	mX = mouseX();
 	mY = mouseY();
-
-#ifdef COVERMOUNT
-#ifdef NON_INTERACT
-	keyProcessMappings(FALSE);		// remove these two lines
-	return;						// remove these two lines
-#endif
-#endif
 
 	/* Process all of our key mappings */
 //	keyProcessMappings();	// done later - see below.
@@ -750,12 +712,8 @@ void CheckFinishedDrag(void)
 				{
 					//if(((STRUCTURE_STATS *)sBuildDetails.psStats)->type >= REF_WALLH AND
 					//	((STRUCTURE_STATS *)sBuildDetails.psStats)->type <= REF_WALLV)
-#ifdef WIN32
 			    	if( ((STRUCTURE_STATS *)sBuildDetails.psStats)->type == REF_WALL ||
 			    		(((STRUCTURE_STATS *)sBuildDetails.psStats)->type == REF_DEFENSE))
-#else           
-			    	if( ((STRUCTURE_STATS *)sBuildDetails.psStats)->type == REF_WALL )
-#endif          
 					{
 						wallDrag.x2 = mouseTileX;
 						wallDrag.y2 = mouseTileY;
@@ -988,15 +946,6 @@ void processMouseClickInput(void)
 	SELECTION_TYPE	selection;
 	MOUSE_TARGET	item=MT_NOTARGET;
 	BOOL OverRadar = OverRadarAndNotDragging();
-
-
-
-#ifdef COVERMOUNT
-#ifdef NON_INTERACT
-	return;
-#endif
-#endif
-
 	
 	// These four functions were embedded in this function but I moved them out for readability. In the
 // absense of any comments I had a guess as to there use and named them accordingly PD 28/05/98.
@@ -1054,7 +1003,7 @@ void processMouseClickInput(void)
 				kill3DBuilding();
 				bRadarDragging = FALSE;
 			}
-#ifndef NON_INTERACT
+//#ifndef NON_INTERACT
 			if(mouseDrag(MOUSE_RMB,(UDWORD *)&rotX,(UDWORD *)&rotY) AND !rotActive AND !bRadarDragging)
 			{
 				rotInitial = player.r.y;
@@ -1063,7 +1012,7 @@ void processMouseClickInput(void)
 				yMoved = 0;
 				rotActive = TRUE;
 			}
-#endif
+//#endif
 		}
 	}
 
@@ -1255,12 +1204,6 @@ void scroll(void)
 #endif
 	UDWORD	timeDiff;
 	BOOL	bRetardScroll = FALSE;
-
-#ifdef COVERMOUNT
-#ifdef NON_INTERACT
-	return;	// no scroll control in demo only version
-#endif
-#endif
 
 	if(InGameOpUp || bDisplayMultiJoiningStatus )		// cant scroll when menu up. or when over radar
 	{
@@ -1621,7 +1564,7 @@ void displayWorld(void)
 	iVector	pos;
 	shakeUpdate();
 
-#ifndef NON_INTERACT
+//#ifndef NON_INTERACT
 	if(mouseDown(MOUSE_RMB) AND	rotActive)
 	{
   		if( (abs(mX-rotX)>8) OR xMoved>8)
@@ -1673,9 +1616,9 @@ void displayWorld(void)
 			setDesiredPitch(player.r.x/DEG_1);
 		}
 	}
-#endif
+//#endif
 
-#ifndef NON_INTERACT
+//#ifndef NON_INTERACT
 	if(mouseReleased(MOUSE_RMB) AND rotActive)
 	{
 		rotActive = FALSE;
@@ -1687,7 +1630,7 @@ void displayWorld(void)
 		camInformOfRotation(&pos);
 		bRadarDragging = FALSE;
 	}
-#endif
+//#endif
 
 	draw3DScene();
 }
@@ -2551,7 +2494,6 @@ SELECTION_TYPE	selection;
 					}
 					break;
 /*				case FEAT_OIL_DRUM:
-#ifdef WIN32
    					psNearestUnit = getNearestDroid(mouseTileX*TILE_UNITS+TILE_UNITS/2,
 												   mouseTileY*TILE_UNITS+TILE_UNITS/2,TRUE);
 					// If so then find the nearest unit! 
@@ -2563,11 +2505,6 @@ SELECTION_TYPE	selection;
 					{
 						orderSelectedLoc(selectedPlayer, psFeature->x,psFeature->y);	// recover it.
 					}
-#else
-					// the above dos'nt work so we'l do it the old way.
-					orderSelectedLoc(selectedPlayer, psFeature->x,psFeature->y);	// recover it.
-					audio_PlayTrack(ID_SOUND_SELECT);
-#endif
 					break;*/
 				case FEAT_BOULDER:
 					//addConsoleMessage("Clicked on a Boulder",DEFAULT_JUSTIFY);

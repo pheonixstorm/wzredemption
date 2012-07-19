@@ -1,4 +1,3 @@
-#ifdef WIN32
 /* 
 	Scores.c Deals with all the mission results gubbins.
 	Alex W. McLean
@@ -566,4 +565,3 @@ MISSION_DATA		*pScoreData;
 
 
 
-#endif

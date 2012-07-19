@@ -32,7 +32,6 @@ typedef void (*RESLOAD_CALLBACK)(void);
 
 typedef struct res_data
 {
-#ifdef WIN32
 	// aID[]  is not initialised ... but for debug reasons it should be valid for PC WRF loading .... PLEASE WRITE THE CODE SOON !!!!
 	// This is for debug use only !!!!!!!!!!
 #ifdef DEBUG
@@ -40,9 +39,6 @@ typedef struct res_data
 #endif
 	void		*pData;				// pointer to the acutal data
 	SDWORD		blockID;			// which of the blocks is it in (so we can clear some of them...)
-#else
-	UDWORD	PackedDataID;			// Packed version of the data pointer and blockID - blockID replaced the top byte of the pointer!
-#endif
 	UDWORD	HashedID;				// hashed version of the name of the id
 	struct	res_data *psNext;		// next entry - most likely to be following on!
 #ifdef DEBUG
@@ -66,10 +62,8 @@ typedef struct _res_type
 	// we must have a pointer to the data here so that we can do a resGetData();
 	RES_DATA		*psRes;		// Linked list of data items of this type
 	UDWORD	HashedType;				// hashed version of the name of the id - // a null hashedtype indicates end of list
-#ifdef WIN32	
 	RES_FILELOAD	fileLoad;		// This isn't really used any more ?
 	struct _res_type	*psNext;
-#endif
 } RES_TYPE;
 
 

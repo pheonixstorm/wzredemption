@@ -122,11 +122,7 @@ BOOL templateIsIDF(DROID_TEMPLATE *psTemplate);
 BOOL idfDroid(DROID *psDroid);
 
 /* Do damage to a droid */
-#ifdef WIN32
 extern BOOL droidDamage(DROID *psDroid, UDWORD damage, UDWORD weaponClass,UDWORD weaponSubClass);
-#else
-extern BOOL droidDamage(DROID *psDroid, UDWORD damage, UDWORD weaponClass);
-#endif
 
 /* The main update routine for all droids */
 extern void droidUpdate(DROID *psDroid);
@@ -293,9 +289,7 @@ extern void	setSelectedGroup(UDWORD groupNumber);
 extern UDWORD	getSelectedCommander( void );
 extern void	setSelectedCommander(UDWORD commander);
 
-#ifdef WIN32
 extern BOOL getDroidResourceName(STRING *pName);
-#endif
 
 /*checks to see if an electronic warfare weapon is attached to the droid*/
 extern BOOL electronicDroid(DROID *psDroid);

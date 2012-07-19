@@ -3,13 +3,9 @@
 #include <math.h>
 #include <dos.h>
 #include "rendmode.h"
-#ifdef WIN32
 #include "pieClip.h"
-#endif
-#ifdef WIN32
 #include "d3dmode.h"
 #include "v4101.h"
-#endif
 #include "rendFunc.h"
 #include "vsr.h"
 //#include "3dfxfunc.h"
@@ -40,11 +36,9 @@ static int	g_mode = REND_UNDEFINED;
 
 //*************************************************************************
 
-#ifdef WIN32
 static uint8	*_VIDEO_MEM;
 static int32	_VIDEO_SIZE;
 static iBool	_VIDEO_LOCK;
-#endif
 
 //*************************************************************************
 //temporary definition
@@ -62,7 +56,6 @@ void (*iV_ppBitmapColourTrans)(iBitmap *bmp, int x, int y, int w, int h, int ow,
 //*
 //******
 
-#ifdef WIN32
 static BOOL	bHas3DNow;
 BOOL	weHave3DNow( void )
 {
@@ -128,9 +121,7 @@ has_3d_now:
 	}
 	return(b3DNow);
 }
-#endif
 
-#ifdef WIN32
 int32 iV_VideoMemorySize(int mode)
 
 {
@@ -253,7 +244,6 @@ uint8 *iV_VideoMemoryAlloc(int mode)
 
 	return _VIDEO_MEM;
 }
-#endif
 
 //*************************************************************************
 //***

@@ -33,9 +33,7 @@
  *	Local Variables
  */
 /***************************************************************************/
-#ifdef WIN32
-	int32		_iVPRIM_DIVTABLE[DIVIDE_TABLE_SIZE];
-#endif
+int32		_iVPRIM_DIVTABLE[DIVIDE_TABLE_SIZE];
 
 static BOOL fogColourSet = FALSE;
 static SDWORD d3dActive = 0;
@@ -137,12 +135,10 @@ BOOL pie_Initialise(SDWORD mode)
 		r = _mode_4101();	// we always want success as jon's stuff does the init
 	}
 
-#ifdef WIN32
 	if (r)
 	{
 		pie_SetDefaultStates();
 	}
-#endif
 
 	if (r)
 	{

@@ -238,11 +238,8 @@ typedef struct _w_sldinit
 /***********************************************************************************/
 
 /* The maximum lenth of strings for the widget system */
-#ifdef WIN32
 #define WIDG_MAXSTR		80
-#else
-#define WIDG_MAXSTR		40
-#endif
+
 /* The maximum value for bar graph size */
 #define WBAR_SCALE		100
 

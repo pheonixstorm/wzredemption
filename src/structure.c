@@ -65,13 +65,11 @@
 #include "ScriptExtern.h"
 #include "keyMap.h"
 #include "game.h"
-#ifdef WIN32
 #include "AdvVis.h"
 #include "MultiPlay.h" 
 #include "netplay.h"
 #include "multigifts.h"
 #include "loop.h"
-#endif
 #include "Scores.h"
 #include "Gateway.h"
 
@@ -1097,9 +1095,7 @@ void initStructLimits(void)
 		{
 			psStructLimits[i].limit = LOTS_OF;
 			psStructLimits[i].currentQuantity = 0;
-#ifdef WIN32
 			psStructLimits[i].globalLimit = LOTS_OF;
-#endif
 		}
 	}
 }
@@ -2074,9 +2070,7 @@ STRUCTURE* buildStructure(STRUCTURE_STATS* pStructureType, UDWORD x, UDWORD y,
 
 		//set up the imd to use for the display
 		psBuilding->sDisplay.imd = pStructureType->pIMD;
-#ifdef WIN32
 //		psBuilding->sDisplay.animFrame = 0;
-#endif
 //DBPRINTF(("%d\n",psBuilding->sDisplay.imd->ymax);
 
 		//mapH = buildFoundation(pStructureType, mapX*TILE_UNITS,mapY*TILE_UNITS);
@@ -2130,7 +2124,6 @@ STRUCTURE* buildStructure(STRUCTURE_STATS* pStructureType, UDWORD x, UDWORD y,
 			}
 		}
 
-#ifdef WIN32
 		/* DEFENSIVE structures are pulled to the terrain */
 		if(pStructureType->type != REF_DEFENSE)
 		{
@@ -2143,10 +2136,6 @@ STRUCTURE* buildStructure(STRUCTURE_STATS* pStructureType, UDWORD x, UDWORD y,
 			getTileMaxMin(mapX,mapY,&max,&min);
 			psBuilding->z = (UWORD)max;	// Got to be - don't change!!!! ALEXM
 		}
-#else
-		buildFlatten(pStructureType, mapX<<TILE_SHIFT, mapY<<TILE_SHIFT ,mapH );
-		psBuilding->z = (UWORD)mapH;//(UWORD)(map_TileHeight(mapX,mapY)+1);//jps 18july97 - shift it up a wee bit - am
-#endif
 
 		//set up the rest of the data
 		//psBuilding->z = pStructureType->height;
@@ -2164,9 +2153,7 @@ STRUCTURE* buildStructure(STRUCTURE_STATS* pStructureType, UDWORD x, UDWORD y,
 		//psBuilding->emissionInterval = 100;
 
 		psBuilding->timeLastHit = 0;
-#ifdef WIN32
 		psBuilding->lastHitWeapon = UDWORD_MAX;	// no such weapon
-#endif
 
 		psBuilding->inFire = FALSE;
 		psBuilding->burnStart = 0;
@@ -2307,9 +2294,7 @@ STRUCTURE* buildStructure(STRUCTURE_STATS* pStructureType, UDWORD x, UDWORD y,
 
 //		//set up the imd to use for the display
 //		psBuilding->sDisplay.imd = pStructureType->pIMD;
-//#ifdef WIN32
 //		psBuilding->sDisplay.animFrame = 0;
-//#endif
 
         //do the visiblilty stiff before setFunctionality - so placement of DP's can work
 //		memset(psBuilding->visible, 0, sizeof(psBuilding->visible));
@@ -2502,14 +2487,10 @@ STRUCTURE* buildStructure(STRUCTURE_STATS* pStructureType, UDWORD x, UDWORD y,
 					productionOutput;
 				//need to change which IMD is used for player 0
 				//Need to do a check its not Barbarian really!
-#ifdef WIN32
 				if (   (bMultiPlayer && isHumanPlayer(psBuilding->player))
 					OR (bMultiPlayer && (game.type == SKIRMISH) && (psBuilding->player < game.maxPlayers))
 					OR !bMultiPlayer)
 					//|| (psBuilding->player ==0) )
-//#else
-//				if (psBuilding->player == 0)
-#endif
 				{
 					capacity = ((FACTORY*)psBuilding->pFunctionality)->capacity;
 					if (capacity < NUM_FACTORY_MODULES)
@@ -2579,11 +2560,9 @@ STRUCTURE* buildStructure(STRUCTURE_STATS* pStructureType, UDWORD x, UDWORD y,
 				
 				//need to change which IMD is used for player 0
 				//Need to do a check its not Barbarian really!
-#ifdef WIN32
 				if (   (bMultiPlayer && isHumanPlayer(psBuilding->player))
 					OR (bMultiPlayer && (game.type == SKIRMISH) && (psBuilding->player < game.maxPlayers))
 					OR !bMultiPlayer)
-#endif
 				{
 					capacity = ((RESEARCH_FACILITY*)psBuilding->pFunctionality)->capacity;
 					if (capacity < NUM_RESEARCH_MODULES)
@@ -2630,13 +2609,9 @@ STRUCTURE* buildStructure(STRUCTURE_STATS* pStructureType, UDWORD x, UDWORD y,
 
 				//need to change which IMD is used for player 0
 				//Need to do a check its not Barbarian really!
-#ifdef WIN32
 				if (   (bMultiPlayer && isHumanPlayer(psBuilding->player))
 					OR (bMultiPlayer && (game.type == SKIRMISH) && (psBuilding->player < game.maxPlayers))
 					OR !bMultiPlayer)
-//#else
-//				if (psBuilding->player == 0)
-#endif
 				{
 					capacity = ((POWER_GEN*)psBuilding->pFunctionality)->capacity;
 					if (capacity < NUM_POWER_MODULES)
@@ -3480,12 +3455,10 @@ static void structPlaceDroid(STRUCTURE *psStructure, DROID_TEMPLATE *psTempl,
 
         //set the droids order to that of the factory - AB 22/04/99
         psNewDroid->secondaryOrder = ((FACTORY *)psStructure->pFunctionality)->secondaryOrder;
-#ifdef WIN32
     	if(bMultiPlayer)		
 	    {
             sendDroidSecondaryAll(psNewDroid);
         }
-#endif
 		if(psStructure->visible[selectedPlayer])
 		{
 			/* add smoke effect to cover the droid's emergence from the factory */
@@ -4656,14 +4629,12 @@ void aiUpdateStructure(STRUCTURE *psStructure)
 				{
 					// release droid from structure 
 					((REPAIR_FACILITY*)psStructure->pFunctionality)->psObj = NULL;
-#ifdef WIN32
 					// This is very new Alex M - Ask John????
 			   //		if(psDroid->psOldCommander AND !psDroid->psOldCommander->died)
 			   //		{
 			   //			cmdDroidAddDroid(psDroid->psOldCommander, psDroid);
 			   //		}
 					// This is very new Alex M - Ask John????
-#endif
 				}
 				else*/
 				if (psStructure->visible[selectedPlayer] AND psDroid->visible[selectedPlayer])
@@ -4715,9 +4686,7 @@ void aiUpdateStructure(STRUCTURE *psStructure)
 
 				bFinishAction = FALSE;
 
-#ifdef WIN32
 				if(!bMultiPlayer || myResponsibility(psDroid->player))
-#endif
 				{	// dont rearm on remote pcs.
 
 					/* do rearming */
@@ -4823,12 +4792,10 @@ void aiUpdateStructure(STRUCTURE *psStructure)
                             psStructure->y);
                     }*/
 
-#ifdef WIN32
 					if( bMultiPlayer)
 					{
 						sendHappyVtol(psDroid);
 					}			
-#endif
 					//clear the rearm pad
 					psDroid->action = DACTION_NONE;
 					bFinishAction = TRUE;
@@ -5418,13 +5385,8 @@ BOOL validLocation(BASE_STATS *psStats, UDWORD x, UDWORD y, UDWORD player,
         	if (psStats->ref >= REF_STRUCTURE_START &&
 		        psStats->ref < (REF_STRUCTURE_START + REF_RANGE))
             {
-#ifdef WIN32
                 //allow us to do so in debug mode!
                 if (!getDebugMappingStatus() && !bMultiPlayer)
-#else
-                //allow us to do so in debug mode!
-		    	if(QACheatMode == FALSE)
-#endif
                 {
     			    // Can't build where we haven't been yet.
 	    		    if(!TEST_TILE_VISIBLE(player,mapTile(i,j))) {
@@ -7129,12 +7091,10 @@ void setHQExists(BOOL state, UDWORD player)
 /*returns the status of the flag*/
 BOOL getHQExists(UDWORD player)
 {
-//#ifdef WIN32
 //	if(bMultiPlayer && game.type == DMATCH)
 //	{
 //		return TRUE;
 //	}
-//#endif
 
 	return hqExists[player];
 }
@@ -7488,12 +7448,10 @@ void buildingComplete(STRUCTURE *psBuilding)
 	{
 		case REF_POWER_GEN:
 			checkForResExtractors(psBuilding);
-#ifdef WIN32
 			if(selectedPlayer == psBuilding->player)
 			{
 				audio_PlayObjStaticTrack( (void *) psBuilding, ID_SOUND_POWER_HUM );
 			}
-#endif
 			break;
 		case REF_RESOURCE_EXTRACTOR:
 			checkForPowerGen(psBuilding);
@@ -7740,11 +7698,9 @@ BOOL electronicDamage(BASE_OBJECT *psTarget, UDWORD damage, UBYTE attackPlayer)
     STRUCTURE   *psStructure;
     DROID       *psDroid;
     BOOL        bCompleted = TRUE;
-#ifdef WIN32
 	NETMSG	m;
 	iVector		pos;
 	UDWORD		i;
-#endif
 
     ASSERT((attackPlayer < MAX_PLAYERS,
 	    "electronicDamage: invalid player id"));
@@ -7771,9 +7727,7 @@ BOOL electronicDamage(BASE_OBJECT *psTarget, UDWORD damage, UBYTE attackPlayer)
         {
     	    //store the time it was hit
 	        psStructure->timeLastHit = gameTime;
-#ifdef WIN32
 			psStructure->lastHitWeapon = WSC_ELECTRONIC;
-#endif
 	        // tell the cluster system it has been attacked
     	    clustObjectAttacked((BASE_OBJECT *)psStructure);
 
@@ -7850,7 +7804,6 @@ BOOL electronicDamage(BASE_OBJECT *psTarget, UDWORD damage, UBYTE attackPlayer)
                 bCompleted = TRUE;
 
                 //give the droid to the attacking player
-#ifdef WIN32		// ffs am
 			   	if(psDroid->visible[selectedPlayer])
 				{
 					for(i=0; i<5; i++)
@@ -7862,9 +7815,6 @@ BOOL electronicDamage(BASE_OBJECT *psTarget, UDWORD damage, UBYTE attackPlayer)
 						addEffect(&pos,EFFECT_EXPLOSION,EXPLOSION_TYPE_FLAMETHROWER,FALSE,NULL,0);
 					}
 				}
-#endif
-
-               
 				
 				(void)giftSingleDroid(psDroid, attackPlayer);
 					
@@ -7891,10 +7841,8 @@ BOOL electronicDamage(BASE_OBJECT *psTarget, UDWORD damage, UBYTE attackPlayer)
 			}
         }
         /* called in droidDamage now - AB 17/06/99
-#ifdef WIN32
 		psDroid->timeLastHit = gameTime;
 		psDroid->lastHitWeapon = WSC_ELECTRONIC;
-#endif
         */
 
     }
@@ -8306,7 +8254,6 @@ void hqReward(UBYTE losingPlayer, UBYTE rewardPlayer)
 			if(TEST_TILE_VISIBLE(losingPlayer,psTile))
 			{
 				SET_TILE_VISIBLE(rewardPlayer,psTile);
-#ifdef WIN32
 				if(getRevealStatus())
 				{
 					if(rewardPlayer == selectedPlayer)
@@ -8314,8 +8261,6 @@ void hqReward(UBYTE losingPlayer, UBYTE rewardPlayer)
 						avInformOfChange(x,y);
 					}
 				}
-#endif
-
 			}
 		}
 	}
@@ -8483,7 +8428,6 @@ void cancelProduction(STRUCTURE *psBuilding)
 /*set a factory's production run to hold*/
 void holdProduction(STRUCTURE *psBuilding)
 {
-#ifdef WIN32
 	FACTORY		*psFactory;
 
 	ASSERT((StructIsFactory(psBuilding), 
@@ -8501,9 +8445,6 @@ void holdProduction(STRUCTURE *psBuilding)
 			audio_PlayTrack(ID_SOUND_WINDOWCLOSE);
 		}
 	}
-#else
-	cancelProduction(psBuilding);
-#endif
 }
 
 /*release a factory's production run from hold*/

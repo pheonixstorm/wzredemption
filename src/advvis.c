@@ -2,7 +2,6 @@
 /* Experiment - possibly only for the faster configurations */
 /* Makes smooth transitions for terrain visibility */
 
-#ifdef WIN32
 #include "frame.h"
 #include "Objects.h"
 #include "Base.h"
@@ -246,4 +245,3 @@ STRUCTURE	*psStruct;
 }
 // ------------------------------------------------------------------------------------
 
-#endif

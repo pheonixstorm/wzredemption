@@ -1,16 +1,9 @@
 #ifndef _console_h
 #define _console_h
 
-#ifdef WIN32
 #define MAX_CONSOLE_MESSAGES			(64)
 #define MAX_CONSOLE_STRING_LENGTH		(255)
 #define MAX_CONSOLE_TMP_STRING_LENGTH	(255)
-#else
-#define MAX_CONSOLE_MESSAGES			(5)
-#define MAX_CONSOLE_STRING_LENGTH		(255)
-#define MAX_CONSOLE_TMP_STRING_LENGTH	(255)
-#endif
-
 
 #define	DEFAULT_MESSAGE_DURATION		GAME_TICKS_PER_SEC * 3
 
@@ -21,32 +14,30 @@
 
 typedef enum
 {
-LEFT_JUSTIFY,
-RIGHT_JUSTIFY,
-CENTRE_JUSTIFY,
-DEFAULT_JUSTIFY
+    LEFT_JUSTIFY,
+    RIGHT_JUSTIFY,
+    CENTRE_JUSTIFY,
+    DEFAULT_JUSTIFY
 } CONSOLE_TEXT_JUSTIFICATION;
 
 typedef struct _console
 {
-UDWORD	topX;
-UDWORD	topY;
-UDWORD	width;
-UDWORD	textDepth;
-BOOL	permanent;
+    UDWORD	topX;
+    UDWORD	topY;
+    UDWORD	width;
+    UDWORD	textDepth;
+    BOOL	permanent;
 } CONSOLE;
 
 /* Definition of a message */
 typedef struct	_console_message 
 {
-STRING	text[MAX_CONSOLE_STRING_LENGTH];		// Text of the message
-UDWORD	timeAdded;								// When was it added to our list?
-//UDWORD	screenIndex;							// Info for justification
-UDWORD JustifyType;
-#ifdef WIN32
-UDWORD	id;
-#endif
-struct _console_message *psNext;
+    STRING	text[MAX_CONSOLE_STRING_LENGTH];		// Text of the message
+    UDWORD	timeAdded;								// When was it added to our list?
+    //UDWORD	screenIndex;							// Info for justification
+    UDWORD JustifyType;
+    UDWORD	id;
+    struct _console_message *psNext;
 } CONSOLE_MESSAGE;
 
 extern char ConsoleString[MAX_CONSOLE_TMP_STRING_LENGTH];

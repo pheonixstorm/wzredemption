@@ -27,13 +27,8 @@
 #include "Block.h"
 
 /* What functions to use for the real malloc and free */
-#ifdef WIN32
 #define RMALLOC		malloc
 #define RFREE		free
-#else
-#define RMALLOC		malloc3
-#define RFREE		free3	         
-#endif
 
 /* Whether allocated memory is initialised to a value and whether the memory
  * is trashed before it is freed.

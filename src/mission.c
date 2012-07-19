@@ -147,11 +147,6 @@ DROID       *apsLimboDroids[MAX_PLAYERS];
 /**********TEST************/
 static  UDWORD      addCount = 0;
 
-//#ifdef COVERMOUNT
-//BOOL		DemoStart;
-//BOOL		DemoExpand;
-//#endif
-
 //STATICS***************
 //Where the Transporter lands for player 0 (sLandingZone[0]), and the rest are 
 //a list of areas that cannot be built on, used for landing the enemy transporters
@@ -231,11 +226,9 @@ static	UDWORD	camNumber = 1;
 BOOL missionIsOffworld(void)
 {
 	return ((mission.type == LDS_MKEEP)
-#ifndef COVERMOUNT
 
 			|| (mission.type == LDS_MCLEAR) 
 			|| (mission.type == LDS_MKEEP_LIMBO)
-#endif
 			);
 }
 
@@ -244,9 +237,7 @@ BOOL missionForReInforcements(void)
 {
     if ( (mission.type == LDS_CAMSTART)
 		OR missionIsOffworld() 
-#ifndef COVERMOUNT
 		OR (mission.type == LDS_CAMCHANGE) 
-#endif
 		)
     {
         return TRUE;
@@ -278,13 +269,11 @@ BOOL missionCanReEnforce(void)
 //returns TRUE if the mission is a Limbo Expand mission
 BOOL missionLimboExpand(void)
 {
-#ifndef COVERMOUNT
     if (mission.type == LDS_EXPAND_LIMBO)
     {
         return TRUE;
     }
     else
-#endif
     {
         return FALSE;
     }
@@ -339,10 +328,6 @@ DBPRINTF(("***Init Mission ***\n"));
     //start as not cheating!
     mission.cheatTime = 0;
 
-//#ifdef COVERMOUNT
-//	DemoStart = TRUE;
-//	DemoExpand = TRUE;
-//#endif
 }
 
 // reset the vtol landing pos
@@ -514,9 +499,7 @@ BOOL startMission(LEVEL_TYPE missionType, STRING *pGame)
 
 	//load the game file for all types of mission except a Between Mission
 	//if (missionType != MISSION_BETWEEN)
-//#ifndef COVERMOUNT
 	if (missionType != LDS_BETWEEN)
-//#endif
 	{
 		loadGameInit(pGame,TRUE);
 	}
@@ -536,9 +519,7 @@ BOOL startMission(LEVEL_TYPE missionType, STRING *pGame)
 		}
 
 		case LDS_MKEEP:
-#ifndef COVERMOUNT
 		case LDS_MKEEP_LIMBO:
-#endif
 		{
 			if (!startMissionOffKeep(pGame))
 			{
@@ -555,30 +536,21 @@ BOOL startMission(LEVEL_TYPE missionType, STRING *pGame)
 			}
 			break;
 		}
-#ifndef COVERMOUNT
 		case LDS_CAMCHANGE:
 		{
 			/*if (getCampaignNumber() == 1)
 			{
 				//play the cam 2 video
 				seq_ClearSeqList();
-			#ifdef WIN32
 				seq_AddSeqToList("CAM2\\c002.rpl",NULL,"CAM2\\c002.txa",FALSE);
-			#else
-				seq_AddSeqToList("CAM2\\C002.STR","1656f");
-			#endif
 				seq_StartNextFullScreenVideo();
 			}
 			else
 			{
 				//play the cam 3 video
 				seq_ClearSeqList();
-			#ifdef WIN32
 				seq_AddSeqToList("CAM2\\cam2out.rpl",NULL,NULL,FALSE);
 				seq_AddSeqToList("CAM3\\c003.rpl",NULL,"CAM3\\c003.txa",FALSE);
-			#else
-				seq_AddSeqToList("CAM3\\C003.STR","1656f");
-			#endif
 				seq_StartNextFullScreenVideo();
 			}*/
 
@@ -614,7 +586,6 @@ BOOL startMission(LEVEL_TYPE missionType, STRING *pGame)
 		}
 	
 
-#endif
 		default:
 		{
 			//error!
@@ -1864,9 +1835,7 @@ void endMission(void)
 			endMissionOffKeep();
 			break;
 		}
-#ifndef COVERMOUNT
 		case LDS_EXPAND:
-#endif
 		case LDS_BETWEEN:
 		{
 			/*
@@ -1874,7 +1843,6 @@ void endMission(void)
 			*/
     		break;
 		}
-#ifndef COVERMOUNT
 		case LDS_CAMCHANGE:
         {
             //any transporters that are flying in need to be emptied
@@ -1904,7 +1872,6 @@ void endMission(void)
 			endMissionOffKeepLimbo();
 			break;
 		}
-#endif
 		default:
 		{
 			//error!
@@ -1989,12 +1956,10 @@ void endMissionExpandLimbo(void)
 //this is called mid Limbo mission via the script
 void resetLimboMission(void)
 {
-#ifndef COVERMOUNT
     //add the units that were moved into the mission list at the start of the mission
     restoreMissionLimboData();
     //set the mission type to plain old expand...
     mission.type = LDS_EXPAND;
-#endif
 }
 
 /* The AI update routine for all Structures left back at base during a Mission*/
@@ -3395,7 +3360,6 @@ static BOOL _intAddMissionResult(BOOL result, BOOL bPlaySuccess)
 			intSetCurrentCursorPosition(&InterfaceSnap,sButInit.id);
 		}
 
-#ifndef COVERMOUNT
 		/* Only add save option if in the game for real, ie, not fastplay. 
         And the player hasn't just completed the whole game
         Don't add save option if just lost and in debug mode*/
@@ -3410,13 +3374,11 @@ static BOOL _intAddMissionResult(BOOL result, BOOL bPlaySuccess)
 			widgAddButton(psWScreen, &sButInit);
 			intSetCurrentCursorPosition(&InterfaceSnap,sButInit.id);
 		}
-#endif
 
 
 	}
 	else
 	{
-#ifndef COVERMOUNT
 		//load
 		sButInit.id			= IDMISSIONRES_LOAD;
 		sButInit.x			= MISSION_1_X;
@@ -3424,7 +3386,7 @@ static BOOL _intAddMissionResult(BOOL result, BOOL bPlaySuccess)
 		sButInit.pText		= strresGetString(psStringRes,STR_MR_LOAD_GAME);//"Load Saved Game";
 		widgAddButton(psWScreen, &sButInit);
 		intSetCurrentCursorPosition(&InterfaceSnap,sButInit.id);
-#endif		//quit
+		//quit
 		sButInit.id			= IDMISSIONRES_QUIT;
 		sButInit.x			= MISSION_2_X;
 		sButInit.y			= MISSION_2_Y;
@@ -3522,10 +3484,8 @@ void missionContineButtonPressed( void )
 
 	if (nextMissionType == LDS_CAMSTART
 		OR nextMissionType == LDS_BETWEEN 
-#ifndef COVERMOUNT
 		OR nextMissionType == LDS_EXPAND 
 		OR nextMissionType == LDS_EXPAND_LIMBO
-#endif
 	)
 	{
         //if we're moving from cam2-cam3?
@@ -3735,10 +3695,8 @@ BOOL setUpMission(UDWORD type)
 		}*/
 	}
 	else if (type == LDS_MKEEP  
-#ifndef COVERMOUNT
 		OR type == LDS_MCLEAR
 		OR type == LDS_MKEEP_LIMBO
-#endif
 		)
 	{
 		launchMission();

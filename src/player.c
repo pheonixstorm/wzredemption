@@ -13,10 +13,7 @@
 #include "game.h"
 #include "Order.h"
 #include "ObjectDef.h"
-
-#ifdef WIN32
 #include "MultiPlay.h"
-#endif
 
 /* The position for the computer players to attack */
 #define ATTACKX		39
@@ -169,7 +166,6 @@ void playerUpdate(UDWORD player)
 //	DROID		*psCurr;
 //	STRUCTURE	*psStruct;
 
-#ifdef WIN32
 	if ((!bMultiPlayer) && (player ==0))		// this'll have to come out to allow p1 AI
 	{											// currently stops the whole thing crashing. 
 		return;
@@ -178,12 +174,6 @@ void playerUpdate(UDWORD player)
 	{
 		return;
 	}
-#else
-	if (player == 0) 
-	{
-		return;
-	}
-#endif
 
 	// See if the human player has been seen by this player 
 /*	if (!asPlayerAI[player].building)
@@ -242,7 +232,6 @@ void playerNewDroid(DROID *psDroid)
 	// Check it isn't the human player
 	player = psDroid->player;
 
-#ifdef WIN32
 	if( (!bMultiPlayer) && (player == 0))
 	{
 		return;
@@ -251,12 +240,6 @@ void playerNewDroid(DROID *psDroid)
 	{
 		return;
 	}
-#else
-	if (player == 0)
-	{
-		return;
-	}
-#endif
 
 	// Add it to the attack group
 	psDroid->sAI.psGroup = asPlayerAI[player].psAttackGrp;
@@ -413,7 +396,6 @@ void attackLocation(UDWORD x, UDWORD y, UDWORD player)
 	DROID	*psDroid, *psCurr;
 	SDWORD	xdiff, ydiff, radSquared;
 
-#ifdef WIN32
 	if( (!bMultiPlayer) && (player == 0))
 	{
 		return;
@@ -422,12 +404,6 @@ void attackLocation(UDWORD x, UDWORD y, UDWORD player)
 	{
 		return;
 	}
-#else
-	if (player == 0)
-	{
-		return;
-	}
-#endif
 
 	// send the droids to attack
 	psDroid = asPlayerAI[player].psAttackGrp;

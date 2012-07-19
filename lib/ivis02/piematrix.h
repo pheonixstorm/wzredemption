@@ -99,11 +99,7 @@ extern SDWORD	aSinTable[];
 
 //*************************************************************************
 
-#ifdef WIN32
 extern void pie_MatInit(void);
-#else//tim you may want to rename the playstation function aswell
-extern void _iv_geo_setup(void);
-#endif
 
 //*************************************************************************
 
@@ -121,11 +117,6 @@ extern void pie_VectorInverseRotate0(iVector *v1, iVector *v2);
 extern void pie_SurfaceNormal(iVector *p1, iVector *p2, iVector *p3, iVector *v);
 extern BOOL pie_Clockwise(iVertex *s);
 extern void pie_SetGeometricOffset(int x, int y);
-
-#ifdef WIN32
-// PIEVERTEX structure contains much infomation that is not required on the playstation ... and hence is not currently used
 extern BOOL pie_PieClockwise(PIEVERTEX *s);	
-#endif
-
 
 #endif

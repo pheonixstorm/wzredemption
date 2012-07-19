@@ -830,7 +830,6 @@ void driveUpdate(void)
 	if(DirectControl) {
 		if(psDrivenDroid != NULL) {
 
-	#ifdef WIN32
 			if(bMultiPlayer && (driveBumpTime < gameTime))	// send latest info about driven droid.
 			{
 				SendDroidInfo(psDrivenDroid,DORDER_MOVE,psDrivenDroid->x,psDrivenDroid->y, NULL);
@@ -839,7 +838,6 @@ void driveUpdate(void)
 	//TO BE DONE:
 		//clear the order on taking over the droid, to stop attacks..
 		//send some sort of message when droids stopo and get inrange.
-	#endif
 
 			// Check the driven droid is still selected
 			if(psDrivenDroid->selected == FALSE) {

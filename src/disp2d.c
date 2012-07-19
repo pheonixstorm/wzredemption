@@ -35,11 +35,9 @@
 #include "Component.h"
 #include "Projectile.h"
 
-//#ifdef WIN32
 //#include "netplay.h"
 //#include "MultiPlay.h"
 //#include "MultiStat.h"
-//#endif
 
 // hack to display the collsion box
 //extern 	QUAD	sBox;

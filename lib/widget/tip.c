@@ -54,12 +54,7 @@ void tipInitialise(void)
 // Set the global toop tip text colour.
 void widgSetTipColour(W_SCREEN *psScreen, UBYTE red, UBYTE green, UBYTE blue)
 {
-#ifdef WIN32 
 	TipColour = -1;					// use bitmap colourings.
-#else
-//	TipColour = screenGetCacheColour(red,green,blue);
-	TipColour = (UBYTE)pal_GetNearestColour(red,green,blue);
-#endif
 }
 
 /*
@@ -113,13 +108,8 @@ void tipStop(WIDGET *psSource)
 	}
 }
 
-#ifdef WIN32
 #define RIGHTBORDER		(0)
 #define BOTTOMBORDER	(0)
-#else
-#define RIGHTBORDER		(24)
-#define BOTTOMBORDER	(16)
-#endif
 
 /* Update and possibly display the tip */
 void tipDisplay(void)

@@ -134,7 +134,6 @@ static BOOL _addSlideOptions()
 	SetCurrentSnapID(&InterfaceSnap,INTINGAMEOP_RESUME);
 
 	/*
-#ifdef WIN32
 	// gamma
 	if (pie_GetRenderEngine() == ENGINE_GLIDE)
 	{
@@ -146,7 +145,6 @@ static BOOL _addSlideOptions()
 		addFESlider(INTINGAMEOP_GAMMA_S,INTINGAMEOP , INTINGAMEOP_MID,INTINGAMEOP_3_Y-5,60,(UDWORD)(gamma*25),INTINGAMEOP_GAMMA );
 
 	}
-#endif
 */
 
 	return TRUE;

@@ -85,12 +85,8 @@
 #include <stdarg.h>
 #include "types.h"
 
-#ifdef WIN32
 /* Include the mono printing stuff */
 #include "mono.h"
-#else
-#include "printf.h"
-#endif
 
 /****************************************************************************************
  *

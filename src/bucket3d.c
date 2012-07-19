@@ -22,9 +22,7 @@
 #include "bucket3D.h"
 #include "message.h"
 #include "Console.h"
-#ifdef WIN32
 #include "Atmos.h"
-#endif
 
 
 #define NUM_BUCKETS		8000
@@ -162,13 +160,12 @@ extern BOOL bucketAddTypeToList(RENDER_TYPE objectType, void* pObject)
 			z = bucketCalculateZ(objectType, pObject);
 		}
 
-#ifdef WIN32
 //		else if(objectType == RENDER_PARTICLE)
 //		{
 //			z = bucketCalculateZ(objectType, pObject);
 //		}
-#endif
-		else if(objectType == RENDER_WATERTILE)
+
+        else if(objectType == RENDER_WATERTILE)
 		{
 			z = bucketCalculateZ(objectType, pObject);
 		}
@@ -257,11 +254,9 @@ extern BOOL bucketRenderCurrentList(void)
 		{
 			switch(thisTag->objectType)
 			{
-#ifdef WIN32
 				case RENDER_PARTICLE:
 	  				renderParticle((ATPART*)thisTag->pObject);
 				break;
-#endif
 				case RENDER_EFFECT:
 					renderEffect((EFFECT*)thisTag->pObject);
 					break;
@@ -286,14 +281,12 @@ extern BOOL bucketRenderCurrentList(void)
 #endif
 				break;
 				case RENDER_TILE:
-#ifdef WIN32
 					if (pie_Hardware())
 					{
 					
 						drawTerrainTile(((TILE_BUCKET*)thisTag->pObject)->i,((TILE_BUCKET*)thisTag->pObject)->j);
 					}
 					else
-#endif
 					{
 						drawTexturedTile(((TILE_BUCKET*)thisTag->pObject)->i,((TILE_BUCKET*)thisTag->pObject)->j);
 					}
@@ -362,7 +355,6 @@ SDWORD bucketCalculateZ(RENDER_TYPE objectType, void* pObject)
 
 	switch(objectType)
 	{
-#ifdef WIN32
 		case RENDER_PARTICLE:
 	   		px = player.p.x & (TILE_UNITS-1);
 	   		pz = player.p.z & (TILE_UNITS-1);
@@ -395,7 +387,6 @@ SDWORD bucketCalculateZ(RENDER_TYPE objectType, void* pObject)
 			}
 #endif
 			break;
-#endif
 		case RENDER_PROJECTILE://not depth sorted 
 		case RENDER_PROJECTILE_TRANSPARENT:
 			((PROJ_OBJECT*)pObject)->psWStats;

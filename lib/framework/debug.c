@@ -262,15 +262,11 @@ void dbg_AssertPosition(SBYTE *pFile, UDWORD Line)
 {
 	if (pFile == NULL)
 	{
-#ifdef WIN32
 		/* Ensure the box can be seen */
 		screenFlipToGDI();
 
 		(void)MessageBox(frameGetWinHandle(), "Invalid assertion arguments\n", "Error",
 			       MB_OK | MB_ICONWARNING);
-#else
-		DBPRINTF(("Error : Invalid assertion arguments\n"));
-#endif
 //		strcpy(aAssertFile, ASSERT_DEFAULT_FILE);
 		pAssertFile = ASSERT_DEFAULT_FILE;
 		AssertLine = 0;
@@ -302,7 +298,6 @@ void dbg_AssertPosition(SBYTE *pFile, UDWORD Line)
  * DebugBreak is used to jump into the debugger.
  *
  */
-#ifdef WIN32
 void dbg_Assert(BOOL Expression, SBYTE *pFormat, ...)
 {
 	va_list		pArgs;
@@ -359,14 +354,3 @@ void dbg_Assert(BOOL Expression, SBYTE *pFormat, ...)
 
 	}
 }
-#else
-void dbg_Assert(BOOL Expression, SBYTE *pFormat, ...)
-{
-	if (!Expression)
-	{
-		DBPRINTF(("\n\nAssertion failed , File: %s\nLine: %d\n\n", pAssertFile, AssertLine));
-		PSYQpause();
-	}
-}
-#endif
-

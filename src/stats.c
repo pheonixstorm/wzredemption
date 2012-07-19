@@ -624,17 +624,12 @@ BOOL loadWeaponStats(SBYTE *pWeaponData, UDWORD bufferSize)
 
 		if(GetGameMode() == GS_NORMAL) 
 		{
-#ifdef WIN32
 			psStats->pMuzzleGraphic = (iIMDShape *) resGetData("IMD", muzzleGfx);
 			if (psStats->pMuzzleGraphic == NULL)
 			{
 				DBERROR(("Cannot find the muzzle PIE for record %s", getStatName(psStats)));
 				return FALSE;
 			}
-#else
-#warning "MUZZLE GRAPHICS LOAD DISSABLED"
-			psStats->pMuzzleGraphic = NULL;
-#endif
 
 			psStats->pInFlightGraphic = (iIMDShape *) resGetData("IMD", flightGfx);
 			if (psStats->pInFlightGraphic == NULL)
@@ -1893,12 +1888,8 @@ BOOL loadRepairStats(SBYTE *pRepairData, UDWORD bufferSize)
         //check its not 0 since we will be dividing by it at a later stage
         if (psStats->time == 0)
         {
-#ifdef WIN32
             ASSERT((FALSE, "loadRepairStats: the delay time cannot be zero for %s", 
                 psStats->pName));
-#else
-            ASSERT((FALSE, "loadRepairStats: the delay time cannot be zero "));
-#endif
             psStats->time = 1;
         }
 
@@ -2580,7 +2571,7 @@ BOOL loadWeaponSounds(SBYTE *pSoundData, UDWORD bufferSize)
 	for (i=0; i < NumRecords; i++)
 	{
 		WeaponName[0]     = '\0';
-#ifdef WIN32	// Ladidadidah weapon id's as strings :(
+    	// Ladidadidah weapon id's as strings :(
 		szWeaponWav[0]    = '\0';
 		szExplosionWav[0] = '\0';
 		//read the data into the storage - the data is delimeted using comma's
@@ -2596,33 +2587,6 @@ BOOL loadWeaponSounds(SBYTE *pSoundData, UDWORD bufferSize)
 		{
 			return FALSE;
 		}
-#else	// Yipodydoodah weapon id's as integers :)
-		//read the data into the storage - the data is delimeted using comma's
-		sscanf(pSoundData,"%[^','],%d,%d,%d",
-			(char*)&WeaponName, &weaponSoundID, &explosionSoundID, &iDum);
-		// Convert an id of 0 to NO_SOUND and hope a weapon never actually want's an id of 0.
-		if(weaponSoundID == 0) weaponSoundID = NO_SOUND;
-		if(explosionSoundID == 0) explosionSoundID = NO_SOUND;
-
- #ifdef DEBUG
-		DBPRINTF(("%s : %d %d\n",WeaponName,weaponSoundID,explosionSoundID));
-
-		if ( ((weaponSoundID < 0) || (weaponSoundID >= ID_MAX_SOUND)) &&
-			 (weaponSoundID != NO_SOUND) )
-		{
-			DBERROR(("Invalid Weapon Sound ID - %d for weapon %s", 
-					weaponSoundID, WeaponName));
-			return FALSE;
-		}
-		if ( ((explosionSoundID < 0) || (explosionSoundID >= ID_MAX_SOUND)) &&
-				 (explosionSoundID != NO_SOUND) )
-		{
-			DBERROR(("Invalid Explosion Sound ID - %d for weapon %s", 
-				explosionSoundID, WeaponName));
-			return FALSE;
-		}
- #endif
-#endif		
 		//find the weapon stat
 		if (!getResourceName(WeaponName))
 		{
@@ -2740,7 +2704,6 @@ BOOL loadPropulsionSounds(SBYTE *pPropSoundData, UDWORD bufferSize)
 
 	for (i=0; i < NumRecords; i++)
 	{
-#ifdef WIN32
 		propulsionName[0] = '\0';
 		//read the data into the storage - the data is delimeted using comma's
 		sscanf(pPropSoundData,"%[^','],%[^','],%[^','],%[^','],%[^','],%[^','],%[^','],%d",
@@ -2775,20 +2738,6 @@ BOOL loadPropulsionSounds(SBYTE *pPropSoundData, UDWORD bufferSize)
 		{
 			return FALSE;
 		}
-#else
-// Playstation uses integer sound id's in the stats rather than text names.
-		propulsionName[0] = '\0';
-		//read the data into the storage - the data is delimeted using comma's
-		sscanf(pPropSoundData,"%[^','],%d,%d,%d,%d,%d,%d,%d",
-			(char*)&propulsionName, &startID, &idleID, &moveOffID, &moveID, &hissID, &shutDownID,&iDum);
-		// Convert an id of 0 to NO_SOUND and hope a weapon never actually want's an id of 0.
-		if(startID == 0) startID = NO_SOUND;
-		if(idleID == 0) idleID = NO_SOUND;
-		if(moveOffID == 0) moveOffID = NO_SOUND;
-		if(moveID == 0) moveID = NO_SOUND;
-		if(hissID == 0) hissID = NO_SOUND;
-		if(shutDownID == 0) shutDownID = NO_SOUND;
-#endif
 		type = getPropulsionType(propulsionName);
 		if (type == INVALID_PROP_TYPE)
 		{

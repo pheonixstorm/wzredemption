@@ -38,7 +38,6 @@
 #include "seqDisp.h"
 
 #include "fpath.h"
-#ifdef WIN32
 #include "warzoneConfig.h"
 #include "lighting.h"
 #include "atmos.h"
@@ -49,7 +48,6 @@
 #include "multigifts.h"
 #include "multilimit.h"
 #include "advvis.h"
-#endif
 #include "pieState.h"
 #include "wrappers.h"
 #include "Order.h"
@@ -1083,7 +1081,6 @@ BOOL scrEnableStructure(void)
 }
 
 
-#ifdef WIN32
 // -----------------------------------------------------------------------------------------
 // Check if a structure can be built.
 // currently PC skirmish only.
@@ -1111,8 +1108,6 @@ BOOL scrIsStructureAvailable(void)
 	}
 	return TRUE;
 }
-#endif
-
 // -----------------------------------------------------------------------------------------
 //make the droid with the matching id the currently selected droid
 BOOL scrSelectDroidByID(void)
@@ -1217,11 +1212,10 @@ BOOL scrAddReticuleButton(void)
 		return FALSE;
 	}
 
-#ifdef NON_INTERACT
-	return(TRUE);
-#endif
+//#ifdef NON_INTERACT
+//	return(TRUE);
+//#endif
 
-#ifdef WIN32
 	//set the appropriate flag to 'draw' the button
 	switch (val)
 	{
@@ -1254,9 +1248,6 @@ BOOL scrAddReticuleButton(void)
 		ASSERT((FALSE, "scrAddReticuleButton: Invalid reticule Button ID"));
 		return FALSE;
 	}
-#else
-	intShowReticuleButton(val,TRUE);
-#endif
 	return TRUE;
 }
 
@@ -1265,23 +1256,12 @@ BOOL scrAddReticuleButton(void)
 BOOL scrRemoveReticuleButton(void)
 {
 	SDWORD	val;
-#ifdef WIN32
 	BOOL	bReset;
-#endif
 
-#ifdef WIN32
 	if (!stackPopParams(2, VAL_INT, &val,VAL_BOOL, &bReset))
 	{
 		return FALSE;
 	}
-#else
-	// SCARY HUH?!
-	if (!stackPopParams(1, VAL_INT, &val))
-	{
-		return FALSE;
-	}
-#endif
-#ifdef WIN32
 	if(bInTutorial)
 	{
 		if(bReset)	// not always desirable
@@ -1320,11 +1300,6 @@ BOOL scrRemoveReticuleButton(void)
 		ASSERT((FALSE, "scrAddReticuleButton: Invalid reticule Button ID"));
 		return FALSE;
 	}
-#else
-		intShowReticuleButton(val,FALSE);
-
-//		widgHide(psWScreen, val);
-#endif
 	return TRUE;
 }
 
@@ -1508,12 +1483,8 @@ BOOL scrBuildDroid(void)
 	//check building the right sort of droid for the factory
 	if (!validTemplateForFactory(psTemplate, psFactory))
 	{
-#ifdef WIN32
 		ASSERT((FALSE, "scrBuildUnit: invalid template - %s for factory - %s",
 			&psTemplate->aName, psFactory->pStructureType->pName));
-#else
-		ASSERT((FALSE, "scrBuildUnit: invalid template - for factory"));
-#endif
 		return FALSE;
 	}
 		
@@ -2061,7 +2032,6 @@ BOOL scrStructureBeingBuilt(void)
 }
 
 
-#ifdef WIN32
 // -----------------------------------------------------------------------------------------
 // multiplayer skirmish only for now.
 // returns TRUE if a specific struct is complete. I know it's like the previous func, 
@@ -2089,7 +2059,6 @@ BOOL scrStructureComplete(void)
 	return TRUE;
 }
 
-#endif
 
 // -----------------------------------------------------------------------------------------
 /*looks to see if a structure (specified by type) exists and built*/
@@ -2781,14 +2750,12 @@ BOOL scrSetStructureLimits(void)
 
 	psStructLimits = asStructLimits[player];
 	psStructLimits[structInc].limit = (UBYTE)limit;
-#ifdef WIN32
 	psStructLimits[structInc].globalLimit = (UBYTE)limit;
-#endif
+
 	return TRUE;
 }
 
 
-#ifdef WIN32
 // -----------------------------------------------------------------------------------------
 // multiplayer limit handler.
 BOOL scrApplyLimitSet()
@@ -2796,8 +2763,6 @@ BOOL scrApplyLimitSet()
 	applyLimitSet();
 	return TRUE;
 }
-#endif
-
 
 // -----------------------------------------------------------------------------------------
 // plays a sound for the specified player - only plays the sound if the 
@@ -2912,7 +2877,6 @@ BOOL scrAddConsoleText(void)
 }
 
 
-#ifdef WIN32
 // -----------------------------------------------------------------------------------------
 /* add a text message to the top of the screen for the selected player - without clearing whats there*/
 BOOL scrTagConsoleText(void)
@@ -2941,16 +2905,14 @@ BOOL scrTagConsoleText(void)
 
 	return TRUE;
 }
-#endif
 
 // -----------------------------------------------------------------------------------------
-#ifdef WIN32
 BOOL	scrClearConsole(void)
 {
 	flushConsoleMessages();
 	return(TRUE);
 }
-#endif
+
 // -----------------------------------------------------------------------------------------
 //demo functions for turning the power on
 BOOL scrTurnPowerOff(void)
@@ -3558,7 +3520,6 @@ BOOL scrSetSnow(void)
 		return FALSE;
 	}
 
-#ifdef WIN32
 	if(bState)
 	{
 		atmosSetWeatherType(WT_SNOWING);
@@ -3567,8 +3528,8 @@ BOOL scrSetSnow(void)
 	{
 		atmosSetWeatherType(WT_NONE);
 	}
-#endif
-	return TRUE;
+
+    return TRUE;
 }
 
 // -----------------------------------------------------------------------------------------
@@ -3582,7 +3543,6 @@ BOOL scrSetRain(void)
 		return FALSE;
 	}
 
-#ifdef WIN32
 	if(bState)
 	{
 		atmosSetWeatherType(WT_RAINING);
@@ -3591,7 +3551,7 @@ BOOL scrSetRain(void)
 	{
 		atmosSetWeatherType(WT_NONE);
 	}
-#endif
+
 	return TRUE;
 }
 
@@ -3605,7 +3565,6 @@ BOOL scrSetBackgroundFog(void)
 	{
 		return FALSE;
 	}
-#ifdef WIN32
 	//jps 17 feb 99 just set the status let other code worry about fogEnable/reveal
 	if (bState)//true, so go to false
 	{
@@ -3662,7 +3621,7 @@ BOOL scrSetBackgroundFog(void)
 		}
 	}
 */
-#endif
+
 	return TRUE;
 }
 
@@ -3676,7 +3635,6 @@ BOOL scrSetDepthFog(void)
 	{
 		return FALSE;
 	}
-#ifdef WIN32		// ffs am
 //jps 17 feb 99 just set the status let other code worry about fogEnable/reveal
 	if (bState)//true, so go to false
 	{
@@ -3732,7 +3690,7 @@ BOOL scrSetDepthFog(void)
 		}
 	}
 */
-#endif
+
 	return TRUE;
 }
 
@@ -3748,7 +3706,6 @@ BOOL scrSetFogColour(void)
 		return FALSE;
 	}
 
-#ifdef WIN32
 //	if (pie_GetRenderEngine() == ENGINE_GLIDE)
 //	{
 		red &= 0xff;	
@@ -3757,7 +3714,6 @@ BOOL scrSetFogColour(void)
 		scrFogColour = ((red << 16) + (green << 8) + blue);
 		pie_SetFogColour(scrFogColour);
 //	}
-#endif
 	return TRUE;
 }
 
@@ -3780,7 +3736,6 @@ BOOL scrRefTest(void)
 
 // -----------------------------------------------------------------------------------------
 // is player a human or computer player? (multiplayer only)
-#ifdef WIN32
 BOOL scrIsHumanPlayer(void)
 {
 	SDWORD	player;
@@ -3797,7 +3752,6 @@ BOOL scrIsHumanPlayer(void)
 
 	return TRUE;
 }
-#endif
 
 // -----------------------------------------------------------------------------------------
 // Set an alliance between two players
@@ -3828,7 +3782,6 @@ BOOL scrCreateAlliance(void)
 	formAlliance((UBYTE)player1, (UBYTE)player2,TRUE,FALSE);
 
 /*
-#ifdef WIN32	
 	if(bMultiPlayer) 
 	{
 
@@ -3845,7 +3798,6 @@ BOOL scrCreateAlliance(void)
 			sendAlliance((UBYTE)player1,(UBYTE)player2,ALLIANCE_FORMED,0);
 		}
 	}
-#endif
 
 	alliances[player1][player2] = ALLIANCE_FORMED;
 	alliances[player2][player1] = ALLIANCE_FORMED;
@@ -3854,7 +3806,6 @@ BOOL scrCreateAlliance(void)
 }
 
 
-#ifdef WIN32
 // -----------------------------------------------------------------------------------------
 // offer an alliance
 BOOL scrOfferAlliance(void)
@@ -3876,7 +3827,6 @@ BOOL scrOfferAlliance(void)
 	requestAlliance((UBYTE)player1,(UBYTE)player2,TRUE,TRUE);
 	return TRUE;
 }
-#endif
 
 // -----------------------------------------------------------------------------------------
 // Break an alliance between two players
@@ -3935,7 +3885,6 @@ if(bMultiPlayer)
 // returns true if 2 or more players are in alliance.
 BOOL scrAllianceExists(void)
 {
-#ifdef WIN32
 	UDWORD i,j;
 	for(i=0;i<MAX_PLAYERS;i++)
 	{
@@ -3951,8 +3900,6 @@ BOOL scrAllianceExists(void)
 			}
 		}
 	}
-
-#endif
 
 	if (!stackPushResult(VAL_BOOL, FALSE))
 	{
@@ -4022,7 +3969,6 @@ BOOL scrPlayerInAlliance(void)
 BOOL scrDominatingAlliance(void)
 {
 	UDWORD i,j;
-#ifdef WIN32
 	for(i=0;i<MAX_PLAYERS;i++)
 	{
 		for(j=0;j<MAX_PLAYERS;j++)
@@ -4039,9 +3985,7 @@ BOOL scrDominatingAlliance(void)
 				return TRUE;
 			}
 		}
-// -----------------------------------------------------------------------------------------
 	}
-#endif
 
 	if (!stackPushResult(VAL_BOOL, TRUE))
 	{
@@ -4060,7 +4004,6 @@ BOOL scrMyResponsibility(void)
 	{
 		return FALSE;
 	}
-#ifdef WIN32
 	if(	myResponsibility(player) )
 	{
 		if (!stackPushResult(VAL_BOOL, TRUE))
@@ -4075,13 +4018,6 @@ BOOL scrMyResponsibility(void)
 			return FALSE;
 		}
 	}
-#else
-	if (!stackPushResult(VAL_BOOL, TRUE))
-	{
-		return FALSE;
-	}
-#endif
-
 	return TRUE;
 }	
 
@@ -4272,12 +4208,10 @@ BOOL scrCompleteResearch(void)
 
 	researchResult(researchIndex, (UBYTE)player, FALSE);
 
-#ifdef WIN32
 	if(bMultiPlayer && (gameTime > 2 ))
 	{
 		SendResearch((UBYTE)player,researchIndex );
 	}
-#endif
 
 	return TRUE;
 }
@@ -4293,14 +4227,12 @@ BOOL scrFlashOn(void)
 	{
 		return FALSE;
 	}
-#ifdef WIN32
 	// For the time being ... we will perform the old code for the reticule ...
 	if (button >= IDRET_OPTIONS && button <= IDRET_CANCEL)
 	{
 		flashReticuleButton((UDWORD)button);
 		return TRUE;
 	}
-#endif
 
 	if(widgGetFromID(psWScreen,button) != NULL)
 	{
@@ -4320,13 +4252,11 @@ BOOL scrFlashOff(void)
 	{
 		return FALSE;
 	}
-#ifdef WIN32
 	if (button >= IDRET_OPTIONS && button <= IDRET_CANCEL)
 	{
 		stopReticuleButtonFlash((UDWORD)button);
 		return TRUE;
 	}
-#endif
 
 	if(widgGetFromID(psWScreen,button) != NULL)
 	{
@@ -6052,9 +5982,7 @@ BOOL scrSetPlayCountDown(void)
 		return FALSE;
 	}
 
-#ifdef WIN32
     setPlayCountDown((UBYTE)bState);
-#endif
 
 	return TRUE;
 }
@@ -6238,8 +6166,6 @@ BOOL scrResetLimboMission(void)
     return TRUE;
 }
 
-
-#ifdef WIN32
 // skirmish only.
 BOOL scrIsVtol(void)
 {
@@ -6264,9 +6190,7 @@ BOOL scrIsVtol(void)
 	return TRUE;
 }
 
-#endif
 
-#ifdef WIN32
 // do the setting up of the template list for the tutorial.
 BOOL scrTutorialTemplates(void)
 {
@@ -6316,7 +6240,6 @@ BOOL scrTutorialTemplates(void)
 	}
 	return TRUE;
 }
-#endif
 
 static	UDWORD			playerToEnumDroid;
 static	UDWORD			playerVisibleDroid;

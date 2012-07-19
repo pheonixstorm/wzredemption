@@ -68,9 +68,7 @@ static allowNewMessages;
 /* What's the default justification */
 static CONSOLE_TEXT_JUSTIFICATION	defJustification;
 
-#ifdef WIN32
 static UDWORD	messageId;	// unique ID
-#endif
 
 // Global string for new console messages.
 char ConsoleString[MAX_CONSOLE_TMP_STRING_LENGTH];
@@ -204,16 +202,8 @@ CONSOLE_MESSAGE	*psMessage;
 	/* Is the string too long? */
 	textLength = strlen(messageText);
 
-#ifdef WIN32
 	ASSERT(( textLength<MAX_CONSOLE_STRING_LENGTH,
 		"Attempt to add a message to the console that exceeds MAX_CONSOLE_STRING_LENGTH"));
-#else
-	if(textLength >= MAX_CONSOLE_STRING_LENGTH) {
-		addConsoleMessage("bad length",jusType);
-		return TRUE;
-	}
-#endif
- 
 
 	/* Are we using a defualt justification? */
 	if(jusType == DEFAULT_JUSTIFY)
@@ -253,9 +243,7 @@ CONSOLE_MESSAGE	*psMessage;
 	/* This is the present newest message */
 	consoleStorage[messageIndex].psNext = NULL;
 
-#ifdef WIN32
 	consoleStorage[messageIndex].id = 0;
-#endif
 
 	/* Are there no messages? */
 	if(consoleMessages == NULL)
@@ -340,9 +328,7 @@ void	updateConsoleMessages( void )
 	/* Time to kill the top one ?*/
 	if(gameTime2 - consoleMessages->timeAdded > messageDuration)
 	{
-#ifdef WIN32
 		consoleMessages->id = messageId++;
-#endif
 		/* Is this the only message? */
 		if(consoleMessages->psNext == NULL)
 		{
@@ -399,9 +385,7 @@ void	flushConsoleMessages( void )
 {
 	consoleMessages = NULL;
 	numActiveMessages = 0;
-#ifdef WIN32
 	messageId = 0;
-#endif
 }
 
 /* Displays all the console messages */

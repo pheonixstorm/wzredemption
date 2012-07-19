@@ -43,14 +43,13 @@ extern BOOL	bAllowDebugMode;
 
 // ----------------------------------------------------------------------------------
 /* WIN 32 specific */
-#ifdef WIN32
 BOOL	checkQwertyKeys			( void );
 UDWORD	asciiKeyCodeToTable		( KEY_CODE code );
 KEY_CODE	getQwertyKey		( void );
 UDWORD	getMarkerX				( KEY_CODE code );
 UDWORD	getMarkerY				( KEY_CODE code );
 SDWORD	getMarkerSpin			( KEY_CODE code );
-#endif
+
 // ----------------------------------------------------------------------------------
 KEY_MAPPING	*keyGetMappingFromFunction(void	*function)
 {
@@ -69,8 +68,7 @@ KEY_MAPPING	*psMapping,*psReturn;
 	return(psReturn);
 }
 // ----------------------------------------------------------------------------------
-/* Some win32 specific stuff allowing the user to add key mappings themselves */
-#ifdef WIN32
+/* Some win 32 specific stuff allowing the user to add key mappings themselves */
 #define	NUM_QWERTY_KEYS	26
 typedef	struct	_keymap_Marker
 {
@@ -79,7 +77,6 @@ UDWORD	xPos,yPos;
 SDWORD	spin;
 } KEYMAP_MARKER;
 static	KEYMAP_MARKER	qwertyKeyMappings[NUM_QWERTY_KEYS];
-#endif
 
 static	BOOL			bDoingDebugMappings = FALSE;
 // ----------------------------------------------------------------------------------
@@ -98,7 +95,6 @@ static BOOL	bKeyProcessing = TRUE;
 // ----------------------------------------------------------------------------------
 // Adding a mapped function ? add a save pointer! Thank AlexL.
 // don't bugger around with the order either. new ones go at the end! DEBUG in debug section..
-#ifdef WIN32
 //typedef void (*_keymapsave)(void);
 _keymapsave keyMapSaveTable[] =
 {
@@ -220,7 +216,6 @@ _keymapsave keyMapSaveTable[] =
 
 	NULL		// last function!
 };
-#endif
 
 // ----------------------------------------------------------------------------------
 /*	
@@ -478,17 +473,8 @@ if(bAllowDebugMode)
 KEY_MAPPING *keyAddMapping(KEY_STATUS status,KEY_CODE metaCode, KEY_CODE subCode, KEY_ACTION action,
 					  void (*pKeyMapFunc)(void), STRING *name)
 {
-KEY_MAPPING	*newMapping;
-BLOCK_HEAP  *psHeap;
-
-#ifdef COVERMOUNT
-#ifdef NON_INTERACT		// escape key is the only valid mapping
-	if(subCode!=KEY_ESC)
-	{
-		return(NULL);
-	}
-#endif
-#endif
+    KEY_MAPPING	*newMapping;
+    BLOCK_HEAP  *psHeap;
 
 	psHeap = memGetBlockHeap();
 	memSetBlockHeap(NULL);
@@ -498,24 +484,9 @@ BLOCK_HEAP  *psHeap;
 	ASSERT(((int)newMapping,"Couldn't allocate memory for a key mapping"));
 
 	/* Plus one for the terminator */
-
-#ifdef WIN32
-
 	newMapping->pName = (STRING*)MALLOC(strlen(name)+1);
 	ASSERT(((int)newMapping->pName,"Couldn't allocate the memory for the string in a mapping"));
 
-#else
-
-	if (strlen(name)==0)
-	{
-		newMapping->pName=NULL;
-	}
-	else
-	{
-		newMapping->pName = (STRING*)MALLOC(strlen(name)+1);
-	}
-
-#endif
 	memSetBlockHeap(psHeap);
 
 
@@ -666,12 +637,9 @@ BOOL		bKeyProcessed;
 		return;
 	}
 
-#ifdef WIN32
-
 	/* Jump out if we've got a new mapping */
   	(void) checkQwertyKeys();
 
-#endif
 	/* Check for the meta keys */
 	if(keyDown(KEY_LCTRL) OR keyDown(KEY_RCTRL) OR keyDown(KEY_LALT)
 		OR keyDown(KEY_RALT) OR keyDown(KEY_LSHIFT) OR keyDown(KEY_RSHIFT))
@@ -698,12 +666,11 @@ BOOL		bKeyProcessed;
 		{
 			break;
 		}
-#ifdef WIN32
-		if(keyToProcess->subKeyCode == KEY_MAXSCAN)
+
+        if(keyToProcess->subKeyCode == KEY_MAXSCAN)
 		{
 			continue;
 		}
-#endif
 
 		if(keyToProcess->metaKeyCode==KEY_IGNORE AND !bMetaKeyDown AND
 			!(keyToProcess->status==KEYMAP__DEBUG AND bDoingDebugMappings == FALSE) )
@@ -782,7 +749,6 @@ BOOL		bKeyProcessed;
 }
 
 // ----------------------------------------------------------------------------------
-#ifdef WIN32
 /* Allows _new_ mappings to be made at runtime */
 BOOL	checkQwertyKeys( void )
 {
@@ -818,10 +784,7 @@ BOOL		aquired;
 	}
 	return(aquired);
 }
-#endif
 
-
-#ifdef WIN32
 // ----------------------------------------------------------------------------------
 // this function isn't really module static - should be removed - debug only
 void	keyShowMappings( void )
@@ -857,7 +820,7 @@ BOOL	onlySub;
 		CONPRINTF(ConsoleString,(ConsoleString,"%s and %s - %s",asciiMeta,asciiSub,psMapping->pName));
 	}
 }
-#endif
+
 // ----------------------------------------------------------------------------------
 /* Returns the key code of the last sub key pressed - allows called functions to have a simple stack */
 KEY_CODE	getLastSubKey( void )
@@ -909,7 +872,6 @@ void	keySetMappingStatus(KEY_MAPPING *psMapping, BOOL state)
 	psMapping->active = state;
 }
 
-#ifdef WIN32
 /* Returns the key code of the first ascii key that its finds has been PRESSED */
 KEY_CODE	getQwertyKey( void )
 {
@@ -990,7 +952,6 @@ UDWORD	entry;
 	return(qwertyKeyMappings[entry].spin);
 }
 
-#endif
 // ----------------------------------------------------------------------------------
 /* Defines whether we process debug key mapping stuff */
 void	processDebugMappings( BOOL val )

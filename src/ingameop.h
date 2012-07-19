@@ -32,11 +32,7 @@ extern BOOL	bSubtitles;
 // initial options
 #define INTINGAMEOP_W			120	 
 
-//#ifdef COVERMOUNT
-//#define INTINGAMEOP_H			88
-//#else
 #define INTINGAMEOP_H			124
-//#endif
 #define INTINGAMEOP_HS			88
 
 #define INTINGAMEOP_X			((320-(INTINGAMEOP_W/2))+D_W)
