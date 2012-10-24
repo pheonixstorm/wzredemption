@@ -804,7 +804,7 @@ BOOL runOptionsMenu(VOID)
 // ////////////////////////////////////////////////////////////////////////////
 // Graphics Options Menu
 /*
-BOOL startGraphicsOptionsMenu(VOID)
+BOOL startGraphicsOptionsMenu(VOID) //FIXME may work or may not, but needs to be added :)
 {
 	addBackdrop();
 	addTopForm();

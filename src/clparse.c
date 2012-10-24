@@ -39,6 +39,7 @@ BOOL	bAllowDebugMode = FALSE;
 
 
 // note that render mode must come before resolution flag.
+// Command line params. See comments for useful tidbits of leftovers and never got toos
 BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 {
 	char			seps[] = " ,\t\n";
@@ -283,18 +284,6 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 		tokenType = strtok( NULL, seps );
 	}
 	
-	/* Hack to disable higher resolution requests in d3d for the demo */
-	if(bCrippleD3D)
-	{
-		pie_SetVideoBufferWidth(640);
-		pie_SetVideoBufferHeight(480);
-	}
-
-	// look for any gamespy flags in the command line.
-/*#ifdef NON_INTERACT
-	SetGameMode(GS_NORMAL);
-#endif*/
-
 	return TRUE;
 }
 

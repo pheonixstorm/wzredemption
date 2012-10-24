@@ -54,7 +54,6 @@ extern BOOL runMultiPlayerMenu		(VOID);
 //extern BOOL runVideoOptionsMenu		(VOID);
 //extern BOOL runGraphicsOptionsMenu	(VOID);
 extern BOOL runGameOptionsMenu		(VOID);
-//extern BOOL runDemoMenu				(VOID); DELETEME
 extern BOOL runOptionsMenu			(VOID);
 extern BOOL runTutorialMenu			(VOID);
 

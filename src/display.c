@@ -293,9 +293,9 @@ PALETTEENTRY	gamePalette[255];		// another game palette (yawn)
 static BOOL	bScreenShakeActive = FALSE;
 static UDWORD screenShakeStarted;
 static UDWORD screenShakeLength;
-//used to determine is a weapon droid is assigned to a sensor tower or sensor droid
+//used to determine is a weapon droid is assigned to a sensor tower or sensor droid FIXME
 static bSensorAssigned;
-//used to determine if the player has selected a Las Sat structure
+//used to determine if the player has selected a Las Sat structure FIXME
 static bLasSatStruct;
 
 // Local prototypes
@@ -502,7 +502,7 @@ void ProcessRadarInput(void)
    				setViewPos(PosX,PosY,TRUE);
    				CheckScrollLimits();
 #endif
-				/*
+				/* FIXME ?
    				RadarZoomLevel++;
    				if(RadarZoomLevel > MAX_RADARZOOM) {
    					RadarZoomLevel = 0;
@@ -1945,7 +1945,7 @@ void dealWithDroidSelect(DROID *psDroid, BOOL bDragBox)
 	{
 //		psDroid->selected = FALSE;
 		DeSelectDroid(psDroid);
-		psDroid->group == UBYTE_MAX;
+		psDroid->group = UBYTE_MAX;
 //		if(OrderUp)
 		{
 			/* Fix this ALEX M!!! */									
