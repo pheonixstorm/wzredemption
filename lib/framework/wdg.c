@@ -611,8 +611,8 @@ BOOL FILE_InitialiseCache(SDWORD CacheSize)
 	}
 	else if (CacheSize==0)
 	{
-		UBYTE *CacheStart;
-		UDWORD CacheSize;
+		UBYTE *CacheStart = NULL;
+		UDWORD CacheSize;  //= NULL;
 
 		Cache.IsCacheDataMalloced=FALSE;
 

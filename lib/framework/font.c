@@ -194,7 +194,9 @@ void fontPrint(SDWORD x, SDWORD y, STRING *pFormat, ...)
 
 
 	sDDSD.dwSize = sizeof(DDSURFACEDESC2);
-	ddrval = psBack->lpVtbl->Lock(psBack, NULL, &sDDSD, DDLOCK_WAIT, NULL);
+    ddrval = psBack->lpVtbl->Lock(psBack, NULL, &sDDSD, DDLOCK_WAIT, NULL); // FIXME or FIXED
+    // lines 197, 287,322,382
+	//ddrval = psBack->Lock(NULL, &sDDSD, DDLOCK_WAIT, NULL);
 	if (ddrval != DD_OK)
 	{
 		ASSERT((FALSE, "fontPrint: Couldn't lock back buffer"));
@@ -282,7 +284,7 @@ void fontPrint(SDWORD x, SDWORD y, STRING *pFormat, ...)
 		break;
 	}
 
-	ddrval = psBack->lpVtbl->Unlock(psBack, sDDSD.lpSurface);
+    ddrval = psBack->lpVtbl->Unlock(psBack, NULL);//&sDDSD.lpSurface); //FIXME or FIXED why sDDSD?
 	if (ddrval != DD_OK)
 	{
 		ASSERT((FALSE, "fontPrint: Couldn;t unlock back buffer"));
@@ -377,7 +379,7 @@ void fontPrintChar(SDWORD x,SDWORD y, PROP_CHAR *psChar, UDWORD height)
 		break;
 	}
 
-	ddrval = psBack->lpVtbl->Unlock(psBack, sDDSD.lpSurface);
+	ddrval = psBack->lpVtbl->Unlock(psBack, NULL); //sDDSD.lpSurface); FIXME
 	if (ddrval != DD_OK)
 	{
 		ASSERT((FALSE, "screenTextOut: Couldn;t unlock back buffer"));

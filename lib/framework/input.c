@@ -243,7 +243,7 @@ void inputProcessMessages(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-		/*
+		/* FIXME
 	case WM_MOUSEWHEEL:	// not defined in non-NT.....bugger.
 		wheelVal = HIWORD(wParam);
 		if(wheelVal<0)
