@@ -21,7 +21,6 @@
 #include "pieFunc.h"
 #include "rendMode.h"
 #include "bspfunc.h"
-#include "E3Demo.h"	// DELETEME ?
 #include "Loop.h"
 #include "Atmos.h"
 #include "RayCast.h"
@@ -542,7 +541,7 @@ BOOL		bPlayerHasHQ = FALSE;
  //----------------------------------------------------------
 //----------------------------------------------------------
 //----------------------------------------------------------
- 	if(getDebugMappingStatus() AND !demoGetStatus() AND !gamePaused())
+ 	if(getDebugMappingStatus() AND !gamePaused())
  	{
  		iV_DrawText("DEBUG ",RET_X+134,440+E_H);
   	}
@@ -588,18 +587,8 @@ BOOL		bPlayerHasHQ = FALSE;
 		processWarCam();
 	}
 
-		if(demoGetStatus())
-		{
-			flushConsoleMessages();
-			setConsolePermanence(TRUE,TRUE);
-	  		permitNewConsoleMessages(TRUE);
-
-			addConsoleMessage("Warzone 2100 : Pumpkin Studios ",RIGHT_JUSTIFY);
-	  		permitNewConsoleMessages(FALSE);
-		}
-
-  //	sprintf(buildInfo,"WallDrag from %d,%d to %d,%d", wallDrag.x1,wallDrag.y1,wallDrag.x2,wallDrag.y2);
-   //	iV_DrawText(buildInfo,100,180);
+ //	sprintf(buildInfo,"WallDrag from %d,%d to %d,%d", wallDrag.x1,wallDrag.y1,wallDrag.x2,wallDrag.y2);
+ //	iV_DrawText(buildInfo,100,180);
 	/*
  	sprintf(buildInfo,"Gridvar calls : %d", gridVarCalls);
 	iV_DrawText(buildInfo,100,180);
@@ -624,8 +613,6 @@ BOOL		bPlayerHasHQ = FALSE;
  //	iV_DrawText(buildInfo,100,260);
 
 
-
-	processDemoCam();
 	processSensorTarget();
 	processDestinationTarget();
 	
@@ -1150,8 +1137,6 @@ BOOL	init3DView(void)
   //	initEffectsSystem();
 	atmosInitSystem();
 
-	initDemoCamera();
-
 	/* HACK -  remove, although function of some form still necessary */
 //	initSmoke();
 
@@ -1187,7 +1172,6 @@ BOOL	init3DView(void)
 	return(TRUE);
 	CONPRINTF(ConsoleString,(ConsoleString, "This build : %s, %s",__TIME__,__DATE__));
 
-	demoProcessTilesIn();
 }
 
 
@@ -1480,7 +1464,7 @@ renderAnimComponent( COMPONENT_OBJECT *psObj )
 		"renderAnimComponent: invalid parent object pointer") );
 
 	/* only draw visible bits */
-	if( (psParentObj->type == OBJ_DROID) AND !godMode AND !demoGetStatus())
+	if( (psParentObj->type == OBJ_DROID) AND !godMode)
 	{
 		if( ((DROID*)psParentObj)->visible[selectedPlayer] != UBYTE_MAX)
 		{
@@ -2046,7 +2030,7 @@ void displayDynamicObjects( void )
 				if(clipXY(psDroid->x,psDroid->y))
 				{
 					/* No point in adding it if you can't see it? */
-					if(psDroid->visible[selectedPlayer] OR godMode OR demoGetStatus())
+					if(psDroid->visible[selectedPlayer] OR godMode)
 					{
 					 	psDroid->sDisplay.frameNumber = currentGameFrame;
 						//don't use #ifndef BUCKET for now - need to do it this way for renderMapToBuffer
@@ -2164,7 +2148,7 @@ BOOL		bForceDraw;
 
 	bForceDraw = ( !getRevealStatus() AND psFeature->psStats->visibleAtStart);
 
-	if (psFeature->visible[selectedPlayer] OR godMode OR demoGetStatus() OR bForceDraw)
+	if (psFeature->visible[selectedPlayer] OR godMode OR bForceDraw)
 	{
 		psFeature->sDisplay.frameNumber = currentGameFrame;
 		/* Get it's x and y coordinates so we don't have to deref. struct later */
@@ -2210,7 +2194,7 @@ BOOL		bForceDraw;
 			objectShimmy((BASE_OBJECT*)psFeature);
 		}
 
-		if(godMode OR demoGetStatus() OR bForceDraw)
+		if(godMode OR bForceDraw)
 		{
 			brightness = 200;
 		}
@@ -2433,7 +2417,7 @@ REPAIR_FACILITY		*psRepairFac = NULL;
   	// -------------------------------------------------------------------------------
 
   
-	if(psStructure->visible[selectedPlayer] OR godMode OR demoGetStatus())
+	if(psStructure->visible[selectedPlayer] OR godMode)
 	{
 		psStructure->sDisplay.frameNumber = currentGameFrame;
 		/* Get it's x and y coordinates so we don't have to deref. struct later */
@@ -2489,7 +2473,7 @@ REPAIR_FACILITY		*psRepairFac = NULL;
 			buildingBrightness = 200+brightVar;
 		}
 		
-		if(godMode OR demoGetStatus())
+		if(godMode)
 		{
 			buildingBrightness = buildingBrightness;
 		}
@@ -2780,7 +2764,7 @@ SDWORD			brightVar;
   	playerFrame =getPlayerColour(psStructure->player);// psStructure->player
    	animFrame = playerFrame;
 	// -------------------------------------------------------------------------------
-	if(psStructure->visible[selectedPlayer] OR godMode OR demoGetStatus())
+	if(psStructure->visible[selectedPlayer] OR godMode)
 	{
   		/* Mark it as having been drawn */
 		psStructure->sDisplay.frameNumber = currentGameFrame;
@@ -2848,7 +2832,7 @@ SDWORD			brightVar;
 
 			buildingBrightness = 200 + brightVar;
 		}
-		if(godMode OR demoGetStatus())
+		if(godMode)
 		{
 			buildingBrightness = buildingBrightness;
 		}
@@ -3141,7 +3125,7 @@ BOOL	renderWallSection(STRUCTURE *psStructure)
 	SDWORD			brightVar;
 
          
-	if(psStructure->visible[selectedPlayer] OR godMode OR demoGetStatus())
+	if(psStructure->visible[selectedPlayer] OR godMode)
 	{
 		psStructure->sDisplay.frameNumber = currentGameFrame;
 		/* Get it's x and y coordinates so we don't have to deref. struct later */
@@ -3167,7 +3151,7 @@ BOOL	renderWallSection(STRUCTURE *psStructure)
 			buildingBrightness = 200 + brightVar;
 		}
 
-		if(godMode OR demoGetStatus())
+		if(godMode)
 		{
 			/* NOP */
 		}

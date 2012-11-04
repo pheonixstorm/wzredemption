@@ -33,7 +33,6 @@ CHEAT_ENTRY	cheatCodes[] =
 	{"W^SSP RZVQ L\\W^KE",kf_AddMissionOffWorld},//let me win
 	{"KVRZ[ZRP",kf_FrameRate},	 //timedemo
 	{"TVSS LZsZ\\KZ[",kf_KillSelected},//kill slected
-	{"[ZRP RP[Z",kf_ToggleDemoMode},	//demo mode
 	{"UPWQ TZKKSZF",kf_ToggleWeather},//john kettley
 	{"WPH Y^LK",kf_FrameRate},//how fast?
 	{"LW^TZF",kf_ToggleShakeStatus},//shakey

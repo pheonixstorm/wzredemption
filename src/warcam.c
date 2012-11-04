@@ -28,7 +28,6 @@
 #include "Order.h"
 #include "Action.h"
 #include "IntDisplay.h"
-#include "E3Demo.h"
 #include "RayCast.h"
 #include "Display3d.h"
 #ifndef PAUL
@@ -90,7 +89,6 @@ BOOL	camTrackCamera				( void );
 void	camSwitchOff				( void );
 BOOL	getWarCamStatus				( void );
 void	camToggleInfo				( void );
-//void	setUpRadarTarget			( SDWORD x, SDWORD y );
 void	setUpRadarTarget			( SDWORD x, SDWORD y );
 void	requestRadarTrack			( SDWORD x, SDWORD y );
 BOOL	getRadarTrackingStatus		( void );
@@ -154,10 +152,7 @@ void	initWarCam( void )
 }
 
 //-----------------------------------------------------------------------------------
-
-
 // Just turn it off.
-//
 void CancelWarCam(void)
 {
    	if(trackingCamera.target->type == OBJ_DROID) {
@@ -273,7 +268,6 @@ BOOL Status = TRUE;
 }
 
 //-----------------------------------------------------------------------------------
-
 /* Flips states for camera active */
 void	setWarCamActive(BOOL status)
 {
@@ -318,7 +312,6 @@ void	setWarCamActive(BOOL status)
 }
 
 //-----------------------------------------------------------------------------------
-
 BASE_OBJECT	*camFindDroidTarget(void)
 {
 	DROID	*psDroid;
@@ -336,8 +329,6 @@ BASE_OBJECT	*camFindDroidTarget(void)
 	/* We didn't find one */
 	return(NULL);
 }
-
-
 
 /* Attempts to find the target for the camera to track */
 BASE_OBJECT	*camFindTarget(void)
@@ -361,6 +352,7 @@ UDWORD	getTestAngle(void)
 {
 	return(testAngle);
 }
+
 //-----------------------------------------------------------------------------------
 void	updateTestAngle( void )
 {
@@ -370,8 +362,8 @@ void	updateTestAngle( void )
 		testAngle = 0;
 	}
 }
-//-----------------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------------
 /* Stores away old viewangle info and sets up new distance and angles */
 void	camAllignWithTarget(BASE_OBJECT *psTarget)
 {
@@ -449,7 +441,6 @@ in the case of location and degrees of arc in the case of rotation.
 */  
 
 //-----------------------------------------------------------------------------------
-
 void	updateCameraAcceleration(UBYTE update)
 {
 FRACT	separation;
@@ -609,7 +600,6 @@ SDWORD	angle;
 }
 
 //-----------------------------------------------------------------------------------
-
 void	updateCameraVelocity( UBYTE	update )
 {
 //UDWORD	frameTime;
@@ -640,7 +630,6 @@ FRACT	fraction;
 }
 
 //-----------------------------------------------------------------------------------
-
 void	updateCameraPosition(UBYTE update)
 {
 //UDWORD	frameTime;
@@ -933,7 +922,6 @@ BOOL	bFlying;
 	/* Most importantly - see if the target we're tracking is dead! */
 	if(trackingCamera.target->died)
 	{
-		setFindNewTarget();
 		return(FALSE);
 	}
 
@@ -1080,18 +1068,13 @@ BOOL	bFlying;
 
 void	processLeaderSelection( void )
 {
-DROID	*psDroid;
-DROID	*psPresent;
-DROID	*psNew=NULL;
-UDWORD	leaderClass;
-BOOL	bSuccess;
-UDWORD	dif;
-UDWORD	bestSoFar;
-
-	if(demoGetStatus())
-	{
-		return;
-	}
+    DROID	*psDroid;
+    DROID	*psPresent;
+    DROID	*psNew=NULL;
+    UDWORD	leaderClass;
+    BOOL	bSuccess;
+    UDWORD	dif;
+    UDWORD	bestSoFar;
 
 	if(getWarCamStatus())
 	{
@@ -1226,6 +1209,7 @@ UDWORD	bestSoFar;
 		camAllignWithTarget((BASE_OBJECT*)psNew);
 	}
 }
+
 //-----------------------------------------------------------------------------------
 DROID *getTrackingDroid( void )
 {
@@ -1384,7 +1368,6 @@ SDWORD	getPresAngle( void )
 {
 	return(presAvAngle);
 }
-//-----------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------
 UDWORD	getNumDroidsSelected( void )
@@ -1436,6 +1419,7 @@ UDWORD	count;
 		*z = zTotals/count;
 	}
 }
+
 //-----------------------------------------------------------------------------------
 void	getGroupTrackingConcerns(SDWORD *x,SDWORD *y, SDWORD *z,UDWORD groupNumber, BOOL bOnScreen)
 {
@@ -1476,9 +1460,8 @@ UDWORD	count;
 		*z = zTotals/count;
 	}
 }
+
 //-----------------------------------------------------------------------------------
-
-
 void camSetOldView(int x,int y,int z,int rx,int ry,int dist)
 {
 	UNUSEDPARAMETER(x);
@@ -1498,7 +1481,7 @@ void camSetOldView(int x,int y,int z,int rx,int ry,int dist)
 //	trackingCamera.oldDistance = dist;
 }
 
-
+//-----------------------------------------------------------------------------------
 /* Static function that switches off tracking - and might not be desirable? - Jim?*/
 void	camSwitchOff( void )
 {
@@ -1515,7 +1498,6 @@ void	camSwitchOff( void )
 }
 
 //-----------------------------------------------------------------------------------
-
 /* Returns whether or not the tracking camera is active */
 BOOL	getWarCamStatus( void )
 {
@@ -1532,7 +1514,6 @@ BOOL	getWarCamStatus( void )
 }
 
 //-----------------------------------------------------------------------------------
-
 /* Flips the status of tracking to the opposite of what it presently is */
 void	camToggleStatus( void )
 {
@@ -1553,7 +1534,7 @@ void	camToggleStatus( void )
 	}
 }
 
-
+//-----------------------------------------------------------------------------------
 /*	Flips on/off whether we print out full info about the droid being tracked.
 	If ON then this info is permanent on screen and realtime updating */
 void	camToggleInfo(void)
@@ -1561,6 +1542,7 @@ void	camToggleInfo(void)
 	bFullInfo = !bFullInfo;
 }
 
+//-----------------------------------------------------------------------------------
 /* Sets up the dummy target for the camera */
 //void	setUpRadarTarget(SDWORD x, SDWORD y)
 void	setUpRadarTarget(SDWORD x, SDWORD y)
@@ -1583,6 +1565,7 @@ void	setUpRadarTarget(SDWORD x, SDWORD y)
 	radarTarget.died = 0;
 }
 
+//-----------------------------------------------------------------------------------
 /* Informs the tracking camera that we want to start tracking to a new radar target */
 void	requestRadarTrack(SDWORD x, SDWORD y)
 {
@@ -1599,6 +1582,7 @@ void	requestRadarTrack(SDWORD x, SDWORD y)
 // 	setWarCamActive(TRUE);
 }
 
+//-----------------------------------------------------------------------------------
 /* Returns whether we're presently tracking to a new _location_ */
 BOOL	getRadarTrackingStatus( void )
 {
@@ -1624,6 +1608,7 @@ BOOL	retVal;
 	return(retVal);
 }
 
+//-----------------------------------------------------------------------------------
 /* Displays a spinning MTV style logo in the top right of the screen */
 void	dispWarCamLogo( void )
 {
@@ -1649,11 +1634,13 @@ void	dispWarCamLogo( void )
 //	iV_MatrixEnd();
 }
 
+//-----------------------------------------------------------------------------------
 void	toggleRadarAllignment( void )
 {
 	bRadarAllign = !bRadarAllign;
 }
 
+//-----------------------------------------------------------------------------------
 /* Returns how far away we are from our goal in a radar track */
 UDWORD	getPositionMagnitude( void )
 {
@@ -1667,6 +1654,7 @@ UDWORD	val;
 	return(val);
 }
 
+//-----------------------------------------------------------------------------------
 /* Rteurns how far away we are from our goal in rotation */
 UDWORD	getRotationMagnitude( void )
 {
@@ -1680,6 +1668,7 @@ UDWORD	val;
 	return(val);
 }
 
+//-----------------------------------------------------------------------------------
 void	camInformOfRotation( iVector *rotation )
 {
 	trackingCamera.rotation.x = rotation->x;

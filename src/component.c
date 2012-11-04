@@ -35,7 +35,6 @@
 #include "IntDisplay.h"
 #include "MiscImd.h"
 #include "Effects.h"
-#include "E3Demo.h"
 #include "Transporter.h"
 #include "Projectile.h"
 
@@ -735,7 +734,7 @@ MAPTILE	*psTile;
 		addEffect(&position,EFFECT_EXPLOSION,EXPLOSION_TYPE_PLASMA,FALSE,NULL,0);
     }
 
-	if (godMode || (psDroid->visible[selectedPlayer] == UBYTE_MAX) OR demoGetStatus())
+	if (godMode || (psDroid->visible[selectedPlayer] == UBYTE_MAX))
 	{
 		//ingame not button object
 		displayCompObj(psObj,&mountRotation,FALSE);

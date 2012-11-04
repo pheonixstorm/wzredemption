@@ -25,7 +25,6 @@
 #include "Geometry.h"
 #include "Radar.h"
 #include "Cheat.h"
-#include "E3Demo.h"	// Is this required? FIXME
 #include "netplay.h"
 #include "multiplay.h"
 #include "multimenu.h"
@@ -1270,14 +1269,12 @@ if(bMultiPlayer && (NetPlay.bComms != 0) )
 		godMode = FALSE;
 //		setDifficultyLevel(getDifficultyLevel());
 		CONPRINTF(ConsoleString,(ConsoleString,"God Mode OFF"));
-		demoProcessTilesOut();
 	}
 	else
 	{
 		godMode = TRUE;
 //		setModifiers(FRACTCONST(1000,100),FRACTCONST(100,1000));
 		CONPRINTF(ConsoleString,(ConsoleString,"God Mode ON"));
-		demoProcessTilesIn();
 	}
 
 }
@@ -1363,29 +1360,6 @@ void	kf_ToggleReloadBars( void )
 {
 	toggleReloadBarDisplay();
 	CONPRINTF(ConsoleString,(ConsoleString, strresGetString(psStringRes,STR_GAM_ENERGY ) ));
-}
-// --------------------------------------------------------------------------
-void	kf_ToggleDemoMode( void )
-{
-	if(demoGetStatus() == FALSE)
-	{
-		/* Switch on demo mode */
-		toggleDemoStatus();
-		enableConsoleDisplay(TRUE);
-	}
-	else
-	{
-		toggleDemoStatus();
-		flushConsoleMessages();
-		setConsolePermanence(FALSE,TRUE);
-		permitNewConsoleMessages(TRUE);
-		addConsoleMessage("Demo Mode OFF - Returning to normal game mode",LEFT_JUSTIFY);
-		if(getWarCamStatus())
-		{
-			camToggleStatus();
-		}
-	}
-
 }
 
 // --------------------------------------------------------------------------
@@ -1644,7 +1618,7 @@ void	kf_ToggleDrivingMode( void )
 		}
 		else
 		{
-			if(	(driveModeActive() == FALSE) &&	(demoGetStatus() == FALSE) && !bMultiPlayer)
+			if(	(driveModeActive() == FALSE) && !bMultiPlayer)
 			{
 				StartDriverMode( NULL );
 			}

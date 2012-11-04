@@ -208,7 +208,6 @@ _keymapsave keyMapSaveTable[] =
 //	kf_ToggleSensorDisplay,
 	kf_FinishResearch,
 	kf_LowerTile,
-	kf_ToggleDemoMode,
 	kf_ToggleGodMode,
 	kf_EndMissionOffWorld, 
 	kf_SystemClose,
@@ -399,7 +398,6 @@ if(bAllowDebugMode)
 	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_N,KEYMAP_PRESSED,kf_GiveTemplateSet,				"Give template set(s) to player 0 ");
 	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_V,KEYMAP_PRESSED,kf_ToggleVisibility,			"Toggle visibility");
 	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_W,KEYMAP_DOWN,kf_LowerTile,						"Lower tile height");	
-	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_Y,KEYMAP_PRESSED,kf_ToggleDemoMode,				"Toggles on/off DEMO Mode");
 //	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_Z,KEYMAP_PRESSED,kf_ToggleSensorDisplay,			"Toggle Sensor display");
 	keyAddMapping(KEYMAP__DEBUG,KEY_LCTRL,KEY_B,KEYMAP_PRESSED,kf_EndMissionOffWorld,			"End Mission");
 	keyAddMapping(KEYMAP__DEBUG,KEY_LCTRL,KEY_KP_MINUS,KEYMAP_PRESSED,kf_SystemClose,			"System Close (EXIT)");
@@ -457,7 +455,6 @@ if(bAllowDebugMode)
 	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_V,KEYMAP_PRESSED,kf_BuildInfo,"Build date and time");
 	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_W,KEYMAP_DOWN,kf_LowerTile,"Lower tile height");
 	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_X,KEYMAP_PRESSED,kf_DebugDroidInfo,"Droid Debug Info");
-	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_Y,KEYMAP_PRESSED,kf_ToggleDemoMode,"Toggles on/off DEMO Mode");
 	keyAddMapping(KEYMAP__DEBUG,KEY_IGNORE,KEY_Z,KEYMAP_PRESSED,kf_ShowGridInfo,"DBPRINTF map grid coverage");
 	*/
 
