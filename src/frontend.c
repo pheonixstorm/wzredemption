@@ -58,7 +58,7 @@
 #include "multistat.h"
 #include "netplay.h"
 
-#define VERSION_STRING	"VER 1.10.0.25"
+#define VERSION_STRING	"VER 1.10.1.29"
 
 extern BOOL bSubtitles;
 
@@ -80,11 +80,9 @@ STRING	strTrans[MAX_STR_LENGTH];
 // iPalette			titlePalette;
 int				FEFont;
 //int				FEBigFont;
-//#ifndef NON_INTERACT
+
 char			pLevelName[MAX_LEVEL_NAME_SIZE+1];	//256];			// vital! the wrf file to use.
-/*#else
-char			pLevelName[]="ROCKIES";
-#endif*/
+
 BOOL			bForceEditorLoaded = FALSE;
 BOOL			bUsingKeyboard = FALSE;		// to disable mouse pointer when using keys.
 BOOL			bUsingSlider   = FALSE;
@@ -117,8 +115,6 @@ BOOL		startTitleMenu			(VOID);
 BOOL		runTitleMenu			(VOID);
 VOID		startSinglePlayerMenu	(VOID);
 BOOL		runSinglePlayerMenu		(VOID);
-//BOOL		runDemoMenu				(VOID);
-//BOOL		startDemoMenu			(VOID);
 BOOL		startTutorialMenu		(VOID);
 BOOL		runTutorialMenu			(VOID);
 BOOL		startMultiPlayerMenu	(VOID);
@@ -238,10 +234,7 @@ VOID changeTitleMode(tMode mode)
 
 	switch(mode)
 	{
-/*	case DEMOMODE:// demo case. remove for release
-		startDemoMenu();
-		break;
-	case VIDEO:
+/*	case VIDEO:
 		startVideoOptionsMenu();
 		break;
 */	
@@ -754,8 +747,6 @@ BOOL startOptionsMenu(VOID)
 	return TRUE;
 }
 
-
-
 BOOL runOptionsMenu(VOID)
 {
 	UDWORD id;
@@ -799,7 +790,6 @@ BOOL runOptionsMenu(VOID)
 
 	return TRUE;
 }
-
 
 // ////////////////////////////////////////////////////////////////////////////
 // Graphics Options Menu
@@ -1145,7 +1135,6 @@ BOOL startGameOptions2Menu(VOID)
 
 	return TRUE;
 }
-
 
 BOOL runGameOptions2Menu(VOID)
 {
@@ -1521,7 +1510,6 @@ BOOL runGameOptionsMenu(VOID)
 }
 
 
-
 // ////////////////////////////////////////////////////////////////////////////
 // ////////////////////////////////////////////////////////////////////////////
 // ////////////////////////////////////////////////////////////////////////////
@@ -1700,7 +1688,6 @@ VOID addSideText(UDWORD id,  UDWORD PosX, UDWORD PosY, STRING *txt)
 #endif
 }
 
-
 VOID addText(int FontID,UDWORD FormID,UDWORD id,  UDWORD PosX, UDWORD PosY, STRING *txt, UDWORD attachID,BOOL *State)
 {
 	W_LABINIT	sLabInit;
@@ -1721,7 +1708,6 @@ DBPRINTF(("addText : %s\n",txt));
 	sLabInit.pCallback  = intUpdateOptionText;
 	widgAddLabel(psWScreen, &sLabInit);
 }
-
 
 
 // ////////////////////////////////////////////////////////////////////////////

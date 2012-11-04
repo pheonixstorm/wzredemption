@@ -225,7 +225,7 @@ void	kf_ToggleConsoleDrop( void )
 	}
 }
 // --------------------------------------------------------------------------
-void	kf_SetKillerLevel( void )
+void	kf_SetKillerLevel( void )  // FIXME This needs to be changed so tough and killer difficulty can be used later.
 {
 	if(!bMultiPlayer || (NetPlay.bComms == 0))
 	{
