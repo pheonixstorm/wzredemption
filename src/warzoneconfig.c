@@ -10,7 +10,7 @@
 #include "frame.h"
 #include "warzoneConfig.h"
 #include "pieState.h"
-
+#include "advvis.h"
 
 /***************************************************************************/
 /*
@@ -28,7 +28,7 @@
 typedef struct _warzoneGlobals
 {
 	WAR_REND_MODE	renderMode;
-//	TEX_MODE	textureMode;
+//	TEX_MODE	textureMode;  // FIXME Eventual tex size placement. Nice to reuse old code :)
 	SEQ_MODE	seqMode;
 	BOOL		bFog;
 	BOOL		bTranslucent;

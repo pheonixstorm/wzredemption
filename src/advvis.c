@@ -8,7 +8,7 @@
 #include "Map.h"
 #include "GTime.h"
 #include "Display3d.h"
-#include "AdvVis.h"
+#include "advvis.h"
 #include "HCI.h"
 #include "PieState.h"
 #include "Component.h"
@@ -34,12 +34,13 @@ static	bRevealActive = FALSE;
 */
 BOOL	bRevealActive = FALSE;
 // ------------------------------------------------------------------------------------
+/*
 void	avInformOfChange(SDWORD x, SDWORD y);
 void	avUpdateTiles( void );
 void	processAVTile(UDWORD x, UDWORD y );
 UDWORD	avGetObjLightLevel(BASE_OBJECT *psObj,UDWORD origLevel);
 void	avGetStats(UDWORD *considered, UDWORD *ignored, UDWORD *calculated);
-
+*/
 
 // ------------------------------------------------------------------------------------
 void	avSetStatus(BOOL var)
