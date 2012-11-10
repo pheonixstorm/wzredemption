@@ -5,12 +5,12 @@
  *
  */
 
-#include "Frame.h"
-#include "FrameInt.h"
-#include "Widget.h"
-#include "WidgInt.h"
-#include "Tip.h"
-#include "Vid.h"
+#include "frame.h"
+#include "frameint.h"
+#include "widget.h"
+#include "widgint.h"
+#include "tip.h"
+#include "vid.h"
 
 
 /* Time delay before showing the tool tip */
