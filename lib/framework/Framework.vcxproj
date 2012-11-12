@@ -363,7 +363,6 @@
     <ClInclude Include="Mono.h" />
     <ClInclude Include="multiWDG.h" />
     <ClInclude Include="ResLY.h" />
-    <ClInclude Include="Resource.h" />
     <ClInclude Include="resource_y.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="StrRes.h" />

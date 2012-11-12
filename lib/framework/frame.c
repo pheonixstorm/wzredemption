@@ -274,7 +274,7 @@ STRING *winErrorToString(SDWORD error)
 
 	// Copy the string.
 	strncpy(winErrorString, lpMsgBuf, 254);
-	winErrorString[255] = '0';
+	winErrorString[255] = '\0';
 
 	// Free the buffer.
 	LocalFree( lpMsgBuf );

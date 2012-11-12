@@ -7,8 +7,8 @@
 
 #include <stdio.h>
 
-#include "Frame.h"
-#include "FrameInt.h"
+#include "frame.h"
+#include "frameint.h"
 
 
 /* The header on a font file */

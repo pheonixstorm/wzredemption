@@ -145,9 +145,6 @@
     <ClInclude Include="ResLY.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource_y.h">
       <Filter>Header Files</Filter>
     </ClInclude>

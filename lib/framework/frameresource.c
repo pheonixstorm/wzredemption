@@ -8,9 +8,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
-#include "Frame.h"
-#include "FrameResource.h"
-#include "ResLY.h"
+#include "frame.h"
+#include "frameresource.h"
+#include "resly.h"
 
 #include "wdg.h"
 #include "multiwdg.h"

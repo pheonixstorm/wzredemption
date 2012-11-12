@@ -19,13 +19,13 @@
 
 /* The input buffer printf's */
 //#define DEBUG_GROUP1
-#include "Types.h"
-#include "Debug.h"
-#include "Input.h"
-#include "Screen.h"
+#include "types.h"
+#include "debug.h"
+#include "input.h"
+#include "screen.h"
 #include "frameint.h"
-#include "Fractions.h"
-#include "Frame.h"
+#include "fractions.h"
+#include "frame.h"
 
 /* The possible states for keys */
 typedef enum _key_state
@@ -44,6 +44,7 @@ typedef enum _key_state
 static KEY_STATE aKeyState[KEY_MAXSCAN];
 
 /* Mouse wheel stuff */
+// static  SDWORD  wheelVal; // ADD FIXME Use this val when mouse rotate function found
 static	UDWORD	oldWheelPos = 0;
 static	BOOL	bMouseWheelForward = FALSE;
 static	BOOL	bMouseWheelBackwards = FALSE;
@@ -243,7 +244,7 @@ void inputProcessMessages(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-		/* FIXME
+		/* FIXME Can be enabled soon I hope.
 	case WM_MOUSEWHEEL:	// not defined in non-NT.....bugger.
 		wheelVal = HIWORD(wParam);
 		if(wheelVal<0)
