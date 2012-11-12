@@ -4,9 +4,9 @@
 #include "ivisdef.h"
 #include "v4101.h"
 #include "vsr.h"
-#include "pieBlitFunc.h"
-#include "BitImage.h"
-#include "TextDraw.h"
+#include "pieblitfunc.h"
+#include "bitimage.h"
+#include "textdraw.h"
 
 //*************************************************************************
 //patch

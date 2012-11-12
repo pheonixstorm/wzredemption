@@ -8,10 +8,10 @@
 /***************************************************************************/
 
 #include "frame.h"
-#include "pieState.h"
+#include "piestate.h"
 #include "piedef.h"
-#include "d3dRender.h"
-#include "dx6TexMan.h"
+#include "d3drender.h"
+#include "dx6texman.h"
 #include "tex.h"
 #include "texd3d.h"
 #ifdef INC_GLIDE

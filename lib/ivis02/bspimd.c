@@ -3,17 +3,15 @@
 	BSP Draw routines for iVis02
 
 	- 5 Sept 1997  - Tim Cannell - Pumpkin Studios - Eidos 
-
-
-
+    
 	- Main routines were written by Gareth Jones .... so if you find any bugs I think you better speak to him ...
 
 */
 
 
 #include "frame.h"	// just for the typedef's
-#include "pieTypes.h"
-#include "pieMatrix.h"
+#include "pietypes.h"
+#include "piematrix.h"
 #include "ivisdef.h"// this can have the #define for BSPIMD in it
 #include "imd.h"// this has the #define for BSPPOLYID_TERMINATE
 #include "ivi.h"

@@ -9,7 +9,7 @@
 #include "d3d.h"
 #include "frame.h"
 #include "texd3d.h"
-#include "pieState.h"
+#include "piestate.h"
 
 /***************************************************************************/
 

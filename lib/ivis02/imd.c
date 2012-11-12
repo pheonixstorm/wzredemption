@@ -11,15 +11,10 @@
 //#define PIETOOL
 
 
-
-
-
 #ifdef PIETOOL
 #define BSPIMD				 
 #define SAVEIMD
 #endif
-
-
 
 #include "ivisdef.h"
 #include "imd.h"		  

@@ -4,7 +4,7 @@
 #include <dos.h>
 #include "rendmode.h"
 #include "bug.h"
-#include "piePalette.h"
+#include "piepalette.h"
 #include "pcx.h"
 #include "tex.h"
 #include "ivispatch.h"
@@ -15,7 +15,7 @@
 	#include "3dfxfunc.h"
 #endif
 
-#include "BitImage.h"
+#include "bitimage.h"
 
 
 static BOOL LoadTextureFile(char *FileName,iSprite *TPage,int *TPageID);

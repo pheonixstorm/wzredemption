@@ -9,7 +9,7 @@
 //#include <stdio.h>
 //#include <stdlib.h>
 //#include <io.h>
-//#include "pcx.h"
+#include "pcx.h"
 //#include "pal.h"
 //#include "bug.h"
 //#include "ivisheap.h"

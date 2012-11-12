@@ -3,10 +3,10 @@
 #include "d3d.h"
 
 //#include "ivi.h"
-#include "rendMode.h"
-#include "pieClip.h"
+#include "rendmode.h"
+#include "pieclip.h"
 #include "d3drender.h"
-#include "dx6TexMan.h"
+#include "dx6texman.h"
 
 /***************************************************************************/
 

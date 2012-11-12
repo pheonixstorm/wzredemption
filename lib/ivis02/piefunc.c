@@ -10,12 +10,12 @@
 #include "frame.h"
 
 #include "piedef.h"
-#include "rendMode.h"
-#include "pieFunc.h"
-#include "pieState.h"
-#include "pieMatrix.h"
-#include "pieTexture.h"
-#include "pieClip.h"
+#include "rendmode.h"
+#include "piefunc.h"
+#include "piestate.h"
+#include "piematrix.h"
+#include "pietexture.h"
+#include "pieclip.h"
 
 #include "d3d.h"
 #include "d3drender.h"

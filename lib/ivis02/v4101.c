@@ -11,9 +11,9 @@
 #include "rendmode.h"
 #include "piemode.h"
 #include "bug.h"
-#include "piePalette.h"
-#include "pieMatrix.h" // clockwise check
-#include "pieClip.h"
+#include "piepalette.h"
+#include "piematrix.h" // clockwise check
+#include "pieclip.h"
 
 #ifdef iV_DDX
 	#include <Wtypes.h>

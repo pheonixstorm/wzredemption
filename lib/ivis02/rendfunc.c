@@ -5,10 +5,10 @@
 #include "rendfunc.h"
 #include "rendmode.h"
 #include "bug.h"
-#include "piePalette.h"
+#include "piepalette.h"
 #include "ivispatch.h"
 #include "fractions.h"
-#include "pieClip.h"
+#include "pieclip.h"
 
 // #ifndef PIETOOL
 

@@ -4,17 +4,17 @@
 #include <dos.h>
 #include <ddraw.h>
 #include "ivisdef.h"
-#include "pieState.h"
+#include "piestate.h"
 #include "rendmode.h"
 #include "rendfunc.h"
-#include "pieClip.h"
-#include "pieBlitFunc.h"
+#include "pieclip.h"
+#include "pieblitfunc.h"
 
 #include "bug.h"
-#include "piePalette.h"
+#include "piepalette.h"
 #include "ivispatch.h"
-#include "TextDraw.h"
-#include "BitImage.h"
+#include "textdraw.h"
+#include "bitimage.h"
 
 extern	void	pie_DrawTextNew(unsigned char *string, int x, int y);
 extern SDWORD DisplayXFactor;

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "ivi.h"
-#include "pieState.h"
-#include "piePalette.h"
+#include "piestate.h"
+#include "piepalette.h"
 #include "rendmode.h"
 #include "bug.h"
 #include "fractions.h"

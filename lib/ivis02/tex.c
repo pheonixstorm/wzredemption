@@ -6,16 +6,16 @@
 #include <ctype.h>
 #include "frame.h"
 #include "ivisdef.h"
-#include "pieState.h"
-#include "dx6TexMan.h"
+#include "piestate.h"
+#include "dx6texman.h"
 #include "tex.h"
 #include "rendmode.h"
 #include "pcx.h"
-#include "piePalette.h"
+#include "piepalette.h"
 #include "bug.h"
 #include "ivispatch.h"
 #ifdef INC_GLIDE
-#include "3dfxText.h"
+#include "3dfxtext.h"
 #endif
 
 #include "d3drender.h"

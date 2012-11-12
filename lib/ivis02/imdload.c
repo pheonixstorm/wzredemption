@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 #include "frame.h"
-#include "pieMatrix.h" //for surface normals
+#include "piematrix.h" //for surface normals
 #include "ivisdef.h"	// for imd structures
 #include "imd.h"	// for imd structures
 #include "rendmode.h"
