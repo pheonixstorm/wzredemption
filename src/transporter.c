@@ -3,33 +3,33 @@
  *
  * code to deal with loading/unloading, interface and flight
 */
-#include "Widget.h"
+#include "widget.h"
 
-#include "Stats.h"
-#include "HCI.h"
-#include "intDisplay.h"
-#include "ObjMem.h"
-#include "Transporter.h"
-#include "Group.h"
-#include "Text.h"
-#include "Display3d.h"
-#include "Mission.h"
-#include "Objects.h"
+#include "stats.h"
+#include "hci.h"
+#include "intdisplay.h"
+#include "objmem.h"
+#include "transporter.h"
+#include "group.h"
+#include "text.h"
+#include "display3d.h"
+#include "mission.h"
+#include "objects.h"
 #include "display.h"
-#include "Script.h"
-#include "ScriptTabs.h"
-#include "Order.h"
+#include "script.h"
+#include "scripttabs.h"
+#include "order.h"
 #include "action.h"
-#include "GTime.h"
-#include "Console.h"
-#include "BitImage.h"
-#include "warCam.h"
+#include "gtime.h"
+#include "console.h"
+#include "bitimage.h"
+#include "warcam.h"
 #include "selection.h"
 #include "audio.h"
 #include "audio_id.h"
-#include "pieMatrix.h"
-#include "MapGrid.h"
-#include "Multiplay.h"
+#include "piematrix.h"
+#include "mapgrid.h"
+#include "multiplay.h"
 #include "csnap.h"
 
 extern CURSORSNAP InterfaceSnap;
@@ -102,6 +102,7 @@ extern CURSORSNAP InterfaceSnap;
 
 //They all take up the same amount of space now - AB 30/10/98
 //defines how much space each sized droid takes up on the Transporter
+// FIXME change this back to the old way?
 #define	LIGHT_DROID					1
 #define MEDIUM_DROID				1//2
 #define HEAVY_DROID					1//3

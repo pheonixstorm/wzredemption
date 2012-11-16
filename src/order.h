@@ -7,10 +7,7 @@
 #ifndef _order_h
 #define _order_h
 
-#include "OrderDef.h"
-
-//turn off the build queue availability until desired release date!
-//#define DISABLE_BUILD_QUEUE
+#include "orderdef.h"
 
 // The droid orders
 typedef enum _droid_order

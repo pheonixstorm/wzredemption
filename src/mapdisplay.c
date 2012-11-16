@@ -12,7 +12,7 @@
 
 /* ----------------------------------------------------------------------------------------- */
 /* Included files */
-#include "stdio.h"
+#include <stdio.h>
 
 /* Includes direct access to render library */
 #include "ivisdef.h"
@@ -20,20 +20,20 @@
 #include "piestate.h"
 #include "piemode.h"
 #include "pietexture.h"
-#include "pieMatrix.h"
+#include "piematrix.h"
 #include "vid.h"
 
-#include "Map.h"
-#include "MapDisplay.h"
-#include "Component.h"
-#include "Disp2D.h"
-#include "Display3d.h"
-#include "HCI.h"
+#include "map.h"
+#include "mapdisplay.h"
+#include "component.h"
+#include "disp2d.h"
+#include "display3d.h"
+#include "hci.h"
 #include "intelmap.h"
-#include "IntImage.h"
+#include "intimage.h"
 //#include "dGlide.h"
-#include "Texture.h"
-#include "IntDisplay.h"
+#include "texture.h"
+#include "intdisplay.h"
 
 extern UWORD ButXPos;	// From intDisplay.c
 extern UWORD ButYPos;

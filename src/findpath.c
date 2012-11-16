@@ -7,13 +7,13 @@
 
 /* Turn printf's */
 //#define DEBUG_GROUP1
-#include "Frame.h"
+#include "frame.h"
 
-#include "Objects.h"
-#include "Map.h"
-#include "FindPath.h"
-#include "GTime.h"
-#include "Geometry.h"
+#include "objects.h"
+#include "map.h"
+#include "findpath.h"
+#include "gtime.h"
+#include "geometry.h"
 
 #include "fractions.h"
 
@@ -877,11 +877,6 @@ UDWORD vect2Follow[COMPASS_POINTS][3]=
 
 
 #endif
-
-
-
-
-
 
 /* Return the difference in directions */
 UDWORD dirDiff(SDWORD start, SDWORD end)

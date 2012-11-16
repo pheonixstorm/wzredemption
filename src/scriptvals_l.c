@@ -279,12 +279,12 @@ extern	int	scrv_mapch	YY_ARGS((int delim, int escape));
 
 #include <stdio.h>
 
-#include "Frame.h"
-#include "Script.h"
-#include "ScriptVals.h"
+#include "frame.h"
+#include "script.h"
+#include "scriptvals.h"
 
 /* Get the Yacc definitions */
-#include "ScriptVals_y.h"
+#include "scriptvals_y.h"
 
 /* Turn off a couple of warnings that the lex generated code gives */
 #pragma warning ( disable : 4102 4305 )

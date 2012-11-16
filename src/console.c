@@ -1,14 +1,14 @@
-#include "Frame.h"
-#include "GTime.h"
-#include "Base.h"
+#include "frame.h"
+#include "gtime.h"
+#include "base.h"
 #include "piedef.h"
 #include "piestate.h"
 #include "rendmode.h"
-#include "intImage.h"
-#include "Console.h"
-#include "ScriptExtern.h"
-#include "Audio_id.h"
-#include "Audio.h"
+#include "intimage.h"
+#include "console.h"
+#include "scriptextern.h"
+#include "audio_id.h"
+#include "audio.h"
 
 /* Alex McLean, Pumpkin Studios, EIDOS Interactive */
 

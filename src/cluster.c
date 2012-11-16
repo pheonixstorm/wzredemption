@@ -7,16 +7,16 @@
 
 // cluster empty printf's
 //#define DEBUG_GROUP0
-#include "Frame.h"
-#include "Objects.h"
-#include "Map.h"
-#include "Cluster.h"
-#include "Console.h"
-#include "HCI.h"
-#include "Gtime.h"
-#include "Script.h"
-#include "ScriptTabs.h"
-#include "ScriptCB.h"
+#include "frame.h"
+#include "objects.h"
+#include "map.h"
+#include "cluster.h"
+#include "console.h"
+#include "hci.h"
+#include "gtime.h"
+#include "script.h"
+#include "scripttabs.h"
+#include "scriptcb.h"
 
 // distance between units for them to be in the same cluster
 #define CLUSTER_DIST	(TILE_UNITS*8)

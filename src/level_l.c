@@ -297,10 +297,10 @@ extern	int	lev_mapch	YY_ARGS((int delim, int escape));
 
 #include <stdio.h>
 
-#include "Frame.h"
+#include "frame.h"
 
-#include "Levels.h"
-#include "LevelInt.h"
+#include "levels.h"
+#include "levelint.h"
 
 /* Turn off a couple of warnings that the lex generated code gives */
 #pragma warning ( disable : 4102 4305 )

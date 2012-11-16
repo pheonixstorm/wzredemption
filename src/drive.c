@@ -10,43 +10,43 @@
 #include <Math.h>
 #include "imd.h"
 #include "vid.h"
-#include "Frame.h"
-#include "Objects.h"
-#include "Move.h"
-#include "FindPath.h"
-#include "Visibility.h"
-#include "Map.h"
-#include "FPath.h"
-#include "Loop.h"
-#include "GTime.h"
+#include "frame.h"
+#include "objects.h"
+#include "move.h"
+#include "findpath.h"
+#include "visibility.h"
+#include "map.h"
+#include "fpath.h"
+#include "loop.h"
+#include "gtime.h"
 #include "audio.h"
 #include "audio_id.h"
-#include "Geometry.h"
+#include "geometry.h"
 #include "animobj.h"
 #include "anim_id.h"
-#include "FormationDef.h"
-#include "Formation.h"
+#include "formationdef.h"
+#include "formation.h"
 #include "action.h"
 #include "order.h"
 #include "astar.h"
-#include "Combat.h"
-#include "MapGrid.h"
+#include "combat.h"
+#include "mapgrid.h"
 #include "display.h"	// needed for widgetsOn flag.
-#include "Effects.h"
+#include "effects.h"
 #include "fractions.h"
 #include "hci.h"
 #include "warcam.h"
 #include "radar.h"
 #include "display3ddef.h"
 #include "display3d.h"
-#include "Console.h"
-#include "Text.h"
+#include "console.h"
+#include "text.h"
 
 // all the bollox needed for script callbacks
 #include "interp.h"				// needed to define types in scripttabs.h
 #include "parse.h"				// needed to define types in scripttabs.h (Arse!)
 #include "scripttabs.h"			// needed to define the callback
-#include "ScriptExtern.h"		// needed to include the GLOBAL for checking bInTutorial
+#include "scriptextern.h"		// needed to include the GLOBAL for checking bInTutorial
 #include "group.h"
 
 #define DEBUG_DRIVE_SPEED
@@ -57,7 +57,7 @@
 #define MINPITCH (768)
 #define PITCHCHANGE (512)
 
-#include "MultiPlay.h"
+#include "multiplay.h"
 
 #include "target.h"
 #include "drive.h"

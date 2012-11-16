@@ -7,8 +7,8 @@
  */
 #include "frame.h"
 #include "widget.h"
-#include "piePalette.h"		// for predefined colours.
-#include "rendMode.h"		// for boxfill
+#include "piepalette.h"		// for predefined colours.
+#include "rendmode.h"		// for boxfill
 #include "hci.h"
 #include "loadsave.h"
 #include "multiplay.h"
@@ -23,7 +23,7 @@
 #include "intdisplay.h"
 #include "text.h"
 #include "mission.h"
-#include "gTime.h"
+#include "gtime.h"
 
 // ////////////////////////////////////////////////////////////////////////////
 #define LOADSAVE_X				130	+ D_W

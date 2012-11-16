@@ -5,25 +5,18 @@
  * Alex Lee. Pumpkin Studios. Eidos PLC 98,
  */
 
-/*	Playstation button symbol -> font mappings.
-|	=	X
-{	=	Circle
-}	=	Square
-~	=	Triangle
-*/
-
-#include "stdio.h"
-#include "Frame.h"
-#include "winMain.h"
-#include "Objects.h"
+#include <stdio.h>
+#include "frame.h"
+#include "winmain.h"
+#include "objects.h"
 #include "display.h"
 #include "widget.h"
 /* Includes direct access to render library */
 #include "ivisdef.h"
-#include "pieState.h"
+#include "piestate.h"
 #include "keyedit.h"
-#include "pieFunc.h"
-#include "warzoneConfig.h"
+#include "piefunc.h"
+#include "warzoneconfig.h"
 #include "vid.h"
 
 #include "display3d.h"
@@ -37,21 +30,21 @@
 #include "design.h"					// for intadddesign
 #include "hci.h"					// for intShowPower
 #include "text.h"					// to get at string resources.
-#include "FrontEnd.h"
-#include "Console.h"
+#include "frontend.h"
+#include "console.h"
 #include "wrappers.h"
 #include "component.h"
 #include "loadsave.h"
-#include "CSnap.h"
+#include "csnap.h"
 //#include "wrappers.h"				// for bUsingKeyboard.
-#include "Frend.h"
+#include "frend.h"
 #include "game.h"
-#include "Init.h"
+#include "init.h"
 #include "difficulty.h"
-#include "InGameOp.h"
+#include "ingameop.h"
 
 #include "advvis.h"
-#include "seqDisp.h"
+#include "seqdisp.h"
 #include "multiplay.h"
 #include "multiint.h"
 #include "multilimit.h"

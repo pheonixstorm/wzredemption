@@ -5,27 +5,24 @@
  *
  */
 
-#include "ctype.h"
+#include <ctype.h>
 
 // levLoadData printf's
 #define DEBUG_GROUP0
-#include "Frame.h"
-#include "Init.h"
-#include "Objects.h"
-#include "HCI.h"
-#include "Levels.h"
-#include "Mission.h"
-#include "LevelInt.h"
-#include "Game.h"
-#include "Lighting.h"
-#include "pieState.h"
-#include "Data.h"
-#include "MultiWDG.h"
-
-//#ifdef DEBUG
+#include "frame.h"
+#include "init.h"
+#include "objects.h"
+#include "hci.h"
+#include "levels.h"
+#include "mission.h"
+#include "levelint.h"
+#include "game.h"
+#include "lighting.h"
+#include "piestate.h"
+#include "data.h"
+#include "multiwdg.h"
 #include "script.h"
-#include "ScriptTabs.h"
-//#endif
+#include "scripttabs.h"
 
 // minimum type number for a type instruction
 #define MULTI_TYPE_START	10

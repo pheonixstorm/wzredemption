@@ -16,7 +16,7 @@
 #include "structuredef.h"
 #include "display.h"
 #include "visibility.h"
-#include "ObjectDef.h"
+#include "Objectdef.h"
 #include "droid.h"
 
 #include "geo.h"

@@ -16,30 +16,30 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include "Frame.h"
+#include "frame.h"
 #include "ivisdef.h" //ivis matrix code
 #include "piedef.h" //ivis matrix code
-#include "pieState.h"
+#include "piestate.h"
 #include "geo.h" //ivis matrix code
-#include "GTime.h"
-#include "Display3d.h"
-#include "Map.h"
-#include "Bucket3D.h"
-#include "pieMode.h"
-#include "Mission.h"
+#include "gtime.h"
+#include "display3d.h"
+#include "map.h"
+#include "bucket3d.h"
+#include "piemode.h"
+#include "mission.h"
 
 /*Remove this one!!! :-( */
-#include "MiscImd.h"
-#include "Effects.h"
+#include "miscimd.h"
+#include "effects.h"
 #include "audio.h"
 #include "audio_id.h"
-#include "HCI.h"
-#include "Lighting.h"
-#include "Console.h"
-#include "Loop.h"
-#include "MultiPlay.h"
+#include "hci.h"
+#include "lighting.h"
+#include "console.h"
+#include "loop.h"
+#include "multiplay.h"
 
-#include "Game.h"
+#include "game.h"
 //#define COUNTOFFSCREEN
 
 #define DOLIGHTS

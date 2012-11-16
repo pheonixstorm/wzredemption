@@ -7,9 +7,9 @@
 #define _hci_h
 
 #include "widget.h"
-#include "Message.h"
+#include "message.h"
 #include "cdspan.h"
-#include "PieClip.h"
+#include "pieclip.h"
 //#include "IntImage.h"
 
 // store the objects that are being used for the object bar

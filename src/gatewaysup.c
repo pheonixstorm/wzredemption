@@ -30,13 +30,13 @@
 
 #else
 
-#include "Frame.h"
-#include "Map.h"
+#include "frame.h"
+#include "map.h"
 
 #endif
 
 #include "assert.h"
-#include "Gateway.h"
+#include "gateway.h"
 
 // Structures and defines for SeedFill().
 typedef int Pixel;		/* 1-channel frame buffer assumed */

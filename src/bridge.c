@@ -1,14 +1,3 @@
-#include "Frame.h"
-#include "Map.h"
-#include "HCI.h"
-#include "MapDisplay.h"
-#include "Display3D.h"
-#include "ivisdef.h" //ivis matrix code
-#include "piedef.h" //pie render
-#include "geo.h" //ivis matrix code
-#include "MiscImd.h"
-#include "Effects.h"
-#include "Bridge.h"
 /* 
 Bridge.c
 Alex McLean, Pumpkin Studios EIDOS Interactive, 1998.
@@ -17,6 +6,17 @@ traversing water and ravines?! My guess is this won't make it into
 the final game, but we'll see...
 */
 
+#include "frame.h"
+#include "map.h"
+#include "hci.h"
+#include "mapdisplay.h"
+#include "display3d.h"
+#include "ivisdef.h" //ivis matrix code
+#include "piedef.h" //pie render
+#include "geo.h" //ivis matrix code
+#include "miscimd.h"
+#include "effects.h"
+#include "bridge.h"
 
 /* 
 Returns TRUE or FALSE as to whether a bridge is valid.
@@ -78,7 +78,6 @@ UDWORD	i;
 	/* Everything's just fine */
 	return(TRUE);
 }
-
 
 /*	
 	This function will actually draw a wall section 
@@ -286,5 +285,3 @@ iVector	dv;
 	
 	}
 }
-
-

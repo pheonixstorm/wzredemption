@@ -6,25 +6,25 @@
  */
 #include <stdio.h>
 
-#include "Objects.h"
-#include "GTime.h"
-#include "Research.h"
+#include "objects.h"
+#include "gtime.h"
+#include "research.h"
 #include "message.h"
 #include "text.h"
 #include "audio.h"
 #include "audio_id.h"
-#include "Script.h"
-#include "ScriptTabs.h"
-#include "HCI.h"
+#include "script.h"
+#include "scripttabs.h"
+#include "hci.h"
 #include "console.h"
-#include "CmdDroid.h"
-#include "Power.h"
+#include "cmddroid.h"
+#include "power.h"
 #include "mission.h"
 
-#include "Frend.h"		// frontend ids.
-#include "IntImage.h"
+#include "frend.h"		// frontend ids.
+#include "intimage.h"
 
-#include "MultiPlay.h"
+#include "multiplay.h"
 
 //used to calc the research power
 #define RESEARCH_FACTOR		32//16

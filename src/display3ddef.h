@@ -1,6 +1,7 @@
 #ifndef _display3ddef_h
 #define _display3ddef_h
 
+// FIXME wiggle room perhaps?
 #define TILE_WIDTH 64
 #define TILE_HEIGHT 64
 #define TILE_SIZE (TILE_WIDTH*TILE_HEIGHT)
@@ -25,11 +26,14 @@
 
 #define LAND_XGRD	(VISIBLE_XTILES + 1)
 #define LAND_YGRD	(VISIBLE_YTILES + 1)
+
+// FIXME Map Zoom defs set min/max to wider def. maybe 5k/500?
 #define DISTANCE	(2600)
 #define START_DISTANCE	(2000)
 
 #define MINDISTANCE	(DISTANCE - DISTANCE/3)
 
+// FIXME Unknown... maybe WZP may know.
 #define NUM_TILES	100		//5 pages of 16 tiles.
 
 #define BOX_PULSE_SIZE	10

@@ -7,7 +7,7 @@
 #ifndef _SeqDisp_h
 #define _SeqDisp_h
 
-#include "pieMode.h"
+#include "piemode.h"
 
 /***************************************************************************/
 /*

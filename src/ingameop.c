@@ -6,9 +6,9 @@
 
 #include "frame.h"
 #include "widget.h"
-#include "Display3d.h"
-#include "intDisplay.h"
-#include "HCI.h"			// for wFont def.& intmode.
+#include "display3d.h"
+#include "intdisplay.h"
+#include "hci.h"			// for wFont def.& intmode.
 #include "loop.h"
 #include "text.h"
 #include "piestate.h"		// for getrendertype
@@ -18,9 +18,9 @@
 #include "loadSave.h"		// for textdisplay function
 #include "console.h"		// to add console message
 
-#include "ScriptExtern.h"	// for tutorial 
+#include "scriptextern.h"	// for tutorial 
 #include "rendmode.h"
-#include "keyBind.h"
+#include "keybind.h"
 
 #include "audio.h"					// for sound.
 #include "cdaudio.h"
@@ -28,7 +28,7 @@
 #include "multiplay.h"
 
 #include "csnap.h"
-#include "inGameOp.h"
+#include "ingameop.h"
 #include "mission.h"
 #include "transporter.h"
 #include "netplay.h"

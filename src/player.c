@@ -6,14 +6,14 @@
  */
 
 
-#include "Frame.h"
-#include "Objects.h"
-#include "Map.h"
-#include "Player.h"
+#include "frame.h"
+#include "objects.h"
+#include "map.h"
+#include "player.h"
 #include "game.h"
-#include "Order.h"
-#include "ObjectDef.h"
-#include "MultiPlay.h"
+#include "order.h"
+#include "objectdef.h"
+#include "multiplay.h"
 
 /* The position for the computer players to attack */
 #define ATTACKX		39
