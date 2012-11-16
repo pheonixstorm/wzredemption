@@ -8,7 +8,7 @@
 #define _mechanics_h
 
 #include "frame.h"
-#include "vombat.h"
+#include "combat.h"
 #include "findpath.h"
 #include "gtime.h"
 #include "map.h"
