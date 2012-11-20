@@ -50,14 +50,23 @@ void	setDifficultyLevel(DIFFICULTY_LEVEL lev)
 		fDifPlayerModifier = FRACTCONST(80,100);
 		fDifEnemyModifier = FRACTCONST(100,100);
 		break;
+    case    DL_TOUGH:
+        fDifPlayerModifier = FRACTCONST(80,100);
+		fDifEnemyModifier = FRACTCONST(120,100);
+        break;
 	case	DL_KILLER:
+		fDifPlayerModifier = FRACTCONST(80,100);
+		fDifEnemyModifier = FRACTCONST(160,100);
+		break;
+	case	DL_DOUBLE:
+		fDifPlayerModifier = FRACTCONST(100,100);
+		fDifEnemyModifier = FRACTCONST(50,100);
+		break;
+	case	DL_BBAKER:
 		fDifPlayerModifier = FRACTCONST(999,100);	// 10 times
 		fDifEnemyModifier = FRACTCONST(1,100);		// almost nothing
 		break;
-	case	DL_TOUGH:
-		fDifPlayerModifier = FRACTCONST(100,100);
-		fDifEnemyModifier = FRACTCONST(50,100);	// they do less damage!
-		break;
+
 	default:
 		DBERROR(("Invalid difficulty level selected - forcing NORMAL"));
 		break;

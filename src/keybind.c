@@ -1,3 +1,10 @@
+/*	
+	KeyBind.c
+	Holds all the functions that can be mapped to a key.
+	All functions at the moment must be 'void func(void)'.
+	Alex McLean, Pumpkin Studios, EIDOS Interactive.
+*/
+
 #include "frame.h"
 #include "objects.h"
 #include "base.h"
@@ -83,15 +90,42 @@ int fogCol = 0;//start in nicks mode
 void	kfsf_SelectAllSameProp	( PROPULSION_TYPE propType );
 void	kfsf_SelectAllSameName	( STRING *droidName );
 void	kfsf_SetSelectedDroidsState( SECONDARY_ORDER sec, SECONDARY_STATE State );
-/*	
-	KeyBind.c
-	Holds all the functions that can be mapped to a key.
-	All functions at the moment must be 'void func(void)'.
-	Alex McLean, Pumpkin Studios, EIDOS Interactive.
-*/
+
+/*
+ *
+ * Cheat Functions
+ *
+ */
 
 // --------------------------------------------------------------------------
-void	kf_ToggleMissionTimer( void )
+// carol vorderman
+void kf_NoFaults( void ) 
+{
+	audio_QueueTrack( ID_SOUND_NOFAULTS );
+}
+
+// --------------------------------------------------------------------------
+// work harder - completes all research
+void kf_FinishResearch( void )
+{
+	STRUCTURE	*psCurr;
+
+	//for (psCurr=apsStructLists[selectedPlayer]; psCurr; psCurr = psCurr->psNext)
+	for (psCurr=interfaceStructList(); psCurr; psCurr = psCurr->psNext)
+	{
+		if (psCurr->pStructureType->type == REF_RESEARCH)
+		{
+			//((RESEARCH_FACILITY *)psCurr->pFunctionality)->timeStarted = 0;
+			((RESEARCH_FACILITY *)psCurr->pFunctionality)->timeStarted = gameTime + 100000;
+			//set power accrued to high value so that will trigger straight away
+			((RESEARCH_FACILITY *)psCurr->pFunctionality)->powerAccrued = 10000;
+		}
+	}
+}
+
+// --------------------------------------------------------------------------
+// time toggle - starts, stops timer
+void kf_ToggleMissionTimer( void )
 {
 	if(mission.cheatTime)
 	{
@@ -102,138 +136,88 @@ void	kf_ToggleMissionTimer( void )
 		setMissionCheatTime(TRUE);
 	}
 }
-// --------------------------------------------------------------------------
-void	kf_ToggleRadarJump( void )
-{
-	if(getRadarJumpStatus())
-	{
-		setRadarJump(FALSE);
-	}
-	else
-	{
-		setRadarJump(TRUE);
-	}
-}
-// --------------------------------------------------------------------------
-void	kf_NoFaults( void )
-{
-	audio_QueueTrack( ID_SOUND_NOFAULTS );
-}
-// --------------------------------------------------------------------------
-
-void	kf_ToggleDimension( void )
-{
-		display3D = FALSE;
-		intSetMapPos(player.p.x + ((visibleXTiles/2) << TILE_SHIFT),
-					 player.p.z + ((visibleYTiles/2) << TILE_SHIFT));
-}
 
 // --------------------------------------------------------------------------
-
-/* Halves all the heights of the map tiles */
-void	kf_HalveHeights( void )
-{
-UDWORD	i,j;
-MAPTILE	*psTile;
-
-  		for (i=0; i<mapWidth; i++)
-		{
-			for (j=0; j<mapHeight; j++)
-			{
-				psTile = mapTile(i,j);
-				psTile->height/=2;;
-			}
-		}
-}
-
-// --------------------------------------------------------------------------
-void	kf_FaceNorth(void)
-{
-	player.r.y = 0;
-	if(getWarCamStatus())
-	{
-		camToggleStatus();
-	}
-}
-// --------------------------------------------------------------------------
-void	kf_FaceSouth(void)
-{
-	player.r.y = DEG(180);
-	if(getWarCamStatus())
-	{
-		camToggleStatus();
-	}
-}
-// --------------------------------------------------------------------------
-void	kf_FaceEast(void)
-{
-	player.r.y = DEG(90);
-	if(getWarCamStatus())
-	{
-		camToggleStatus();
-	}
-}
-// --------------------------------------------------------------------------
-void	kf_FaceWest(void)
-{
-	player.r.y = DEG(270);
-	if(getWarCamStatus())
-	{
-		camToggleStatus();
-	}
-}
-// --------------------------------------------------------------------------
-
-/* Writes out debug info about all the selected droids */
-void	kf_DebugDroidInfo( void )
-{
-DROID	*psDroid;
-
-	for(psDroid = apsDroidLists[selectedPlayer]; psDroid; psDroid=psDroid->psNext)
-			{
-				if (psDroid->selected)
-				{
-					printDroidInfo(psDroid);
-				}
-			}
-}
-
-// --------------------------------------------------------------------------
-//
-///* Prints out the date and time of the build of the game */
-void	kf_BuildInfo( void )
+// version - tells you when the game code was compiled
+void kf_BuildInfo( void )
 {
  	CONPRINTF(ConsoleString,(ConsoleString,"Built at %s on %s",__TIME__,__DATE__));
 }
 
 // --------------------------------------------------------------------------
-
-/* Toggles whether the windows surface gets updated */
-void	kf_UpdateWindow( void )
+// get off my land - kills all enemy units on map (was units & structures)
+void kf_KillEnemy( void )
 {
-    updateVideoCard = !updateVideoCard;
-    addConsoleMessage("Windows surface update toggled",DEFAULT_JUSTIFY);
-}
+UDWORD	player;
+DROID	*psCDroid,*psNDroid;
+STRUCTURE	*psCStruct, *psNStruct;
 
-// --------------------------------------------------------------------------
-void	kf_ToggleConsoleDrop( void )
-{
-	if(!bInTutorial)
+
+	for(player = 0; player<MAX_PLAYERS AND !bMultiPlayer; player++)
 	{
-		toggleConsoleDrop();
+		if(player!=selectedPlayer)
+		{
+		 	// wipe out all the droids
+			for(psCDroid=apsDroidLists[player]; psCDroid; psCDroid=psNDroid)
+			{
+				psNDroid = psCDroid->psNext;
+				destroyDroid(psCDroid);
+			}
+			// wipe out all their structures
+		  //	for(psCStruct=apsStructLists[player]; psCStruct; psCStruct=psNStruct)
+		  //	{
+		  //		psNStruct = psCStruct->psNext;
+		  //		destroyStruct(psCStruct);
+		  //	}
+		}
 	}
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetKillerLevel( void )  // FIXME This needs to be changed so tough and killer difficulty can be used later.
+// whale fin - turns on/off infinte power
+void kf_TogglePower( void )
+{
+#ifndef DEBUG
+if(bMultiPlayer)
+{
+	return;
+}
+#endif
+		powerCalculated = !powerCalculated;
+		if (powerCalculated)
+		{
+			addConsoleMessage("Infinite power disabled",DEFAULT_JUSTIFY);
+			powerCalc(TRUE);
+		}
+		else
+		{
+			addConsoleMessage("Infinite power enabled",DEFAULT_JUSTIFY);
+		}
+}
+
+// --------------------------------------------------------------------------
+void kf_SetDoubleUnitsLevel( void )
+{
+	if(!bMultiPlayer|| (NetPlay.bComms == 0))
+	{
+		setDifficultyLevel(DL_DOUBLE);
+		addConsoleMessage("Twice as nice!",LEFT_JUSTIFY);
+	}
+}
+
+// --------------------------------------------------------------------------
+// biffer baker - almost god like damage
+void kf_SetBakerLevel( void )
 {
 	if(!bMultiPlayer || (NetPlay.bComms == 0))
 	{
-		setDifficultyLevel(DL_KILLER);
+		setDifficultyLevel(DL_BBAKER);
 		addConsoleMessage("Hard as nails!!!",LEFT_JUSTIFY);
 	}
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetEasyLevel( void )
+void kf_SetEasyLevel( void )
 {
 	if(!bMultiPlayer|| (NetPlay.bComms == 0))
 	{
@@ -243,7 +227,48 @@ void	kf_SetEasyLevel( void )
 }
 
 // --------------------------------------------------------------------------
-void	kf_UpThePower( void )
+void kf_SetNormalLevel( void )
+{
+	if(!bMultiPlayer|| (NetPlay.bComms == 0))
+	{
+		setDifficultyLevel(DL_NORMAL);
+		addConsoleMessage("Back to normality!",LEFT_JUSTIFY);
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_SetHardLevel( void )
+{
+	if(!bMultiPlayer|| (NetPlay.bComms == 0))
+	{
+		setDifficultyLevel(DL_HARD);
+		addConsoleMessage("Getting tricky!",LEFT_JUSTIFY);
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_SetToughUnitsLevel( void )
+{
+	if(!bMultiPlayer|| (NetPlay.bComms == 0))
+	{
+		setDifficultyLevel(DL_TOUGH);
+		addConsoleMessage("Fall in marines!",LEFT_JUSTIFY);
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_SetKillerLevel( void )
+{
+	if(!bMultiPlayer || (NetPlay.bComms == 0))
+	{
+		setDifficultyLevel(DL_KILLER);
+		addConsoleMessage("Are you nuts!!!",LEFT_JUSTIFY);
+	}
+}
+
+// --------------------------------------------------------------------------
+// show me the power - 1000 extra power
+void kf_UpThePower( void )
 {
 	if(!bMultiPlayer|| (NetPlay.bComms == 0))
 	{
@@ -253,46 +278,35 @@ void	kf_UpThePower( void )
 }
 
 // --------------------------------------------------------------------------
-void	kf_MaxPower( void )
+void kf_ToggleMouseInvert( void )
 {
-	if(!bMultiPlayer|| (NetPlay.bComms == 0))
+	if(getInvertMouseStatus())
 	{
-		asPower[selectedPlayer]->currentPower=SDWORD_MAX;
-		addConsoleMessage("Max Power!!",LEFT_JUSTIFY);
+		setInvertMouseStatus(FALSE);
+	}
+	else
+	{
+		setInvertMouseStatus(TRUE);
 	}
 }
 
 // --------------------------------------------------------------------------
-void	kf_SetNormalLevel( void )
+void kf_ToggleShakeStatus( void )
 {
-	if(!bMultiPlayer|| (NetPlay.bComms == 0))
+	if(getShakeStatus())
 	{
-		setDifficultyLevel(DL_NORMAL);
-		addConsoleMessage("Back to normality!",LEFT_JUSTIFY);
+		setShakeStatus(FALSE);
 	}
-}
-// --------------------------------------------------------------------------
-void	kf_SetHardLevel( void )
-{
-	if(!bMultiPlayer|| (NetPlay.bComms == 0))
+	else
 	{
-		setDifficultyLevel(DL_HARD);
-		addConsoleMessage("Getting tricky!",LEFT_JUSTIFY);
+		setShakeStatus(TRUE);
 	}
-}
-// --------------------------------------------------------------------------
-void	kf_SetToughUnitsLevel( void )
-{
-	if(!bMultiPlayer|| (NetPlay.bComms == 0))
-	{
-		setDifficultyLevel(DL_TOUGH);
-		addConsoleMessage("Twice as nice!",LEFT_JUSTIFY);
-	}
-}
-// --------------------------------------------------------------------------
 
-/* Writes out the frame rate */
-void	kf_FrameRate( void )
+}
+
+// --------------------------------------------------------------------------
+// Writes out the frame rate
+void kf_FrameRate( void )
 {
 	if (pie_GetRenderEngine() == ENGINE_GLIDE)
 	{
@@ -357,7 +371,158 @@ void	kf_FrameRate( void )
 }
 
 // --------------------------------------------------------------------------
+// Makes it snow if it's not snowing and stops it if it is
+void kf_ToggleWeather( void )
+{
+	if(atmosGetWeatherType() == WT_NONE)
+	{
+		atmosSetWeatherType(WT_SNOWING);
+		addConsoleMessage("Oh, the weather outside is frightful... SNOW",LEFT_JUSTIFY);
 
+	}
+	else if(atmosGetWeatherType() == WT_SNOWING)
+	{
+		atmosSetWeatherType(WT_RAINING);
+		addConsoleMessage("Singing in the rain, I'm singing in the rain... RAIN",LEFT_JUSTIFY);
+	}
+	else
+	{
+		atmosInitSystem();
+		atmosSetWeatherType(WT_NONE);
+		addConsoleMessage("Forecast : Clear skies for all areas... NO WEATHER",LEFT_JUSTIFY);
+	}
+}
+
+// --------------------------------------------------------------------------
+// kill all the selected objects
+void kf_KillSelected(void)
+{
+	DROID		*psCDroid, *psNDroid;
+	STRUCTURE	*psCStruct, *psNStruct;
+
+#ifndef DEBUG
+if(bMultiPlayer)
+{
+	return;
+}
+#endif
+
+	for(psCDroid=apsDroidLists[selectedPlayer]; psCDroid; psCDroid=psNDroid)
+	{
+		psNDroid = psCDroid->psNext;
+		if (psCDroid->selected)
+		{
+//		  	removeDroid(psCDroid);
+			destroyDroid(psCDroid);
+		}
+	}
+	for(psCStruct=apsStructLists[selectedPlayer]; psCStruct; psCStruct=psNStruct)
+	{
+		psNStruct = psCStruct->psNext;
+		if (psCStruct->selected)
+		{
+			destroyStruct(psCStruct);
+		}
+	}
+}
+
+// --------------------------------------------------------------------------
+// Tell the scripts to start a mission
+void kf_AddMissionOffWorld( void )
+{
+#ifndef DEBUG
+if(bMultiPlayer)
+{
+	return;
+}
+#endif
+	game_SetValidityKey(VALIDITYKEY_CTRL_M);
+	eventFireCallbackTrigger(CALL_MISSION_START);
+}
+
+
+/*
+ *
+ * Debug(ish) Functions
+ *
+ */
+
+// --------------------------------------------------------------------------
+// Toggles the outline around the map tiles FIXME in cheat line 26
+void kf_ToggleOutline( void )
+{
+		if(terrainOutline)
+		{
+			terrainOutline = FALSE;
+		}
+		else
+		{
+			terrainOutline = TRUE;
+		}
+//		addConsoleMessage("Tile outline display toggled",DEFAULT_JUSTIFY);
+}
+
+// --------------------------------------------------------------------------
+// Not yet set. May need to be fixed up anyway.
+void kf_ToggleGodMode( void )
+{
+#ifndef DEBUG
+if(bMultiPlayer && (NetPlay.bComms != 0) )
+{
+	return;
+}
+#endif
+	if(godMode)
+	{
+		godMode = FALSE;
+//		setDifficultyLevel(getDifficultyLevel());
+		CONPRINTF(ConsoleString,(ConsoleString,"God Mode OFF"));
+	}
+	else
+	{
+		godMode = TRUE;
+//		setModifiers(FRACTCONST(1000,100),FRACTCONST(100,1000));
+		CONPRINTF(ConsoleString,(ConsoleString,"God Mode ON"));
+	}
+
+}
+
+// --------------------------------------------------------------------------
+// Writes out debug info about all the selected droids
+void kf_DebugDroidInfo( void )
+{
+DROID	*psDroid;
+
+	for(psDroid = apsDroidLists[selectedPlayer]; psDroid; psDroid=psDroid->psNext)
+			{
+				if (psDroid->selected)
+				{
+					printDroidInfo(psDroid);
+				}
+			}
+}
+
+// --------------------------------------------------------------------------
+// Unknown use
+void kf_MaxPower( void )
+{
+	if(!bMultiPlayer|| (NetPlay.bComms == 0))
+	{
+		asPower[selectedPlayer]->currentPower=SDWORD_MAX;
+		addConsoleMessage("Max Power!!",LEFT_JUSTIFY);
+	}
+}
+
+// --------------------------------------------------------------------------
+// Recalculates the lighting values for a tile
+void kf_RecalcLighting( void )
+{
+		//initLighting();
+        initLighting(0, 0, mapWidth, mapHeight);
+		addConsoleMessage("Lighting values for all tiles recalculated",DEFAULT_JUSTIFY);
+}
+
+// --------------------------------------------------------------------------
 // display the total number of objects in the world
 void kf_ShowNumObjects( void )
 {
@@ -392,122 +557,8 @@ void kf_ShowNumObjects( void )
 }
 
 // --------------------------------------------------------------------------
-
-/* Toggles radar on off */
-void	kf_ToggleRadar( void )
-{
-  		radarOnScreen = !radarOnScreen;
-//		addConsoleMessage("Radar display toggled",DEFAULT_JUSTIFY);
-}
-
-// --------------------------------------------------------------------------
-
-/* Toggles the outline around the map tiles */
-void	kf_ToggleOutline( void )
-{
-		if(terrainOutline)
-		{
-			terrainOutline = FALSE;
-		}
-		else
-		{
-			terrainOutline = TRUE;
-		}
-//		addConsoleMessage("Tile outline display toggled",DEFAULT_JUSTIFY);
-}
-
-// --------------------------------------------------------------------------
-
-/* Toggles infinite power on/off */
-void	kf_TogglePower( void )
-{
-#ifndef DEBUG
-if(bMultiPlayer)
-{
-	return;
-}
-#endif
-		powerCalculated = !powerCalculated;
-		if (powerCalculated)
-		{
-			addConsoleMessage("Infinite power disabled",DEFAULT_JUSTIFY);
-			powerCalc(TRUE);
-		}
-		else
-		{
-			addConsoleMessage("Infinite power enabled",DEFAULT_JUSTIFY);
-		}
-}
-
-// --------------------------------------------------------------------------
-
-/* Recalculates the lighting values for a tile */
-void	kf_RecalcLighting( void )
-{
-		//initLighting();
-        initLighting(0, 0, mapWidth, mapHeight);
-		addConsoleMessage("Lighting values for all tiles recalculated",DEFAULT_JUSTIFY);
-}
-
-// --------------------------------------------------------------------------
-
-/* Raises the 3dfx gamma value */
-void	kf_RaiseGamma( void )
-{
-	if (pie_GetRenderEngine() == ENGINE_GLIDE)
-	{
-		if(gamma<(float)5.0)
-		{
-			gamma = gamma+(float)0.1;
-			pie_SetGammaValue(gamma);
-			addConsoleMessage("Gamma correction altered",DEFAULT_JUSTIFY);
-		}
-		else
-		{
-			gamma = (float)0.2;
-		}
-	}
-}
-
-// --------------------------------------------------------------------------
-
-/* Lowers the threedfx gamma value */
-void	kf_LowerGamma( void )
-{
-	if (pie_GetRenderEngine() == ENGINE_GLIDE)
-	{
-		if(gamma>(float)0.2)
-		{
-			gamma = gamma-(float)0.1;
-			pie_SetGammaValue(gamma);
-			addConsoleMessage("Gamma correction lowered",DEFAULT_JUSTIFY);
-		}
-		else
-		{
-			addConsoleMessage("Gamma correction at MINIMUM",DEFAULT_JUSTIFY);
-		}
-	}
-}	
-
-// --------------------------------------------------------------------------
-
-/* Sends the 3dfx screen buffer to disk */
-void	kf_ScreenDump( void )
-{
-	if(pie_GetRenderEngine() == ENGINE_GLIDE)
-	{
-		CONPRINTF(ConsoleString,(ConsoleString,"3dfx 24 bit raw screen dump written to working directory : %s",iV_ScreenDumpToDisk()));
-	}
-	else
-	{
-		CONPRINTF(ConsoleString,(ConsoleString,"Screen dump function presently only works on 3dfx based cards."));
-	}
-}
-
-// --------------------------------------------------------------------------
-
-/* Make all functions available */
-void	kf_AllAvailable( void )
+// give all -  TEST FUNCTION - MAKE EVERYTHING AVAILABLE
+void kf_AllAvailable( void )
 {
 
 #ifndef DEBUG
@@ -524,77 +575,111 @@ if(bMultiPlayer && (NetPlay.bComms != 0) )
 }
 
 // --------------------------------------------------------------------------
-
-/* Flips the cut of a tile */
-void	kf_TriFlip( void )
+// show mappings - Dumps all the keyboard mappings to the console display
+void kf_ShowMappings( void )
 {
-iVector	pos;
-//MAPTILE	*psTile;
-//		psTile = mapTile(mouseTileX,mouseTileY);
-//		TOGGLE_TRIFLIP(psTile);
-//		addConsoleMessage("Triangle flip status toggled",DEFAULT_JUSTIFY);
-		pos.x = mouseTileX*TILE_UNITS + TILE_UNITS/2;
-		pos.z = mouseTileY*TILE_UNITS + TILE_UNITS/2;
-		pos.y = map_Height(pos.x,pos.x);
-		effectGiveAuxVar(50);
-		effectGiveAuxVarSec(10000);
+	keyShowMappings();
+}
 
-		addEffect(&pos,EFFECT_FIRE,FIRE_TYPE_LOCALISED,FALSE,NULL,0); 
+// --------------------------------------------------------------------------
+void kf_ToggleDroidInfo( void )
+{
+	camToggleInfo();
+}
+
+// --------------------------------------------------------------------------
+// Probably doesn't work and may crash game
+void kf_ToggleDrivingMode( void )
+{
+	/* No point unless we're tracking */
+	if(getWarCamStatus())
+	{
+		if(getDrivingStatus())
+		{
+			StopDriverMode();
+		}
+		else
+		{
+			if(	(driveModeActive() == FALSE) && !bMultiPlayer)
+			{
+				StartDriverMode( NULL );
+			}
+		}
+	}
 
 }
 
 // --------------------------------------------------------------------------
-void	kf_ToggleBackgroundFog( void )
+void kf_GiveTemplateSet(void)
 {
-	static BOOL bEnabled  = TRUE;//start in nicks mode
-	
-		if (bEnabled)//true, so go to false
+	addTemplateSet(4,0);
+	addTemplateSet(4,1);
+	addTemplateSet(4,2);
+	addTemplateSet(4,3);
+}
+
+// --------------------------------------------------------------------------
+// Not written
+void kf_ScatterDroids( void )
+{
+	// to be written!
+	addConsoleMessage("Scatter droids - not written yet!",LEFT_JUSTIFY);
+}
+
+// --------------------------------------------------------------------------
+// Toggles whether we process debug key mappings
+void kf_ToggleDebugMappings( void )
+{
+#ifndef DEBUG
+if(bMultiPlayer && (NetPlay.bComms != 0) )
+{
+	return;
+}
+#endif
+
+#ifndef DEBUG
+	if(bAllowDebugMode)
+#endif
+	{
+		if(getDebugMappingStatus())
 		{
-			bEnabled = FALSE;
-			fogStatus &= FOG_FLAGS-FOG_BACKGROUND;//clear lowest bit of 3
-			if (fogStatus == 0)
-			{
-				pie_SetFogStatus(FALSE);
-				pie_EnableFog(FALSE);
-			}
+			processDebugMappings(FALSE);
+			CONPRINTF(ConsoleString,(ConsoleString,"ALL Debug Key Mappings - DISALLOWED"));
 		}
 		else
 		{
-			bEnabled = TRUE;
-			if (fogStatus == 0)
-			{
-				pie_EnableFog(TRUE);
-			}
-			fogStatus |= FOG_BACKGROUND;//set lowest bit of 3
+			game_SetValidityKey(VALIDITYKEY_CHEAT_MODE);
+			processDebugMappings(TRUE);
+			CONPRINTF(ConsoleString,(ConsoleString,"ALL Debug Key Mappings - PERMITTED"));
+			CONPRINTF(ConsoleString,(ConsoleString,"DISCLAIMER: YOU HAVE NOW CHEATED"));
 		}
+		if(bMultiPlayer)
+		{
+			sendTextMessage("Presses Debug. CHEAT",TRUE);
+		}
+	}
 }
 
-extern void	kf_ToggleDistanceFog( void )
+// --------------------------------------------------------------------------
+// Halves all the heights of the map tiles
+void kf_HalveHeights( void )
 {
-	static BOOL bEnabled  = TRUE;//start in nicks mode
-	
-		if (bEnabled)//true, so go to false
+UDWORD	i,j;
+MAPTILE	*psTile;
+
+  		for (i=0; i<mapWidth; i++)
 		{
-			bEnabled = FALSE;
-			fogStatus &= FOG_FLAGS-FOG_DISTANCE;//clear middle bit of 3
-			if (fogStatus == 0)
+			for (j=0; j<mapHeight; j++)
 			{
-				pie_SetFogStatus(FALSE);
-				pie_EnableFog(FALSE);
+				psTile = mapTile(i,j);
+				psTile->height/=2;;
 			}
-		}
-		else
-		{
-			bEnabled = TRUE;
-			if (fogStatus == 0)
-			{
-				pie_EnableFog(TRUE);
-			}
-			fogStatus |= FOG_DISTANCE;//set lowest bit of 3
 		}
 }
 
-void	kf_ToggleMistFog( void )
+// --------------------------------------------------------------------------
+// Unknown function - keymap value of LCtrl K
+void kf_ToggleMistFog( void )
 {
 	static BOOL bEnabled  = TRUE;//start in nicks mode
 	
@@ -619,7 +704,9 @@ void	kf_ToggleMistFog( void )
 		}
 }
 
-void	kf_ToggleFogColour( void )
+// --------------------------------------------------------------------------
+// Fog Color, haze black urban or rockies. keymap: LCtrl L
+void kf_ToggleFogColour( void )
 {
 	fogCol++;
 	if (fogCol>4)
@@ -646,7 +733,9 @@ void	kf_ToggleFogColour( void )
 	}
 }
 
-void	kf_ToggleFog( void )
+// --------------------------------------------------------------------------
+// Fog on or off - keymap: LCtrl J
+void kf_ToggleFog( void )
 {
 	static BOOL fogEnabled = FALSE;
 	
@@ -666,9 +755,249 @@ void	kf_ToggleFog( void )
 }
 
 // --------------------------------------------------------------------------
+// Quick game exit - keymap keypad -
+void kf_SystemClose( void )
+{
+	if(pie_GetRenderEngine() == ENGINE_GLIDE)
+	{
+		grSstControl(GR_CONTROL_DEACTIVATE);
+	}
 
-/* Toggles fog on/off */
-void	kf_ToggleWidgets( void )
+//	ExitProcess(4);
+	loopFastExit();
+}
+
+// --------------------------------------------------------------------------
+// Maximum Scroll Limits - set in debug and also commented out 395/436 keymap J
+void kf_MaxScrollLimits( void )
+{
+	scrollMinX = scrollMinY = 0;
+	scrollMaxX = mapWidth;
+	scrollMaxY = mapHeight;
+}
+
+// --------------------------------------------------------------------------
+// If this is performed twice then it changes the productionPlayer
+void kf_SelectPlayer( void )
+{
+    UDWORD	playerNumber, prevPlayer;
+#ifndef DEBUG
+if(bMultiPlayer && (NetPlay.bComms != 0) )
+{
+	return;
+}
+#endif
+    //store the current player
+    prevPlayer = selectedPlayer;
+
+	playerNumber = (getLastSubKey()-KEY_F1);
+  	if(playerNumber >= 10)
+	{
+		selectedPlayer = 0;
+	}
+	else
+	{
+		selectedPlayer = playerNumber;
+	}
+   //	godMode = TRUE;
+
+    if (prevPlayer == selectedPlayer)
+    {
+        changeProductionPlayer((UBYTE)selectedPlayer);
+    }
+
+}
+
+// --------------------------------------------------------------------------
+// Tell the scripts to end a mission
+void kf_EndMissionOffWorld( void )
+{
+#ifndef DEBUG
+if(bMultiPlayer)
+{
+	return;
+}
+#endif
+	eventFireCallbackTrigger(CALL_MISSION_END);
+}
+
+// --------------------------------------------------------------------------
+// Initialise the player power levels
+void kf_NewPlayerPower( void )
+{
+#ifndef DEBUG
+if(bMultiPlayer)
+{
+	return;
+}
+#endif
+	newGameInitPower();
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h Toggles the power bar display on and off
+void kf_TogglePowerBar( void )
+{
+	togglePowerBar();
+}
+
+// --------------------------------------------------------------------------
+// Pause the game
+void kf_TogglePauseMode( void )
+{
+
+	if(bMultiPlayer && (NetPlay.bComms != 0) )
+	{
+		return;
+	}
+	/* Is the game running? */
+	if(gamePaused() == FALSE)
+	{
+		/* Then pause it */
+		setGamePauseStatus(TRUE);		
+		setConsolePause(TRUE);
+		setScriptPause(TRUE);
+		setAudioPause(TRUE);
+		/* And stop the clock */
+		gameTimeStop();
+		addConsoleMessage(strresGetString(psStringRes,STR_MISC_PAUSED),CENTRE_JUSTIFY);
+
+	}
+	else
+	{
+		/* Else get it going again */
+		setGamePauseStatus(FALSE);
+		setConsolePause(FALSE);
+		setScriptPause(FALSE);
+		setAudioPause(FALSE);
+		/* And start the clock again */
+		gameTimeStart();
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_ChooseOptions( void )
+{
+//	if(!widgetsOn) widgetsOn = TRUE;
+	intResetScreen(TRUE);
+	setWidgetsStatus(TRUE);
+	intAddOptions();
+}
+
+// --------------------------------------------------------------------------
+void kf_ToggleVisibility( void )
+{
+	if(getRevealStatus())
+	{
+		setRevealStatus(FALSE);
+	}
+	else
+	{
+		setRevealStatus(TRUE);
+	}
+
+}
+
+
+/*
+ *
+ * Unknown Functions
+ *
+ */
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h Toggles whether the windows surface gets updated
+void kf_UpdateWindow( void )
+{
+    updateVideoCard = !updateVideoCard;
+    addConsoleMessage("Windows surface update toggled",DEFAULT_JUSTIFY);
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h
+void kf_ToggleDimension( void )
+{
+		display3D = FALSE;
+		intSetMapPos(player.p.x + ((visibleXTiles/2) << TILE_SHIFT),
+					 player.p.z + ((visibleYTiles/2) << TILE_SHIFT));
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 440. Flips the cut of a tile. 
+void kf_TriFlip( void )
+{
+iVector	pos;
+//MAPTILE	*psTile;
+//		psTile = mapTile(mouseTileX,mouseTileY);
+//		TOGGLE_TRIFLIP(psTile);
+//		addConsoleMessage("Triangle flip status toggled",DEFAULT_JUSTIFY);
+		pos.x = mouseTileX*TILE_UNITS + TILE_UNITS/2;
+		pos.z = mouseTileY*TILE_UNITS + TILE_UNITS/2;
+		pos.y = map_Height(pos.x,pos.x);
+		effectGiveAuxVar(50);
+		effectGiveAuxVarSec(10000);
+
+		addEffect(&pos,EFFECT_FIRE,FIRE_TYPE_LOCALISED,FALSE,NULL,0); 
+
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 454
+void kf_ToggleBackgroundFog( void )
+{
+	static BOOL bEnabled  = TRUE;//start in nicks mode
+	
+		if (bEnabled)//true, so go to false
+		{
+			bEnabled = FALSE;
+			fogStatus &= FOG_FLAGS-FOG_BACKGROUND;//clear lowest bit of 3
+			if (fogStatus == 0)
+			{
+				pie_SetFogStatus(FALSE);
+				pie_EnableFog(FALSE);
+			}
+		}
+		else
+		{
+			bEnabled = TRUE;
+			if (fogStatus == 0)
+			{
+				pie_EnableFog(TRUE);
+			}
+			fogStatus |= FOG_BACKGROUND;//set lowest bit of 3
+		}
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h
+void kf_ToggleDistanceFog( void )
+{
+	static BOOL bEnabled  = TRUE;//start in nicks mode
+	
+		if (bEnabled)//true, so go to false
+		{
+			bEnabled = FALSE;
+			fogStatus &= FOG_FLAGS-FOG_DISTANCE;//clear middle bit of 3
+			if (fogStatus == 0)
+			{
+				pie_SetFogStatus(FALSE);
+				pie_EnableFog(FALSE);
+			}
+		}
+		else
+		{
+			bEnabled = TRUE;
+			if (fogStatus == 0)
+			{
+				pie_EnableFog(TRUE);
+			}
+			fogStatus |= FOG_DISTANCE;//set lowest bit of 3
+		}
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 442
+void kf_ToggleWidgets( void )
 {
 //	 	widgetsOn = !widgetsOn;
 	if(getWidgetsStatus())
@@ -683,22 +1012,18 @@ void	kf_ToggleWidgets( void )
 }
 
 // --------------------------------------------------------------------------
-
-/* Toggle camera on/off */
-void	kf_ToggleCamera( void )
+// FIXME - Commented out in keymap line 441 Toggles on/off gouraud shading
+void kf_ToggleGouraud( void )
 {
-		if(getWarCamStatus() == FALSE) {
-			shakeStop();	// Ensure screen shake stopped before starting camera mode.
-			setDrivingStatus(FALSE);
-		}
-		camToggleStatus();
+ 	gouraudShading = !gouraudShading;
+ 	addConsoleMessage("Gouraud shading toggled",DEFAULT_JUSTIFY);
+	texPage++;
 }
 
 // --------------------------------------------------------------------------
-
-/* Simulates a close down */
+// FIXME - Commented out in keymap line 437 Simulates a close down
 /*
-void	kf_SimCloseDown( void )
+void kf_SimCloseDown( void )
 {
   		bScreenClose = TRUE;
 		audio_PlayTrack( ID_SOUND_THX_SHUTDOWN );
@@ -710,50 +1035,394 @@ void	kf_SimCloseDown( void )
 		screenCloseState = SC_CLOSING_DOWN;
 }
 */
-// --------------------------------------------------------------------------
 
-/* Toggles on/off gouraud shading */
-void	kf_ToggleGouraud( void )
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h - Shrink the screen down
+/*
+void kf_ShrinkScreen( void )
 {
- 	gouraudShading = !gouraudShading;
- 	addConsoleMessage("Gouraud shading toggled",DEFAULT_JUSTIFY);
-	texPage++;
+	// nearest multiple of 8 plus 1 
+	if (xOffset<73)
+	{
+		xOffset+=8;
+  		distance+=170;
+		if (yOffset<200)
+		{
+			yOffset+=8;
+		}
+	}
 }
+*/
 
 // --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h - Expand the screen
+/*
+void kf_ExpandScreen( void )
+{
+	if(xOffset)
+	{
+   		if (distance>DISTANCE)
+   		{
+   			distance-=170;
+   		}
+   		xOffset-=8;
+   		if(yOffset)
+   		{
+   			yOffset-=8;
+   		}
+	}
+}
+*/
 
-/* Raises the tile under the mouse */
-void	kf_RaiseTile( void )
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 450 Raises the tile under the mouse
+void kf_RaiseTile( void )
 {
 	raiseTile(mouseTileX,mouseTileY);
 }
 
 // --------------------------------------------------------------------------
-
-/* Lowers the tile under the mouse */
-void	kf_LowerTile( void )
+// FIXME - Commented out in keymap line 456, also in debug section line 400 Lowers the tile under the mouse
+void kf_LowerTile( void )
 {
 //	lowerTile(mouseTileX,mouseTileY);
 	selNextSpecifiedBuilding(REF_FACTORY);
 }
 
 // --------------------------------------------------------------------------
-
-/* Quick game exit */
-void	kf_SystemClose( void )
+// FIXME - Only listed in keybind.c/h
+void kf_SelectMoveGrouping( void )
 {
-	if(pie_GetRenderEngine() == ENGINE_GLIDE)
-	{
-		grSstControl(GR_CONTROL_DEACTIVATE);
-	}
+UDWORD	groupNumber;
 
-//	ExitProcess(4);
-	loopFastExit();
+	groupNumber = (getLastSubKey()-KEY_1) + 1;
+	activateGroupAndMove(selectedPlayer,groupNumber);
 }
 
 // --------------------------------------------------------------------------
-/* Zooms out from display */
-void	kf_ZoomOut( void )
+// FIXME - Commented out in keymap line 431 Raises the G Offset
+void kf_UpGeoOffset( void )
+{
+	geoOffset++;
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 432 Lowers the geoOffset
+void kf_DownGeoOffset( void )
+{
+	geoOffset--;
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 433 Ups the droid scale
+void kf_UpDroidScale( void )
+{
+	droidScale++;
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 434 Lowers the droid scale
+void kf_DownDroidScale( void )
+{
+	if(droidScale>2)
+	{
+		droidScale--;
+	}
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h
+void kf_TriggerRayCast( void )
+{
+DROID	*psDroid;
+BOOL	found;
+DROID	*psOther;
+
+	found = FALSE;
+	for(psDroid = apsDroidLists[selectedPlayer]; psDroid AND !found; 
+		psDroid = psDroid->psNext)
+		{
+			if(psDroid->selected)
+			{
+				found = TRUE;
+				psOther = psDroid;
+			}
+			/* NOP */
+		}
+
+	if(found)
+	{
+//		 getBlockHeightDirToEdgeOfGrid(UDWORD x, UDWORD y, UBYTE direction, UDWORD *height, UDWORD *dist)
+   //		getBlockHeightDirToEdgeOfGrid(psOther->x,psOther->y,psOther->direction,&height,&dist);
+//		getBlockHeightDirToEdgeOfGrid(mouseTileX*TILE_UNITS,mouseTileY*TILE_UNITS,getTestAngle(),&height,&dist);
+	}
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h
+void kf_ScriptTest( void )
+{
+	UBYTE	*pBuffer;
+	UDWORD	size;
+
+	eventSaveState(1,&pBuffer, &size);
+
+	eventReset();
+
+	eventLoadState(pBuffer, size, TRUE);
+
+	FREE(pBuffer);
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c/h
+void kf_TriggerShockWave( void )
+{
+iVector	pos;
+
+		pos.x = mouseTileX*TILE_UNITS + TILE_UNITS/2;
+		pos.z = mouseTileY*TILE_UNITS + TILE_UNITS/2;
+		pos.y = map_Height(pos.x,pos.z) + SHOCK_WAVE_HEIGHT; 
+
+		addEffect(&pos,EFFECT_EXPLOSION,EXPLOSION_TYPE_SHOCKWAVE,FALSE,NULL,0);
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 443
+//void kf_ToggleRadarAllign( void )
+//{
+//	toggleRadarAllignment();
+//	addConsoleMessage("Radar allignment toggled",LEFT_JUSTIFY);
+//}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c ?? not in h
+void kf_ToggleBlips( void )
+{
+	if(doWeDrawRadarBlips())
+	{
+		setBlipDraw(FALSE);
+	}
+	else
+	{
+		setBlipDraw(TRUE);
+	}
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c ?? not in h
+void kf_ToggleProximitys( void )
+{
+	if(doWeDrawProximitys())
+	{
+		setProximityDraw(FALSE);
+	}
+	else
+	{
+		setProximityDraw(TRUE);
+	}
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Commented out in keymap line 458 display the grid info for all the selected objects
+void kf_ShowGridInfo(void)
+{
+	DROID		*psCDroid, *psNDroid;
+	STRUCTURE	*psCStruct, *psNStruct;
+
+	for(psCDroid=apsDroidLists[selectedPlayer]; psCDroid; psCDroid=psNDroid)
+	{
+		psNDroid = psCDroid->psNext;
+		if (psCDroid->selected)
+		{
+			gridDisplayCoverage((BASE_OBJECT *)psCDroid);
+		}
+	}
+	for(psCStruct=apsStructLists[selectedPlayer]; psCStruct; psCStruct=psNStruct)
+	{
+		psNStruct = psCStruct->psNext;
+		if (psCStruct->selected)
+		{
+			gridDisplayCoverage((BASE_OBJECT *)psCStruct);
+		}
+	}
+}
+
+// --------------------------------------------------------------------------
+// FIXME - Only listed in keybind.c usage removed?
+void kfsf_SelectAllSameProp( PROPULSION_TYPE propType )
+{
+    UNUSEDPARAMETER(propType);
+	/*
+PROPULSION_STATS	*psPropStats;
+DROID	*psDroid;
+
+	for(psDroid = apsDroidLists[selectedPlayer]; psDroid; psDroid = psDroid->psNext)
+	{
+		if(!psDroid->selected)
+		{
+			psPropStats = asPropulsionStats + psDroid->asBits[COMP_PROPULSION].nStat;
+			ASSERT( (PTRVALID(psPropStats, sizeof(PROPULSION_STATS)),
+					"moveUpdateDroid: invalid propulsion stats pointer") );
+			if ( psPropStats->propulsionType == propType )
+			{
+				psDroid->selected = TRUE;
+			}
+		}
+	}
+	*/
+}
+
+
+/*
+ *
+ * 3dFx Functions
+ *
+ */
+
+// --------------------------------------------------------------------------
+/* Raises the 3dfx gamma value */
+void kf_RaiseGamma( void )
+{
+	if (pie_GetRenderEngine() == ENGINE_GLIDE)
+	{
+		if(gamma<(float)5.0)
+		{
+			gamma = gamma+(float)0.1;
+			pie_SetGammaValue(gamma);
+			addConsoleMessage("Gamma correction altered",DEFAULT_JUSTIFY);
+		}
+		else
+		{
+			gamma = (float)0.2;
+		}
+	}
+}
+
+// --------------------------------------------------------------------------
+/* Lowers the threedfx gamma value */
+void kf_LowerGamma( void )
+{
+	if (pie_GetRenderEngine() == ENGINE_GLIDE)
+	{
+		if(gamma>(float)0.2)
+		{
+			gamma = gamma-(float)0.1;
+			pie_SetGammaValue(gamma);
+			addConsoleMessage("Gamma correction lowered",DEFAULT_JUSTIFY);
+		}
+		else
+		{
+			addConsoleMessage("Gamma correction at MINIMUM",DEFAULT_JUSTIFY);
+		}
+	}
+}	
+
+// --------------------------------------------------------------------------
+/* Sends the 3dfx screen buffer to disk */
+void kf_ScreenDump( void )
+{
+	if(pie_GetRenderEngine() == ENGINE_GLIDE)
+	{
+		CONPRINTF(ConsoleString,(ConsoleString,"3dfx 24 bit raw screen dump written to working directory : %s",iV_ScreenDumpToDisk()));
+	}
+	else
+	{
+		CONPRINTF(ConsoleString,(ConsoleString,"Screen dump function presently only works on 3dfx based cards."));
+	}
+}
+
+
+/*
+ *
+ * KeyMap Functions
+ *
+ */
+
+// --------------------------------------------------------------------------
+void kf_ToggleRadarJump( void )
+{
+	if(getRadarJumpStatus())
+	{
+		setRadarJump(FALSE);
+	}
+	else
+	{
+		setRadarJump(TRUE);
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_FaceNorth(void)
+{
+	player.r.y = 0;
+	if(getWarCamStatus())
+	{
+		camToggleStatus();
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_FaceSouth(void)
+{
+	player.r.y = DEG(180);
+	if(getWarCamStatus())
+	{
+		camToggleStatus();
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_FaceEast(void)
+{
+	player.r.y = DEG(90);
+	if(getWarCamStatus())
+	{
+		camToggleStatus();
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_FaceWest(void)
+{
+	player.r.y = DEG(270);
+	if(getWarCamStatus())
+	{
+		camToggleStatus();
+	}
+}
+
+// --------------------------------------------------------------------------
+void kf_ToggleConsoleDrop( void )
+{
+	if(!bInTutorial)
+	{
+		toggleConsoleDrop();
+	}
+}
+
+// --------------------------------------------------------------------------
+// Toggles radar on off
+void kf_ToggleRadar( void )
+{
+  		radarOnScreen = !radarOnScreen;
+//		addConsoleMessage("Radar display toggled",DEFAULT_JUSTIFY);
+}
+
+// --------------------------------------------------------------------------
+// Toggle camera on/off
+void kf_ToggleCamera( void )
+{
+		if(getWarCamStatus() == FALSE) {
+			shakeStop();	// Ensure screen shake stopped before starting camera mode.
+			setDrivingStatus(FALSE);
+		}
+		camToggleStatus();
+}
+
+// --------------------------------------------------------------------------
+// Zooms out from display
+void kf_ZoomOut( void )
 {
 FRACT	fraction;
 FRACT	zoomInterval;
@@ -776,38 +1445,8 @@ FRACT	zoomInterval;
 }
 
 // --------------------------------------------------------------------------
-void	kf_RadarZoomIn( void )
-{
-	if(RadarZoomLevel < MAX_RADARZOOM) 
-	{
-		RadarZoomLevel++;
-	   	SetRadarZoom(RadarZoomLevel);
-		audio_PlayTrack( ID_SOUND_BUTTON_CLICK_5 );
-   	}
-	else	// at maximum already
-	{
-		audio_PlayTrack( ID_SOUND_BUILD_FAIL );
-	}	
-
-}
-// --------------------------------------------------------------------------
-void	kf_RadarZoomOut( void )
-{
-	if(RadarZoomLevel)
-	{
-		RadarZoomLevel--;
-	   	SetRadarZoom(RadarZoomLevel);
-		audio_PlayTrack( ID_SOUND_BUTTON_CLICK_5 );
-	}
-	else	// at minimum already
-	{
-		audio_PlayTrack( ID_SOUND_BUILD_FAIL );
-	}
-}
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-/* Zooms in the map */
-void	kf_ZoomIn( void )
+// Zooms in the map
+void kf_ZoomIn( void )
 {
 FRACT	fraction;
 FRACT	zoomInterval;
@@ -824,53 +1463,39 @@ FRACT	zoomInterval;
 }
 
 // --------------------------------------------------------------------------
-void kf_MaxScrollLimits( void )
+void kf_RadarZoomIn( void )
 {
-	scrollMinX = scrollMinY = 0;
-	scrollMaxX = mapWidth;
-	scrollMaxY = mapHeight;
+	if(RadarZoomLevel < MAX_RADARZOOM) 
+	{
+		RadarZoomLevel++;
+	   	SetRadarZoom(RadarZoomLevel);
+		audio_PlayTrack( ID_SOUND_BUTTON_CLICK_5 );
+   	}
+	else	// at maximum already
+	{
+		audio_PlayTrack( ID_SOUND_BUILD_FAIL );
+	}	
+
 }
 
+// --------------------------------------------------------------------------
+void kf_RadarZoomOut( void )
+{
+	if(RadarZoomLevel)
+	{
+		RadarZoomLevel--;
+	   	SetRadarZoom(RadarZoomLevel);
+		audio_PlayTrack( ID_SOUND_BUTTON_CLICK_5 );
+	}
+	else	// at minimum already
+	{
+		audio_PlayTrack( ID_SOUND_BUILD_FAIL );
+	}
+}
 
 // --------------------------------------------------------------------------
-// Shrink the screen down
-/*
-void	kf_ShrinkScreen( void )
-{
-	// nearest multiple of 8 plus 1 
-	if (xOffset<73)
-	{
-		xOffset+=8;
-  		distance+=170;
-		if (yOffset<200)
-		{
-			yOffset+=8;
-		}
-	}
-}
-*/
-// --------------------------------------------------------------------------
-// Expand the screen
-/*
-void	kf_ExpandScreen( void )
-{
-	if(xOffset)
-	{
-   		if (distance>DISTANCE)
-   		{
-   			distance-=170;
-   		}
-   		xOffset-=8;
-   		if(yOffset)
-   		{
-   			yOffset-=8;
-   		}
-	}
-}
-*/
-// --------------------------------------------------------------------------
-/* Spins the world round left */
-void	kf_RotateLeft( void )
+// Spins the world round left
+void kf_RotateLeft( void )
 {
 FRACT	fraction;
 FRACT	rotAmount;
@@ -881,8 +1506,8 @@ FRACT	rotAmount;
 }
 
 // --------------------------------------------------------------------------
-/* Spins the world right */
-void	kf_RotateRight( void )
+// Spins the world right
+void kf_RotateRight( void )
 {
 FRACT	fraction;
 FRACT	rotAmount;
@@ -897,8 +1522,8 @@ FRACT	rotAmount;
 }
 			
 // --------------------------------------------------------------------------
-/* Pitches camera back */
-void	kf_PitchBack( void )
+// Pitches camera back
+void kf_PitchBack( void )
 {
 FRACT	fraction;
 FRACT	pitchAmount;
@@ -938,8 +1563,8 @@ FRACT	pitchAmount;
 }
 
 // --------------------------------------------------------------------------
-/* Pitches camera foward */
-void	kf_PitchForward( void )
+// Pitches camera foward
+void kf_PitchForward( void )
 {
 FRACT	fraction;
 FRACT	pitchAmount;
@@ -960,55 +1585,16 @@ FRACT	pitchAmount;
 }
 
 // --------------------------------------------------------------------------
-/* Resets pitch to default */
-void	kf_ResetPitch( void )
+// Resets pitch to default
+void kf_ResetPitch( void )
 {
  	player.r.x = DEG(360-20);
 	distance = START_DISTANCE;
 }
 
 // --------------------------------------------------------------------------
-/* Dumps all the keyboard mappings to the console display */
-void	kf_ShowMappings( void )
-{
-	keyShowMappings();
-}
-
-// --------------------------------------------------------------------------
-/*If this is performed twice then it changes the productionPlayer*/
-void	kf_SelectPlayer( void )
-{
-    UDWORD	playerNumber, prevPlayer;
-#ifndef DEBUG
-if(bMultiPlayer && (NetPlay.bComms != 0) )
-{
-	return;
-}
-#endif
-    //store the current player
-    prevPlayer = selectedPlayer;
-
-	playerNumber = (getLastSubKey()-KEY_F1);
-  	if(playerNumber >= 10)
-	{
-		selectedPlayer = 0;
-	}
-	else
-	{
-		selectedPlayer = playerNumber;
-	}
-   //	godMode = TRUE;
-
-    if (prevPlayer == selectedPlayer)
-    {
-        changeProductionPlayer((UBYTE)selectedPlayer);
-    }
-
-}
-// --------------------------------------------------------------------------
-
-/* Selects the player's groups 1..9 */
-void	kf_SelectGrouping( void )
+// Selects the player's groups 1..9
+void kf_SelectGrouping( void )
 {
 UDWORD	groupNumber;
 BOOL	bAlreadySelected;
@@ -1053,10 +1639,8 @@ BOOL	Selected;
 	}
 }
 
-
 // --------------------------------------------------------------------------
-
-void	kf_AssignGrouping( void )
+void kf_AssignGrouping( void )
 {
 UDWORD	groupNumber;
 
@@ -1065,8 +1649,7 @@ UDWORD	groupNumber;
 }
 
 // --------------------------------------------------------------------------
-
-void	kf_SelectCommander( void )
+void kf_SelectCommander( void )
 {
 SDWORD	cmdNumber;
 
@@ -1076,67 +1659,16 @@ SDWORD	cmdNumber;
 	selCommander(cmdNumber);
 }
 
-
 // --------------------------------------------------------------------------
-void	kf_SelectMoveGrouping( void )
-{
-UDWORD	groupNumber;
-
-	groupNumber = (getLastSubKey()-KEY_1) + 1;
-	activateGroupAndMove(selectedPlayer,groupNumber);
-}
-// --------------------------------------------------------------------------
-void	kf_ToggleDroidInfo( void )
-{
-	camToggleInfo();
-}
-// --------------------------------------------------------------------------
-void	kf_addInGameOptions( void )
+void kf_addInGameOptions( void )
 {
 		setWidgetsStatus(TRUE);
 		intAddInGameOptions();
 }
-// --------------------------------------------------------------------------
-/* Tell the scripts to start a mission*/
-void	kf_AddMissionOffWorld( void )
-{
-#ifndef DEBUG
-if(bMultiPlayer)
-{
-	return;
-}
-#endif
-	game_SetValidityKey(VALIDITYKEY_CTRL_M);
-	eventFireCallbackTrigger(CALL_MISSION_START);
-}
-// --------------------------------------------------------------------------
-/* Tell the scripts to end a mission*/
-void	kf_EndMissionOffWorld( void )
-{
-#ifndef DEBUG
-if(bMultiPlayer)
-{
-	return;
-}
-#endif
-	eventFireCallbackTrigger(CALL_MISSION_END);
-}
-// --------------------------------------------------------------------------
-/* Initialise the player power levels*/
-void	kf_NewPlayerPower( void )
-{
-#ifndef DEBUG
-if(bMultiPlayer)
-{
-	return;
-}
-#endif
-	newGameInitPower();
-}
 
 // --------------------------------------------------------------------------
 // Display multiplayer guff.
-void	kf_addMultiMenu(void)
+void kf_addMultiMenu(void)
 {
 	if(bMultiPlayer)
 	{
@@ -1157,6 +1689,8 @@ void kf_multiAudioStart(void)
 	return;
 }
 
+// --------------------------------------------------------------------------
+// start/stop capturing audio for multiplayer
 void kf_multiAudioStop(void)
 {	
 	if(bMultiPlayer 
@@ -1166,9 +1700,10 @@ void kf_multiAudioStop(void)
 	}
 	return;
 }
-// --------------------------------------------------------------------------
 
-void	kf_JumpToMapMarker( void )
+// --------------------------------------------------------------------------
+// FIXME No idea... Doesn't fall into any of the above listings
+void kf_JumpToMapMarker( void )
 {
 UDWORD	entry;
 	if(!getRadarTrackingStatus())
@@ -1186,101 +1721,9 @@ UDWORD	entry;
 	}
 }
 
-
 // --------------------------------------------------------------------------
-/* Raises the G Offset */
-void	kf_UpGeoOffset( void )
-{
-	geoOffset++;
-}
-// --------------------------------------------------------------------------
-/* Lowers the geoOffset */
-void	kf_DownGeoOffset( void )
-{
-	geoOffset--;
-}
-// --------------------------------------------------------------------------
-/* Ups the droid scale */
-void	kf_UpDroidScale( void )
-{
-	droidScale++;
-}
-// --------------------------------------------------------------------------
-/* Lowers the droid scale */
-void	kf_DownDroidScale( void )
-{
-	if(droidScale>2)
-	{
-		droidScale--;
-	}
-}
-// --------------------------------------------------------------------------
-/* Toggles the power bar display on and off*/
-void	kf_TogglePowerBar( void )
-{
-	togglePowerBar();
-}
-// --------------------------------------------------------------------------
-/* Toggles whether we process debug key mappings */
-void	kf_ToggleDebugMappings( void )
-{
-#ifndef DEBUG
-if(bMultiPlayer && (NetPlay.bComms != 0) )
-{
-	return;
-}
-#endif
-
-#ifndef DEBUG
-	if(bAllowDebugMode)
-#endif
-	{
-		if(getDebugMappingStatus())
-		{
-			processDebugMappings(FALSE);
-			CONPRINTF(ConsoleString,(ConsoleString,"ALL Debug Key Mappings - DISALLOWED"));
-		}
-		else
-		{
-			game_SetValidityKey(VALIDITYKEY_CHEAT_MODE);
-			processDebugMappings(TRUE);
-			CONPRINTF(ConsoleString,(ConsoleString,"ALL Debug Key Mappings - PERMITTED"));
-			CONPRINTF(ConsoleString,(ConsoleString,"DISCLAIMER: YOU HAVE NOW CHEATED"));
-		}
-		if(bMultiPlayer)
-		{
-			sendTextMessage("Presses Debug. CHEAT",TRUE);
-		}
-	}
-}
-// --------------------------------------------------------------------------
-
-
-void	kf_ToggleGodMode( void )
-{
-#ifndef DEBUG
-if(bMultiPlayer && (NetPlay.bComms != 0) )
-{
-	return;
-}
-#endif
-	if(godMode)
-	{
-		godMode = FALSE;
-//		setDifficultyLevel(getDifficultyLevel());
-		CONPRINTF(ConsoleString,(ConsoleString,"God Mode OFF"));
-	}
-	else
-	{
-		godMode = TRUE;
-//		setModifiers(FRACTCONST(1000,100),FRACTCONST(100,1000));
-		CONPRINTF(ConsoleString,(ConsoleString,"God Mode ON"));
-	}
-
-}
-// --------------------------------------------------------------------------
-/* Aligns the view to north - some people can't handle the world spinning */
-void	kf_SeekNorth( void )
+// Aligns the view to north - some people can't handle the world spinning
+void kf_SeekNorth( void )
 {
 	player.r.y = 0;
 	if(getWarCamStatus())
@@ -1291,112 +1734,21 @@ void	kf_SeekNorth( void )
 }
 
 // --------------------------------------------------------------------------
-void	kf_TogglePauseMode( void )
-{
-
-	if(bMultiPlayer && (NetPlay.bComms != 0) )
-	{
-		return;
-	}
-	/* Is the game running? */
-	if(gamePaused() == FALSE)
-	{
-		/* Then pause it */
-		setGamePauseStatus(TRUE);		
-		setConsolePause(TRUE);
-		setScriptPause(TRUE);
-		setAudioPause(TRUE);
-		/* And stop the clock */
-		gameTimeStop();
-		addConsoleMessage(strresGetString(psStringRes,STR_MISC_PAUSED),CENTRE_JUSTIFY);
-
-	}
-	else
-	{
-		/* Else get it going again */
-		setGamePauseStatus(FALSE);
-		setConsolePause(FALSE);
-		setScriptPause(FALSE);
-		setAudioPause(FALSE);
-		/* And start the clock again */
-		gameTimeStart();
-	}
-}
-
-// --------------------------------------------------------------------------
-// finish all the research for the selected player
-void	kf_FinishResearch( void )
-{
-	STRUCTURE	*psCurr;
-
-	//for (psCurr=apsStructLists[selectedPlayer]; psCurr; psCurr = psCurr->psNext)
-	for (psCurr=interfaceStructList(); psCurr; psCurr = psCurr->psNext)
-	{
-		if (psCurr->pStructureType->type == REF_RESEARCH)
-		{
-			//((RESEARCH_FACILITY *)psCurr->pFunctionality)->timeStarted = 0;
-			((RESEARCH_FACILITY *)psCurr->pFunctionality)->timeStarted = gameTime + 100000;
-			//set power accrued to high value so that will trigger straight away
-			((RESEARCH_FACILITY *)psCurr->pFunctionality)->powerAccrued = 10000;
-		}
-	}
-}
-
-// --------------------------------------------------------------------------
-//void	kf_ToggleRadarAllign( void )
-//{
-//	toggleRadarAllignment();
-//	addConsoleMessage("Radar allignment toggled",LEFT_JUSTIFY);
-//}
-
-// --------------------------------------------------------------------------
-void	kf_ToggleEnergyBars( void )
+void kf_ToggleEnergyBars( void )
 {
 	toggleEnergyBars();
 	CONPRINTF(ConsoleString,(ConsoleString, strresGetString(psStringRes,STR_GAM_ENERGY ) ));
 }
+
 // --------------------------------------------------------------------------
-void	kf_ToggleReloadBars( void )
+void kf_ToggleReloadBars( void )
 {
 	toggleReloadBarDisplay();
 	CONPRINTF(ConsoleString,(ConsoleString, strresGetString(psStringRes,STR_GAM_ENERGY ) ));
 }
 
 // --------------------------------------------------------------------------
-void	kf_ChooseOptions( void )
-{
-//	if(!widgetsOn) widgetsOn = TRUE;
-	intResetScreen(TRUE);
-	setWidgetsStatus(TRUE);
-	intAddOptions();
-}
-
-// --------------------------------------------------------------------------
-void	kf_ToggleBlips( void )
-{
-	if(doWeDrawRadarBlips())
-	{
-		setBlipDraw(FALSE);
-	}
-	else
-	{
-		setBlipDraw(TRUE);
-	}
-}
-// --------------------------------------------------------------------------
-void	kf_ToggleProximitys( void )
-{
-	if(doWeDrawProximitys())
-	{
-		setProximityDraw(FALSE);
-	}
-	else
-	{
-		setProximityDraw(TRUE);
-	}
-}
-// --------------------------------------------------------------------------
-void	kf_JumpToResourceExtractor( void )
+void kf_JumpToResourceExtractor( void )
 {
 STRUCTURE	*psStruct;
 SDWORD	xJump,yJump;
@@ -1418,40 +1770,39 @@ SDWORD	xJump,yJump;
 	}
 
 }
+
 // --------------------------------------------------------------------------
-void	kf_JumpToRepairUnits( void )
+void kf_JumpToRepairUnits( void )
 {
 	selNextSpecifiedUnit( DROID_REPAIR );
 }
+
 // --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-void	kf_JumpToConstructorUnits( void )
+void kf_JumpToConstructorUnits( void )
 {
 	selNextSpecifiedUnit( DROID_CONSTRUCT );
 }
+
 // --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-void	kf_JumpToSensorUnits( void )
+void kf_JumpToSensorUnits( void )
 {
 	selNextSpecifiedUnit( DROID_SENSOR );
 }
+
 // --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-void	kf_JumpToCommandUnits( void )
+void kf_JumpToCommandUnits( void )
 {
 	selNextSpecifiedUnit( DROID_COMMAND );
 }
-// --------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------
-void	kf_JumpToUnassignedUnits( void )
+void kf_JumpToUnassignedUnits( void )
 {
 	selNextUnassignedUnit();
 }
+
 // --------------------------------------------------------------------------
-
-
-void	kf_ToggleOverlays( void )
+void kf_ToggleOverlays( void )
 {
 		/* Make sure they're both the same */
 //		radarOnScreen = widgetsOn;
@@ -1469,13 +1820,15 @@ void	kf_ToggleOverlays( void )
 
 }
 
-void	kf_SensorDisplayOn( void )
+// --------------------------------------------------------------------------
+void kf_SensorDisplayOn( void )
 {
 //	debugToggleSensorDisplay();
 	startSensorDisplay();
 }
 
-void	kf_SensorDisplayOff( void )
+// --------------------------------------------------------------------------
+void kf_SensorDisplayOff( void )
 {
 	stopSensorDisplay();
 }
@@ -1491,8 +1844,9 @@ void	kf_SensorDisplayOff( void )
 #define IDRET_DESIGN		7		// design droids button
 #define IDRET_CANCEL		8		// central cancel button
 */
+
 // --------------------------------------------------------------------------
-void	kf_ChooseCommand( void )
+void kf_ChooseCommand( void )
 {
 	if (intCheckReticuleButEnabled(IDRET_COMMAND))
 	{
@@ -1507,8 +1861,9 @@ W_BUTTON *psButton;
 	buttonClicked(psButton,WKEY_PRIMARY);
 	*/
 }
+
 // --------------------------------------------------------------------------
-void	kf_ChooseManufacture( void )
+void kf_ChooseManufacture( void )
 {
 	if (intCheckReticuleButEnabled(IDRET_MANUFACTURE))
 	{
@@ -1525,8 +1880,9 @@ W_BUTTON *psButton;
 	*/
 
 }
+
 // --------------------------------------------------------------------------
-void	kf_ChooseResearch( void )
+void kf_ChooseResearch( void )
 {
 	if (intCheckReticuleButEnabled(IDRET_RESEARCH))
 	{
@@ -1541,8 +1897,9 @@ W_BUTTON *psButton;
 	buttonClicked(psButton,WKEY_PRIMARY);
 	 */
 }
+
 // --------------------------------------------------------------------------
-void	kf_ChooseBuild( void )
+void kf_ChooseBuild( void )
 {
 	if (intCheckReticuleButEnabled(IDRET_BUILD))
 	{
@@ -1559,7 +1916,7 @@ W_BUTTON *psButton;
 }
 
 // --------------------------------------------------------------------------
-void	kf_ChooseDesign( void )
+void kf_ChooseDesign( void )
 {
 	if (intCheckReticuleButEnabled(IDRET_DESIGN))
 	{
@@ -1574,8 +1931,9 @@ W_BUTTON *psButton;
 	buttonClicked(psButton,WKEY_PRIMARY);
 	*/
 }
+
 // --------------------------------------------------------------------------
-void	kf_ChooseIntelligence( void )
+void kf_ChooseIntelligence( void )
 {
 	if (intCheckReticuleButEnabled(IDRET_INTEL_MAP))
 	{
@@ -1591,9 +1949,9 @@ W_BUTTON *psButton;
 	*/
 
 }
-// --------------------------------------------------------------------------
 
-void	kf_ChooseCancel( void )
+// --------------------------------------------------------------------------
+void kf_ChooseCancel( void )
 {
 	setKeyButtonMapping(IDRET_CANCEL);
 
@@ -1606,31 +1964,12 @@ W_BUTTON *psButton;
   */
 
 }
+
 // --------------------------------------------------------------------------
-void	kf_ToggleDrivingMode( void )
-{
-	/* No point unless we're tracking */
-	if(getWarCamStatus())
-	{
-		if(getDrivingStatus())
-		{
-			StopDriverMode();
-		}
-		else
-		{
-			if(	(driveModeActive() == FALSE) && !bMultiPlayer)
-			{
-				StartDriverMode( NULL );
-			}
-		}
-	}
-
-}
-
 BOOL	bMovePause = FALSE;
 
 // --------------------------------------------------------------------------
-void	kf_MovePause( void )
+void kf_MovePause( void )
 {
 	
 	if(!bMultiPlayer)	// can't do it in multiplay
@@ -1663,8 +2002,9 @@ void	kf_MovePause( void )
 		}
 	}
 }
+
 // --------------------------------------------------------------------------
-void	kf_MoveToLastMessagePos( void )
+void kf_MoveToLastMessagePos( void )
 {
 	SDWORD	iX, iY, iZ;
 
@@ -1675,144 +2015,29 @@ void	kf_MoveToLastMessagePos( void )
 		setViewPos( iX>>TILE_SHIFT, iY>>TILE_SHIFT, TRUE );
 	}
 }
-// --------------------------------------------------------------------------
-/* Makes it snow if it's not snowing and stops it if it is */
-void	kf_ToggleWeather( void )
-{
-	if(atmosGetWeatherType() == WT_NONE)
-	{
-		atmosSetWeatherType(WT_SNOWING);
-		addConsoleMessage("Oh, the weather outside is frightful... SNOW",LEFT_JUSTIFY);
-
-	}
-	else if(atmosGetWeatherType() == WT_SNOWING)
-	{
-		atmosSetWeatherType(WT_RAINING);
-		addConsoleMessage("Singing in the rain, I'm singing in the rain... RAIN",LEFT_JUSTIFY);
-	}
-	else
-	{
-		atmosInitSystem();
-		atmosSetWeatherType(WT_NONE);
-		addConsoleMessage("Forecast : Clear skies for all areas... NO WEATHER",LEFT_JUSTIFY);
-	}
-}
 
 // --------------------------------------------------------------------------
-void	kf_SelectNextFactory(void)
+void kf_SelectNextFactory(void)
 {
 	selNextSpecifiedBuilding(REF_FACTORY);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectNextResearch(void)
+void kf_SelectNextResearch(void)
 {
 	selNextSpecifiedBuilding(REF_RESEARCH);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectNextPowerStation(void)
+void kf_SelectNextPowerStation(void)
 {
 	selNextSpecifiedBuilding(REF_POWER_GEN);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectNextCyborgFactory(void)
+void kf_SelectNextCyborgFactory(void)
 {
 	selNextSpecifiedBuilding(REF_CYBORG_FACTORY);
-}
-// --------------------------------------------------------------------------
-
-
-void	kf_KillEnemy( void )
-{
-UDWORD	player;
-DROID	*psCDroid,*psNDroid;
-STRUCTURE	*psCStruct, *psNStruct;
-
-
-	for(player = 0; player<MAX_PLAYERS AND !bMultiPlayer; player++)
-	{
-		if(player!=selectedPlayer)
-		{
-		 	// wipe out all the droids
-			for(psCDroid=apsDroidLists[player]; psCDroid; psCDroid=psNDroid)
-			{
-				psNDroid = psCDroid->psNext;
-				destroyDroid(psCDroid);
-			}
-			// wipe out all their structures
-		  //	for(psCStruct=apsStructLists[player]; psCStruct; psCStruct=psNStruct)
-		  //	{
-		  //		psNStruct = psCStruct->psNext;
-		  //		destroyStruct(psCStruct);
-		  //	}
-		}
-	}
-}
-
-// kill all the selected objects
-void kf_KillSelected(void)
-{
-	DROID		*psCDroid, *psNDroid;
-	STRUCTURE	*psCStruct, *psNStruct;
-
-#ifndef DEBUG
-if(bMultiPlayer)
-{
-	return;
-}
-#endif
-
-	for(psCDroid=apsDroidLists[selectedPlayer]; psCDroid; psCDroid=psNDroid)
-	{
-		psNDroid = psCDroid->psNext;
-		if (psCDroid->selected)
-		{
-//		  	removeDroid(psCDroid);
-			destroyDroid(psCDroid);
-		}
-	}
-	for(psCStruct=apsStructLists[selectedPlayer]; psCStruct; psCStruct=psNStruct)
-	{
-		psNStruct = psCStruct->psNext;
-		if (psCStruct->selected)
-		{
-			destroyStruct(psCStruct);
-		}
-	}
-}
-
-// --------------------------------------------------------------------------
-// display the grid info for all the selected objects
-void kf_ShowGridInfo(void)
-{
-	DROID		*psCDroid, *psNDroid;
-	STRUCTURE	*psCStruct, *psNStruct;
-
-	for(psCDroid=apsDroidLists[selectedPlayer]; psCDroid; psCDroid=psNDroid)
-	{
-		psNDroid = psCDroid->psNext;
-		if (psCDroid->selected)
-		{
-			gridDisplayCoverage((BASE_OBJECT *)psCDroid);
-		}
-	}
-	for(psCStruct=apsStructLists[selectedPlayer]; psCStruct; psCStruct=psNStruct)
-	{
-		psNStruct = psCStruct->psNext;
-		if (psCStruct->selected)
-		{
-			gridDisplayCoverage((BASE_OBJECT *)psCStruct);
-		}
-	}
-}
-
-
-// --------------------------------------------------------------------------
-void kf_GiveTemplateSet(void)
-{
-	addTemplateSet(4,0);
-	addTemplateSet(4,1);
-	addTemplateSet(4,2);
-	addTemplateSet(4,3);
 }
 
 // --------------------------------------------------------------------------
@@ -1935,8 +2160,9 @@ void kf_SendTextMessage(void)
 		return;
 	}
 }
+
 // --------------------------------------------------------------------------
-void	kf_ToggleConsole( void )
+void kf_ToggleConsole( void )
 {
 	if(getConsoleDisplayStatus())
 	{
@@ -1947,8 +2173,9 @@ void	kf_ToggleConsole( void )
 		enableConsoleDisplay(TRUE);
 	}
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectAllOnScreenUnits( void )
+void kf_SelectAllOnScreenUnits( void )
 {
 
 	selDroidSelection(selectedPlayer, DS_ALL_UNITS, DST_UNUSED, TRUE);
@@ -1971,8 +2198,9 @@ UDWORD	dX,dY;
 	}
 */
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectAllUnits( void )
+void kf_SelectAllUnits( void )
 {
  
 	selDroidSelection(selectedPlayer, DS_ALL_UNITS, DST_UNUSED, FALSE);
@@ -1985,39 +2213,44 @@ DROID	*psDroid;
 	}
 */
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectAllVTOLs( void )
+void kf_SelectAllVTOLs( void )
 {
   //	kfsf_SelectAllSameProp(LIFT);
 	selDroidSelection(selectedPlayer,DS_BY_TYPE,DST_VTOL,FALSE);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectAllHovers( void )
+void kf_SelectAllHovers( void )
 {
 //	kfsf_SelectAllSameProp(HOVER);
 	selDroidSelection(selectedPlayer,DS_BY_TYPE,DST_HOVER,FALSE);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectAllWheeled( void )
+void kf_SelectAllWheeled( void )
 {
 //	kfsf_SelectAllSameProp(WHEELED);
 	selDroidSelection(selectedPlayer,DS_BY_TYPE,DST_WHEELED,FALSE);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectAllTracked( void )
+void kf_SelectAllTracked( void )
 {
 //	kfsf_SelectAllSameProp(TRACKED);
 	selDroidSelection(selectedPlayer,DS_BY_TYPE,DST_TRACKED,FALSE);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectAllHalfTracked( void )
+void kf_SelectAllHalfTracked( void )
 {
 //	kfsf_SelectAllSameProp(HALF_TRACKED);
 	selDroidSelection(selectedPlayer,DS_BY_TYPE,DST_HALF_TRACKED,FALSE);
 }
 
 // --------------------------------------------------------------------------
-void	kf_SelectAllDamaged( void )
+void kf_SelectAllDamaged( void )
 {
 	selDroidSelection(selectedPlayer,DS_BY_TYPE,DST_ALL_DAMAGED,FALSE);
 /*
@@ -2034,8 +2267,9 @@ UDWORD	damage;
 	}
 */
 }
+
 // --------------------------------------------------------------------------
-void	kf_SelectAllCombatUnits( void )
+void kf_SelectAllCombatUnits( void )
 {
 	selDroidSelection(selectedPlayer,DS_BY_TYPE,DST_ALL_COMBAT,FALSE);
 
@@ -2050,33 +2284,11 @@ DROID	*psDroid;
 	}
 */
 }
-// --------------------------------------------------------------------------
-void	kfsf_SelectAllSameProp( PROPULSION_TYPE propType )
-{
-    UNUSEDPARAMETER(propType);
-	/*
-PROPULSION_STATS	*psPropStats;
-DROID	*psDroid;
 
-	for(psDroid = apsDroidLists[selectedPlayer]; psDroid; psDroid = psDroid->psNext)
-	{
-		if(!psDroid->selected)
-		{
-			psPropStats = asPropulsionStats + psDroid->asBits[COMP_PROPULSION].nStat;
-			ASSERT( (PTRVALID(psPropStats, sizeof(PROPULSION_STATS)),
-					"moveUpdateDroid: invalid propulsion stats pointer") );
-			if ( psPropStats->propulsionType == propType )
-			{
-				psDroid->selected = TRUE;
-			}
-		}
-	}
-	*/
-}
 // --------------------------------------------------------------------------
 // this is worst case (size of apsDroidLists[selectedPlayer] squared).
 // --------------------------------------------------------------------------
-void	kf_SelectAllSameType( void )
+void kf_SelectAllSameType( void )
 {
 	selDroidSelection(selectedPlayer,DS_BY_TYPE,DST_ALL_SAME,FALSE);
 	/*
@@ -2094,8 +2306,9 @@ DROID	*psDroid;
 	}
 	*/
 }
+
 // --------------------------------------------------------------------------
-void	kfsf_SelectAllSameName( STRING *droidName )
+void kfsf_SelectAllSameName( STRING *droidName )
 {
     UNUSEDPARAMETER(droidName);
 
@@ -2114,98 +2327,99 @@ DROID	*psDroid;
 	}
 	*/
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidRangeShort( void )
+void kf_SetDroidRangeShort( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_ATTACK_RANGE,DSS_ARANGE_SHORT);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidRangeDefault( void )
+void kf_SetDroidRangeDefault( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_ATTACK_RANGE,DSS_ARANGE_DEFAULT);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidRangeLong( void )
+void kf_SetDroidRangeLong( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_ATTACK_RANGE,DSS_ARANGE_LONG);
 }
 
 // --------------------------------------------------------------------------
-void	kf_SetDroidRetreatMedium( void )
+void kf_SetDroidRetreatMedium( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_REPAIR_LEVEL,DSS_REPLEV_LOW);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidRetreatHeavy( void )
+void kf_SetDroidRetreatHeavy( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_REPAIR_LEVEL,DSS_REPLEV_HIGH);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidRetreatNever( void )
+void kf_SetDroidRetreatNever( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_REPAIR_LEVEL,DSS_REPLEV_NEVER);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidAttackAtWill( void )
+void kf_SetDroidAttackAtWill( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_ATTACK_LEVEL,DSS_ALEV_ALWAYS);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidAttackReturn( void )
+void kf_SetDroidAttackReturn( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_ATTACK_LEVEL,DSS_ALEV_ATTACKED);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidAttackCease( void )
+void kf_SetDroidAttackCease( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_ATTACK_LEVEL,DSS_ALEV_NEVER);
 }
 
 // --------------------------------------------------------------------------
-void	kf_SetDroidMoveHold( void )
+void kf_SetDroidMoveHold( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_HALTTYPE,DSS_HALT_HOLD);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidMovePursue( void )
+void kf_SetDroidMovePursue( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_HALTTYPE,DSS_HALT_PERSUE);	// ASK?
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidMovePatrol( void )
+void kf_SetDroidMovePatrol( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_PATROL,DSS_PATROL_SET);	// ASK
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidReturnToBase( void )
+void kf_SetDroidReturnToBase( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_RETURN_TO_LOC,DSS_RTL_BASE);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidGoForRepair( void )
+void kf_SetDroidGoForRepair( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_RETURN_TO_LOC,DSS_RTL_REPAIR);
 }
+
 // --------------------------------------------------------------------------
-void	kf_SetDroidRecycle( void )
+void kf_SetDroidRecycle( void )
 {
 	kfsf_SetSelectedDroidsState(DSO_RECYCLE,DSS_RECYCLE_SET);
 }
-// --------------------------------------------------------------------------
-void	kf_ToggleVisibility( void )
-{
-	if(getRevealStatus())
-	{
-		setRevealStatus(FALSE);
-	}
-	else
-	{
-		setRevealStatus(TRUE);
-	}
 
-}
 // --------------------------------------------------------------------------
-void	kfsf_SetSelectedDroidsState( SECONDARY_ORDER sec, SECONDARY_STATE state )
+void kfsf_SetSelectedDroidsState( SECONDARY_ORDER sec, SECONDARY_STATE state )
 {
 DROID	*psDroid;
 
@@ -2223,40 +2437,9 @@ DROID	*psDroid;
 		}
 	}
 }
+
 // --------------------------------------------------------------------------
-void	kf_TriggerRayCast( void )
-{
-DROID	*psDroid;
-BOOL	found;
-DROID	*psOther;
-
-	found = FALSE;
-	for(psDroid = apsDroidLists[selectedPlayer]; psDroid AND !found; 
-		psDroid = psDroid->psNext)
-		{
-			if(psDroid->selected)
-			{
-				found = TRUE;
-				psOther = psDroid;
-			}
-			/* NOP */
-		}
-
-	if(found)
-	{
-//		 getBlockHeightDirToEdgeOfGrid(UDWORD x, UDWORD y, UBYTE direction, UDWORD *height, UDWORD *dist)
-   //		getBlockHeightDirToEdgeOfGrid(psOther->x,psOther->y,psOther->direction,&height,&dist);
-//		getBlockHeightDirToEdgeOfGrid(mouseTileX*TILE_UNITS,mouseTileY*TILE_UNITS,getTestAngle(),&height,&dist);
-	}
-}
-// --------------------------------------------------------------------------
-
-void	kf_ScatterDroids( void )
-{
-	// to be written!
-	addConsoleMessage("Scatter droids - not written yet!",LEFT_JUSTIFY);
-}// --------------------------------------------------------------------------
-void	kf_CentreOnBase( void )
+void kf_CentreOnBase( void )
 {
 STRUCTURE	*psStruct;
 BOOL		bGotHQ;
@@ -2296,7 +2479,6 @@ UDWORD		xJump,yJump;
 }
 
 // --------------------------------------------------------------------------
-
 void kf_ToggleFormationSpeedLimiting( void )
 {
 	if(bMultiPlayer)
@@ -2315,7 +2497,7 @@ void kf_ToggleFormationSpeedLimiting( void )
 }
 
 // --------------------------------------------------------------------------
-void	kf_RightOrderMenu( void )
+void kf_RightOrderMenu( void )
 {
 DROID	*psDroid,*psGotOne;
 BOOL	bFound;
@@ -2343,58 +2525,8 @@ BOOL	bFound;
 		intObjectSelected((BASE_OBJECT*)psGotOne);
 	}
 }
+
 // --------------------------------------------------------------------------
-void kf_ScriptTest( void )
-{
-	UBYTE	*pBuffer;
-	UDWORD	size;
-
-	eventSaveState(1,&pBuffer, &size);
-
-	eventReset();
-
-	eventLoadState(pBuffer, size, TRUE);
-
-	FREE(pBuffer);
-}
-// --------------------------------------------------------------------------
-void kf_TriggerShockWave( void )
-{
-iVector	pos;
-
-		pos.x = mouseTileX*TILE_UNITS + TILE_UNITS/2;
-		pos.z = mouseTileY*TILE_UNITS + TILE_UNITS/2;
-		pos.y = map_Height(pos.x,pos.z) + SHOCK_WAVE_HEIGHT; 
-
-		addEffect(&pos,EFFECT_EXPLOSION,EXPLOSION_TYPE_SHOCKWAVE,FALSE,NULL,0);
-}
-// --------------------------------------------------------------------------
-void	kf_ToggleMouseInvert( void )
-{
-	if(getInvertMouseStatus())
-	{
-		setInvertMouseStatus(FALSE);
-	}
-	else
-	{
-		setInvertMouseStatus(TRUE);
-	}
-}
-// --------------------------------------------------------------------------
-void	kf_ToggleShakeStatus( void )
-{
-	if(getShakeStatus())
-	{
-		setShakeStatus(FALSE);
-	}
-	else
-	{
-		setShakeStatus(TRUE);
-	}
-
-}
-// --------------------------------------------------------------------------
-
 void kf_SpeedUp( void )
 {
 	FRACT	mod, fast1,fast2;
@@ -2440,6 +2572,7 @@ void kf_SpeedUp( void )
 	}
 }
 
+// --------------------------------------------------------------------------
 void kf_SlowDown( void )
 {
 	FRACT	mod, fast1,fast2;
@@ -2485,6 +2618,7 @@ void kf_SlowDown( void )
 	}
 }
 
+// --------------------------------------------------------------------------
 void kf_NormalSpeed( void )
 {
 	if ( (!bMultiPlayer || (NetPlay.bComms == 0)) && !bInTutorial)
@@ -2495,7 +2629,6 @@ void kf_NormalSpeed( void )
 }
 
 // --------------------------------------------------------------------------
-
 void kf_ToggleReopenBuildMenu( void )
 {
 	intReopenBuild( !intGetReopenBuild() );
@@ -2509,5 +2642,3 @@ void kf_ToggleReopenBuildMenu( void )
 		CONPRINTF(ConsoleString,(ConsoleString,strresGetString(psStringRes,STR_GAM_BUILD_NO_REOPEN)));
 	}
 }
-
-// --------------------------------------------------------------------------

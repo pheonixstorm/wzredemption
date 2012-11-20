@@ -51,7 +51,7 @@
 #include "multistat.h"
 #include "netplay.h"
 
-#define VERSION_STRING	"VER 1.10.1.31"
+#define VERSION_STRING	"VER 1.10.1.42"
 
 extern BOOL bSubtitles;
 
@@ -1285,7 +1285,7 @@ BOOL startGameOptionsMenu(VOID)
 	addTopForm();
 	addBottomForm();
 
-	// difficulty
+	// difficulty FIXME for new difficulty settings see text.h line 241 and 242 for STR_TOUGH STR_KILLER
 	addTextButton(FRONTEND_DIFFICULTY,  FRONTEND_POS2X-25,FRONTEND_POS2Y, strresGetString(psStringRes, STR_FE_DIFFICULTY),TRUE,FALSE);
 	switch(getDifficultyLevel())
 	{
@@ -1747,7 +1747,7 @@ VOID displayTitleBitmap(struct _widget *psWidget, UDWORD xOffset, UDWORD yOffset
 	case REND_MODE_HAL:
 		if(weHave3DNow())
 		{
-			sprintf(sTmp, VERSION_STRING " - Build: %s D3D (With AMD 3DNow! and SSE2)",__DATE__);
+			sprintf(sTmp, VERSION_STRING " - Build: %s D3D (With AMD 3DNow!)",__DATE__);
 		}
 		else
 		{

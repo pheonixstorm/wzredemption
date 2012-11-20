@@ -238,6 +238,8 @@ enum _fixed_str_id
 	STR_EASY,
 	STR_NORMAL,
 	STR_HARD,
+//    STR_TOUGH,
+//    STR_KILLER,
 
   	STR_MUL_LEAVE,			
 	STR_MUL_JOINING,	
