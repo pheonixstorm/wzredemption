@@ -537,6 +537,7 @@ void processInput(void)
 {
 	UDWORD	x,y;
 	BOOL	mOverR = FALSE;
+    UDWORD  WheelCount;
 
 	x = mouseX();
 	y = mouseY();
@@ -576,6 +577,20 @@ void processInput(void)
 	{
 		camToggleStatus();
 	}
+
+    if (mouseWheelForward())
+    {
+        for (WheelCount = 0; WheelCount < 20; WheelCount++)
+        { kf_ZoomIn(); }
+        mouseWheelReset();
+    }
+
+    if (mouseWheelBackwards())
+    {
+        for (WheelCount = 0; WheelCount < 20; WheelCount++)
+        { kf_ZoomOut(); }
+        mouseWheelReset();
+    }
 
 	if(intMode != INT_DESIGN)
 	{

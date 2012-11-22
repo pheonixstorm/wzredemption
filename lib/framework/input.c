@@ -44,7 +44,7 @@ typedef enum _key_state
 static KEY_STATE aKeyState[KEY_MAXSCAN];
 
 /* Mouse wheel stuff */
-// static  SDWORD  wheelVal; // ADD FIXME Use this val when mouse rotate function found
+static  int     wheelVal; // Wheel zoom code added, though unsure if correctly or working yet... Nope.. locks up the game :(
 static	UDWORD	oldWheelPos = 0;
 static	BOOL	bMouseWheelForward = FALSE;
 static	BOOL	bMouseWheelBackwards = FALSE;
@@ -244,30 +244,22 @@ void inputProcessMessages(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 
-		/* FIXME Can be enabled soon I hope.
+		// FIXME Can be enabled soon I hope.
 	case WM_MOUSEWHEEL:	// not defined in non-NT.....bugger.
-		wheelVal = HIWORD(wParam);
+		wheelVal = (short)HIWORD(wParam); //GET_WHEEL_DELTA_WPARAM(wParam);
 		if(wheelVal<0)
 		{
-			bMouseWheelForward = TRUE;
-			bMouseWheelBackwards = FALSE;
-			bMouseWheelStatic = FALSE;
-		}
-		if(wheelVal>0)
-		{
-		 	bMouseWheelForward = FALSE;
+			bMouseWheelForward = FALSE;
 			bMouseWheelBackwards = TRUE;
 			bMouseWheelStatic = FALSE;
 		}
-		else
-		{
-			bMouseWheelForward = FALSE;
+        else
+        {
+            bMouseWheelForward = TRUE;
 			bMouseWheelBackwards = FALSE;
-			bMouseWheelStatic = TRUE;
-		}
-
+			bMouseWheelStatic = FALSE;
+        }
 		break;
-	   */
 	case WM_KEYUP:
 	case WM_SYSKEYUP:
 
@@ -518,6 +510,13 @@ BOOL	mouseWheelBackwards( void)
 BOOL	mouseWheelStatic( void)
 {
 	return(bMouseWheelStatic);
+}
+
+void mouseWheelReset(void)
+{
+    bMouseWheelForward      = FALSE;
+    bMouseWheelBackwards    = FALSE;
+    bMouseWheelStatic       = TRUE;
 }
 
 /* This returns true if the mouse key is currently depressed */
