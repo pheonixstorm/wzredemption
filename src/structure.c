@@ -197,13 +197,6 @@ static UDWORD	lastMaxUnitMessage;
 // (for example used to change the type of wall at a location)
 //BOOL removeStruct(STRUCTURE *psDel);
 
-//#ifdef DEMO
-//BOOL demoStructs(void);
-//BOOL createStructureStat(STRUCTURE_STATS *psBuilding, STRUCTURE_STATS *psNewStructure,
-//						 UDWORD ref, STRING *pName, UDWORD type);
-//void printAvailStructs(void);
-//#endif
-
 /* New function from Alex M */
 /* Tells you if a point is inside the footprint of a building */
 
@@ -3707,9 +3700,8 @@ static BOOL IsFactoryCommanderGroupFull(FACTORY *psFactory)
 // Disallow manufacture of units once these limits are reached,
 // dos'nt mean that these numbers can't be exceeded if units are
 // put down in the editor or by the scripts.
-static UWORD MaxDroidsAllowedPerPlayer[MAX_PLAYERS]={100,999,999,999,999,999,999,999};
+static UWORD MaxDroidsAllowedPerPlayer[MAX_PLAYERS]={140,999,999,999,999,999,999,999};
 static UWORD MaxDroidsAllowedPerPlayerMultiPlayer[MAX_PLAYERS]={300,300,300,300,300,300,300,300};
-//static UWORD MaxDroidsAllowedPerPlayerMultiPlayer[MAX_PLAYERS]={10,10,10,10,10,10,10,10};
 
 UDWORD getMaxStructures(UDWORD PlayerNumber)
 {
