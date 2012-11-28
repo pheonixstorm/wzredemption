@@ -37,9 +37,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ani.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Anim.h">
       <Filter>Header Files</Filter>
     </ClInclude>

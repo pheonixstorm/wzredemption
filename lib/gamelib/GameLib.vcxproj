@@ -194,7 +194,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ani.h" />
     <ClInclude Include="Anim.h" />
     <ClInclude Include="Animobj.h" />
     <ClInclude Include="GTime.h" />

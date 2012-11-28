@@ -794,6 +794,9 @@
     <ClInclude Include="Wrappers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ani.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cur00001.cur">

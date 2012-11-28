@@ -1246,6 +1246,7 @@
     <ClInclude Include="AdvVis.h" />
     <ClInclude Include="Ai.h" />
     <ClInclude Include="AIDef.h" />
+    <ClInclude Include="ani.h" />
     <ClInclude Include="Anim_id.h" />
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="AStar.h" />
