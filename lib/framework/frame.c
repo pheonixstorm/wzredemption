@@ -14,11 +14,13 @@
 // defines the inline functions in this module
 #define DEFINE_INLINE
 
+#ifdef WIN32
 #pragma warning (disable : 4201 4214 4115 4514)
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_EXTRA_LEAN
 #include <windows.h>
 #pragma warning (default : 4201 4214 4115)
+#endif
 
 #include <stdio.h>
 #include <time.h>

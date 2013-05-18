@@ -6,12 +6,14 @@
  *
  */
 
+#ifdef WIN32
 #pragma warning (disable : 4201 4214 4115 4514)
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_EXTRA_LEAN
 #include <windows.h>
 #include <ddraw.h>
 #pragma warning (default : 4201 4214 4115)
+#endif
 
 /* Allow frame header files to be singly included */
 #define FRAME_LIB_INCLUDE

@@ -9,11 +9,14 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+// First wrap of win32 specific code.. More in the file, but will eventually replace this with custom code.
+#ifdef WIN32
 #pragma warning (disable : 4201 4214 4115 4514)
 #define WIN32_LEAN_AND_MEAN
 #define WIN32_EXTRA_LEAN
 #include <Windows.h>
 #pragma warning (default : 4201 4214 4115)
+#endif
 
 #include "frame.h"
 #include "frameint.h"

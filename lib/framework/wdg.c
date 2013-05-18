@@ -18,7 +18,6 @@
 
 
 /** local definitions **/
-
 //#define	PRIMCATALOG		// define this if we want to use the primative buffer to store the wdg catalogs - frees up 29k (!)
 
 #define MAX_STR (256)
@@ -37,7 +36,6 @@ int freadpos(UDWORD filepos,UBYTE *buffer, UDWORD bytescount, FILE *handle)
 
 
 /* default settings */
-
 /** external functions **/
 BOOL FILE_ProcessFile(WRFINFO *CurrentFile, UBYTE *pRetreivedFile);
 void SetLastFnameExtra(UBYTE SoftwareFlag, SBYTE TexturePage);
