@@ -110,7 +110,7 @@ void cmdDroidSetDesignator(DROID *psDroid)
 	apsCmdDesignator[psDroid->player] = psDroid;
 }
 
-// set the current target designator for a player
+// clear the current target designator for a player
 void cmdDroidClearDesignator(UDWORD player)
 {
 	apsCmdDesignator[player] = NULL;

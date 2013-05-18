@@ -81,8 +81,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,10,2,43
- PRODUCTVERSION 1,10,2,43
+ FILEVERSION 1,10,2,45
+ PRODUCTVERSION 1,10,2,45
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -99,12 +99,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "DarkStorm Interactive"
             VALUE "FileDescription", "Warzone 2100"
-            VALUE "FileVersion", "1.10.2.43"
+            VALUE "FileVersion", "1.10.2.45"
             VALUE "InternalName", "Warzone 2100"
             VALUE "LegalCopyright", "Copyright Pumpkin Studios, EIDOS Interactive 1998"
             VALUE "OriginalFilename", "Warzone.exe"
             VALUE "ProductName", "Warzone 2100"
-            VALUE "ProductVersion", "1.10.2.43"
+            VALUE "ProductVersion", "1.10.2.45"
         END
     END
     BLOCK "VarFileInfo"

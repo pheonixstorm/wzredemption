@@ -366,9 +366,6 @@
     <ClCompile Include="warzoneConfig.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Water.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="WinMain.c">
       <Filter>Source Files</Filter>
     </ClCompile>

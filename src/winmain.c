@@ -7,7 +7,10 @@
 //		multidemo	- used with covermount to make a multiplayer demo.
 //
 
+#ifdef win32
 #include <direct.h>
+#endif
+
 #include "frame.h"
 #include "widget.h"
 #include "script.h"
