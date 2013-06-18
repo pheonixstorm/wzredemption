@@ -24,15 +24,17 @@ typedef enum _title_mode {
 		LOADSAVEGAME,				// 15 loading a save game
 		KEYMAP,						// 16 keymap editor
 		GAME2,						// 17 second options menu.
-//		GRAPHICS,					// 5
-//		VIDEO,
+		GRAPHICS,					// 5
+		VIDEO,
 } tMode;
 
 //typedef enum _titlemode tMode;	// define the type
 
 tMode titleMode;					// the global case
 
-#define DEFAULT_LEVEL	"CAM_1A"
+// FIXME Change this to data.
+// Will make creating new campaigns easieras well as additional expansions (NP cam and Collective Cam)
+#define DEFAULT_LEVEL	"CAM_1A"  
 //#define DEFAULT_LEVEL	"CAM_2A"
 #define TUTORIAL_LEVEL	"TUTORIAL3"
 
@@ -51,8 +53,8 @@ extern BOOL startTitleMenu			(VOID);
 extern BOOL runTitleMenu			(VOID);
 extern BOOL runSinglePlayerMenu		(VOID);
 extern BOOL runMultiPlayerMenu		(VOID);
-//extern BOOL runVideoOptionsMenu		(VOID);
-//extern BOOL runGraphicsOptionsMenu	(VOID);
+extern BOOL runVideoOptionsMenu		(VOID);
+extern BOOL runGraphicsOptionsMenu	(VOID);
 extern BOOL runGameOptionsMenu		(VOID);
 extern BOOL runOptionsMenu			(VOID);
 extern BOOL runTutorialMenu			(VOID);
@@ -186,24 +188,24 @@ BOOL addIGTextButton(UDWORD id,UWORD y,UDWORD StringID,UDWORD Style);
 #define FRONTEND_CONTROL		20041
 #define FRONTEND_CONTROL_BT		20042
 
-//#define FRONTEND_VIDEO			20051
-//#define FRONTEND_SOFTWARE		20052
-//#define FRONTEND_DIRECTX		20053
-//#define FRONTEND_OPENGL			20054
-//#define FRONTEND_GLIDE			20055
+#define FRONTEND_VIDEO			20051
+#define FRONTEND_SOFTWARE		20052
+#define FRONTEND_DIRECTX		20053
+#define FRONTEND_OPENGL			20054
+#define FRONTEND_GLIDE			20055 // FIXME Replcae with FRONTEND_RENDER_R ?
 
-// Should this section survive? FIXME
-#define FRONTEND_DEMO			20056
-#define FRONTEND_DEMO1			20057
-#define FRONTEND_DEMO2			20058
-#define FRONTEND_DEMO3			20059
+// Should this section survive? FIXME Recycle and reuse
+#define FRONTEND_RENDER			20056
+#define FRONTEND_RENDER_R		20057
+#define FRONTEND_RESOLUTION 	20058
+#define FRONTEND_RESOLUTION_R	20059
 #define FRONTEND_DEMO4			20060
 #define FRONTEND_DEMO5			20061
 
 #define FRONTEND_LOGO			20062
 
 #define FRONTEND_GAMEOPTIONS 	20063
-//#define FRONTEND_GRAPHICS		20064
+#define FRONTEND_GRAPHICS		20064
 #define FRONTEND_TEXTURES		20065
 #define FRONTEND_TEXTURES_R		20066
 #define FRONTEND_EFFECTS		20067

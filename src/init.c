@@ -758,7 +758,7 @@ BOOL systemInitialise(void)
 	//initialize render engine
 	switch (war_GetRendMode())
 	{
-	case	REND_MODE_GLIDE:
+	case	REND_MODE_GLIDE: // FIXME replace with OpenGL
 		if (!pie_Initialise(REND_GLIDE_3DFX))
 		{
 			ASSERT((FALSE,"Unable to initialise 3DFX hardware"));
@@ -773,7 +773,7 @@ BOOL systemInitialise(void)
 			return FALSE;
 		}
 		break;
-	case	REND_MODE_RGB:
+	case	REND_MODE_RGB: // FIXME To be removed
 		pie_SetDirect3DDeviceName("RGB Emulation");
 		if (!pie_Initialise(REND_D3D_RGB))
 		{

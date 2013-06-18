@@ -243,9 +243,9 @@ TITLECODE titleLoop(void)
 //		case DEMOMODE:
 //			runDemoMenu();
 //			break;
-//	case VIDEO:
-//			runVideoOptionsMenu();
-//			break;
+    	case VIDEO:
+			runVideoOptionsMenu();
+			break;
 		case OPTIONS:
 			runOptionsMenu();
 			break;

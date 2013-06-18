@@ -26,7 +26,7 @@ typedef	enum	WAR_REND_MODE
 					REND_MODE_GLIDE,
 					REND_MODE_RGB,
 					REND_MODE_HAL,
-					REND_MODE_HAL2,
+					REND_MODE_OGL,
 					REND_MODE_REF,
 				}
 				WAR_REND_MODE;

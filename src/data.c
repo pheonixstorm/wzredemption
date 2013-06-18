@@ -1710,4 +1710,3 @@ BOOL dataInitLoadFuncs(void)
 
 	return TRUE;
 }
-

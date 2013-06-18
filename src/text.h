@@ -222,17 +222,26 @@ enum _fixed_str_id
 	STR_FE_CRAPFOG,
 	STR_FE_GOODFOG,
 
+    // Render Options
+    //STR_FE_RENDER
 	STR_FE_VIDEO,				
 	STR_FE_SOFTWARE,	
 	STR_FE_DIRECTX,	
 	STR_FE_OPENGL,	
-	STR_FE_GLIDE,	
+	STR_FE_GLIDE, // REMOVE
+
 	STR_FE_GAME,		
 	STR_FE_GRAPHICS,	
 	STR_FE_TEXTURE,		
 	STR_FE_EFFECTS,		
 	STR_FE_FOG,			
 	STR_FE_TRANSPARENCY,
+
+    // Game Resolution
+    //STR_FE_RESOLUTION,
+    //STR_800,
+    //STR_1024,
+    //STR_1280,
 
 	STR_FE_DIFFICULTY,
 	STR_EASY,

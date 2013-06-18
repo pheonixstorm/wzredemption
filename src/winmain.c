@@ -139,7 +139,7 @@ int WINAPI WinMain(
 	}
 
 	war_SetDefaultStates();
-
+    // FIXME rewrite next 7 lines to load correct render state. Software, D3D, or OpenGL. Glide is getting removed.
 	war_SetRendMode(REND_MODE_HAL);
 
 	if (InitGlideDLL())	// In ivis02/3dfxdyn.c - returns FALSE if no glide2x.dll is not found
@@ -190,11 +190,7 @@ init://jump here from the end if re_initialising
 
 	reInit = FALSE;//just so we dont restart again
 
-#ifdef USE_FILE_PATH
-	_chdir(FILE_PATH);
-#endif
-
-	//always start windowed toggle to fullscreen later
+	//always start windowed toggle to fullscreen later. Change to start fullscreen, remove unneeded rendermodes.
 	if (war_GetRendMode() == REND_MODE_HAL)
 	{
 		bGlide = FALSE;
@@ -409,7 +405,7 @@ init://jump here from the end if re_initialising
 			case FRAME_KILLFOCUS:
 				paused = TRUE;
 				gameTimeStop();
-				if (pie_GetRenderEngine() == ENGINE_GLIDE)
+				if (pie_GetRenderEngine() == ENGINE_GLIDE) // FIXME swap to OpenGL when added
 				{
 					if (!gl_Deactivate())
 					{
@@ -429,7 +425,7 @@ init://jump here from the end if re_initialising
 					quit = TRUE;
 					Restart = TRUE;
 				}
-				if (pie_GetRenderEngine() == ENGINE_GLIDE)
+				if (pie_GetRenderEngine() == ENGINE_GLIDE) // FIXME swap to OpenGL when added
 				{
 					if (!gl_Reactivate())
 					{

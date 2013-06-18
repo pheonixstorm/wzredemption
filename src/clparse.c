@@ -45,7 +45,6 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 	char			seps[] = " ,\t\n";
 	char			*tokenType;
 	char			*token;
-	BOOL			bCrippleD3D = FALSE; // Disable higher resolutions for d3D
 	char			seps2[] ="\"";
 	char			cl[255];
 	char			cl2[255];
@@ -63,7 +62,7 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 	{
 		if ( stricmp( tokenType, "-window" ) == 0 )
 		{
-#ifdef	_DEBUG
+#ifdef	_DEBUG // FIXME Makes no sense to have windowed in an ifdef if the result is the same either way. Remove.
 			clStartWindowed = TRUE;
 #else
 			clStartWindowed = TRUE;
@@ -81,7 +80,7 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 			pie_SetVideoBufferHeight(480);
 
 		}
-		else if ( stricmp( tokenType, "-3DFX" ) == 0 )
+		else if ( stricmp( tokenType, "-3DFX" ) == 0 )  // FIXME Replace for OpenGL
 		{
 			if (!bGlideDllPresent)
 			{
@@ -99,26 +98,25 @@ BOOL ParseCommandLine( LPSTR psCmdLine, BOOL bGlideDllPresent)
 
 			war_SetRendMode(REND_MODE_HAL);
 			pie_SetDirect3DDeviceName("Direct3D HAL");
-//			bCrippleD3D = TRUE;
 			pie_SetVideoBufferWidth(640);
 			pie_SetVideoBufferHeight(480);
 		}
 
-		else if ( stricmp( tokenType, "-MMX" ) == 0 )
+		else if ( stricmp( tokenType, "-MMX" ) == 0 ) // REMOVE
 		{
 			war_SetRendMode(REND_MODE_RGB);
 			pie_SetDirect3DDeviceName("RGB Emulation");
 			pie_SetVideoBufferWidth(640);
 			pie_SetVideoBufferHeight(480);
 		}
-		else if ( stricmp( tokenType, "-RGB" ) == 0 )
+		else if ( stricmp( tokenType, "-RGB" ) == 0 ) // REMOVE
 		{
 			war_SetRendMode(REND_MODE_RGB);
 			pie_SetDirect3DDeviceName("RGB Emulation");
 			pie_SetVideoBufferWidth(640);
 			pie_SetVideoBufferHeight(480);
 		}
-		else if ( stricmp( tokenType, "-REF" ) == 0 )
+		else if ( stricmp( tokenType, "-REF" ) == 0 ) // REMOVE I don't think REF is used past DX8
 		{
 			war_SetRendMode(REND_MODE_REF);
 			pie_SetDirect3DDeviceName("Reference Rasterizer");

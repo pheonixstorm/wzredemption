@@ -1,6 +1,6 @@
 /*
  *Config.c  saves your favourite options to the Registry.
- * 
+ * Rewrite to use binary config files or text ini instead of registry.
  */
 
 #include "frame.h"

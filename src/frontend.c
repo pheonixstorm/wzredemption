@@ -51,7 +51,7 @@
 #include "multistat.h"
 #include "netplay.h"
 
-#define VERSION_STRING	"VER 1.10.2.45"
+#define VERSION_STRING	"VER 1.10.2.49"
 
 extern BOOL bSubtitles;
 
@@ -118,10 +118,10 @@ BOOL		startGameOptionsMenu	(VOID);
 BOOL		runGameOptionsMenu		(VOID);
 BOOL		startGameOptions2Menu	(VOID);
 BOOL		runGameOptions2Menu		(VOID);
-//BOOL		startVideoOptionsMenu	(VOID);
-//BOOL		runVideoOptionsMenu		(VOID);
-//BOOL		startGraphicsOptionsMenu(VOID);
-//BOOL		runGraphicsptionsMenu	(VOID);
+BOOL		startVideoOptionsMenu	(VOID);
+BOOL		runVideoOptionsMenu		(VOID);
+BOOL		startGraphicsOptionsMenu(VOID);
+BOOL		runGraphicsptionsMenu	(VOID);
 
 VOID		addTopForm				(VOID);
 VOID		removeTopForm			(VOID);
@@ -142,15 +142,12 @@ VOID		displayTextAt270		(struct _widget *psWidget, UDWORD xOffset, UDWORD yOffse
 static VOID	displayBigSlider		(struct _widget *psWidget, UDWORD xOffset, UDWORD yOffset, UDWORD *pColours);
 
 
-// Returns TRUE if escape key pressed on PC or close button pressed on Playstation.
-//
+// Returns TRUE if escape key pressed.
 BOOL CancelPressed(VOID)
 {
-	if(keyPressed(KEY_ESC)) {
-		return TRUE;
-	}
-	return FALSE;
+	return keyPressed(KEY_ESC);
 }
+
 // ////////////////////////////////////////////////////////////////////////////
 // for cursorsnap stuff on pc
 VOID processFrontendSnap(BOOL bHideCursor)
@@ -227,10 +224,9 @@ VOID changeTitleMode(tMode mode)
 
 	switch(mode)
 	{
-/*	case VIDEO:
+	case VIDEO:
 		startVideoOptionsMenu();
 		break;
-*/	
 	case SINGLE:
 		startSinglePlayerMenu();
 		break;
@@ -337,7 +333,7 @@ BOOL startTitleMenu(VOID)
 	return TRUE;
 }
 
-static void frontEndCDOK( void )
+static void frontEndCDOK( void ) // DELETEME ?? Safe to remove CD functions? Probably.
 {
 	changeTitleMode( g_tModeNext );
 }
@@ -383,7 +379,6 @@ void frontEndCheckCD( tMode tModeNext, CD_INDEX cdIndex )
 
 	changeTitleMode( tModeNext );
 }
-
 
 BOOL runTitleMenu(VOID)
 {
@@ -478,10 +473,10 @@ BOOL runTutorialMenu(VOID)
 		changeTitleMode(TITLE);
 	}
 
-	DrawBegin();	
-	StartCursorSnap(&InterfaceSnap);
+	DrawBegin();	// DELETEME ?? This only used for SR and 4101. Must figure out what those are (both software render?)
+	StartCursorSnap(&InterfaceSnap);                    // FIXMEWhat is this needed for??
 	widgDisplayScreen(psWScreen);						// show the widgets currently running
-	DrawEnd();
+	DrawEnd();  // Same as DrawBegin()
 	return TRUE;
 
 }
@@ -731,7 +726,8 @@ BOOL startOptionsMenu(VOID)
 	addSideText	 (FRONTEND_SIDETEXT ,	FRONTEND_SIDEX,FRONTEND_SIDEY, strresGetString(psStringRes, STR_FE_SIDEOPTIONS));
 	addTextButton(FRONTEND_GAMEOPTIONS2,FRONTEND_POS3X,FRONTEND_POS3Y, strresGetString(psStringRes, STR_FE_GRAPHICS),FALSE,FALSE);
 	addTextButton(FRONTEND_GAMEOPTIONS,	FRONTEND_POS4X,FRONTEND_POS4Y, strresGetString(psStringRes, STR_FE_GAME),FALSE,FALSE);
-	addTextButton(FRONTEND_KEYMAP,		FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_KM_KEYMAP),FALSE,FALSE);
+    addTextButton(FRONTEND_VIDEO,	    FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_VIDEO),FALSE,FALSE);
+	addTextButton(FRONTEND_KEYMAP,		FRONTEND_POS6X,FRONTEND_POS6Y, strresGetString(psStringRes, STR_KM_KEYMAP),FALSE,FALSE);
 	addMultiBut(psWScreen,FRONTEND_BOTFORM,FRONTEND_QUIT,10,10,30,29, STR_FE_RETURN,IMAGE_RETURN,IMAGE_RETURN_HI,TRUE);
 
 	SetMousePos(0,320,FRONTEND_BOTFORMY+FRONTEND_POS3Y);
@@ -755,12 +751,12 @@ BOOL runOptionsMenu(VOID)
 	case FRONTEND_GAMEOPTIONS2:
 		changeTitleMode(GAME2);
 		break;
-//	case FRONTEND_VIDEO:
-//		changeTitleMode(VIDEO);
-//		break;
-//	case FRONTEND_GRAPHICS:
-//		changeTitleMode(GRAPHICS);
-//		break;
+	case FRONTEND_VIDEO:
+		changeTitleMode(VIDEO);
+		break;
+	case FRONTEND_GRAPHICS:
+		changeTitleMode(GRAPHICS);
+		break;
 	case FRONTEND_KEYMAP:
 		changeTitleMode(KEYMAP);
 		break;
@@ -786,7 +782,7 @@ BOOL runOptionsMenu(VOID)
 
 // ////////////////////////////////////////////////////////////////////////////
 // Graphics Options Menu
-/*
+
 BOOL startGraphicsOptionsMenu(VOID) //FIXME may work or may not, but needs to be added :)
 {
 	addBackdrop();
@@ -807,8 +803,12 @@ BOOL startGraphicsOptionsMenu(VOID) //FIXME may work or may not, but needs to be
 	{
 		strcpy(strFog, "off");
 	}
-	addTextButton(FRONTEND_FOG,		FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_FOG),TRUE,FALSE);
-	addTextButton(FRONTEND_FOG_R,	FRONTEND_POS5M,FRONTEND_POS5Y, strFog,TRUE,FALSE);
+    // Original unaltered
+    //addTextButton(FRONTEND_FOG,		FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_FOG),TRUE,FALSE);
+	//addTextButton(FRONTEND_FOG_R,	FRONTEND_POS5M,FRONTEND_POS5Y, strFog,TRUE,FALSE);
+
+    addTextButton(FRONTEND_FOGTYPE,		FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_FOG),TRUE,FALSE);
+	addTextButton(FRONTEND_FOGTYPE_R,	FRONTEND_POS5M,FRONTEND_POS5Y, strFog,TRUE,FALSE);
 
 	//translucency
 	if (!war_GetTranslucent())
@@ -846,17 +846,17 @@ BOOL runGraphicsOptionsMenu(VOID)
 		break;
 	case FRONTEND_EFFECTS:
 		break;
-	case FRONTEND_FOG:
-	case FRONTEND_FOG_R:
+	case FRONTEND_FOGTYPE:
+	case FRONTEND_FOGTYPE_R:
 		if (war_GetFog())
 		{
 			war_SetFog(FALSE);
-			widgSetString(psWScreen,FRONTEND_FOG_R,"off");
+			widgSetString(psWScreen,FRONTEND_FOGTYPE_R,"off");
 		}
 		else
 		{
 			war_SetFog(TRUE);
-			widgSetString(psWScreen,FRONTEND_FOG_R,"on");
+			widgSetString(psWScreen,FRONTEND_FOGTYPE_R,"on");
 		}
 //changeTitleMode(GRAPHICS);
 
@@ -915,12 +915,29 @@ BOOL startVideoOptionsMenu(VOID)
 	addTopForm();
 	addBottomForm();
 
-
+	// New Renderer menu: Keep commented out until new strings.txt can be written
+	addTextButton(FRONTEND_RENDER, FRONTEND_POS2X-50, FRONTEND_POS2Y, strresGetString(psStringRes, STR_FE_VIDEO), TRUE, FALSE);
+	switch (war_GetRendMode())
+	{
+		case REND_MODE_HAL:
+			addTextButton(FRONTEND_RENDER_R, FRONTEND_POS2M-25, FRONTEND_POS2Y, strresGetString(psStringRes, STR_FE_DIRECTX),TRUE,FALSE);
+			break;
+		case REND_MODE_OGL:
+			addTextButton(FRONTEND_RENDER_R, FRONTEND_POS2M-25, FRONTEND_POS2Y, strresGetString(psStringRes, STR_FE_OPENGL),TRUE,FALSE);
+			break;
+		case REND_MODE_SOFTWARE:
+			//addTextButton(FRONTEND_RENDER_R, POS2M-25, FRONTEND_POS2Y, strresGetString(psStringRes, STR_),TRUE,FALSE);
+			//break;
+		default:
+			addTextButton(FRONTEND_RENDER_R, FRONTEND_POS2M-25, FRONTEND_POS2Y, strresGetString(psStringRes, STR_FE_SOFTWARE),TRUE,FALSE);
+			break;
+	}
+	/*
 	addTextButton(FRONTEND_SOFTWARE,FRONTEND_POS2X,FRONTEND_POS2Y, strresGetString(psStringRes, STR_FE_SOFTWARE),FALSE,FALSE);
 	addTextButton(FRONTEND_DIRECTX,	FRONTEND_POS3X,FRONTEND_POS3Y, strresGetString(psStringRes, STR_FE_DIRECTX),FALSE,FALSE);
 	addTextButton(FRONTEND_OPENGL,	FRONTEND_POS4X,FRONTEND_POS4Y, strresGetString(psStringRes, STR_FE_OPENGL),FALSE,TRUE);
 	addTextButton(FRONTEND_GLIDE,	FRONTEND_POS5X,FRONTEND_POS5Y, strresGetString(psStringRes, STR_FE_GLIDE),FALSE,FALSE);
-
+	*/
 	addMultiBut(psWScreen,FRONTEND_BOTFORM,FRONTEND_QUIT,10,10,30,29, STR_FE_RETURN,IMAGE_RETURN,IMAGE_RETURN_HI,TRUE);
 
 	SetMousePos(0,320,FRONTEND_BOTFORMY+FRONTEND_POS3Y);
@@ -935,7 +952,7 @@ BOOL runVideoOptionsMenu(VOID)
 	processFrontendSnap(TRUE);
 
 	id = widgRunScreen(psWScreen);						// Run the current set of widgets 
-	switch(id)
+	/* switch(id)
 	{
 	case FRONTEND_SOFTWARE:
 		if (war_GetRendMode() == REND_MODE_SOFTWARE)
@@ -974,13 +991,13 @@ BOOL runVideoOptionsMenu(VOID)
 		}
 		break;
 	case FRONTEND_OPENGL:
-		if (war_GetRendMode() == REND_MODE_HAL2)
+		if (war_GetRendMode() == REND_MODE_OGL)
 		{
 			changeTitleMode(OPTIONS);
 		}
 		else
 		{
-			war_SetRendMode(REND_MODE_HAL2);
+			war_SetRendMode(REND_MODE_OGL);
 			reInit = TRUE;//restart
 			changeTitleMode(QUIT);
 		}
@@ -991,7 +1008,37 @@ BOOL runVideoOptionsMenu(VOID)
 	default:
 		break;
 	}
+	*/
 	
+	switch (id)
+	{
+		case FRONTEND_RENDER:
+		case FRONTEND_RENDER_R:
+			switch (war_GetRendMode())
+			{
+				case REND_MODE_HAL:
+					war_SetRendMode(REND_MODE_OGL);
+					widgSetString(psWScreen,FRONTEND_RENDER_R, strresGetString(psStringRes,STR_FE_OPENGL));
+					break;
+				case REND_MODE_OGL:
+					war_SetRendMode(REND_MODE_SOFTWARE);
+					widgSetString(psWScreen,FRONTEND_RENDER_R, strresGetString(psStringRes,STR_FE_SOFTWARE));
+					break;
+				case REND_MODE_SOFTWARE:
+					war_SetRendMode(REND_MODE_HAL);
+					widgSetString(psWScreen,FRONTEND_RENDER_R, strresGetString(psStringRes,STR_FE_DIRECTX));
+					break;
+			}
+			break;
+		
+		//case FRONTEND_RESOLUTION:
+		//case FRONTEND_RESOLUTION_R:
+		//	switch (pie_GetVideoBufferWidth())
+		//		case 800:
+		case FRONTEND_QUIT:
+			changeTitleMode(OPTIONS);
+			break;
+	}
 	// If close button pressed then return from this menu.
 	if(CancelPressed()) {
 		changeTitleMode(OPTIONS);
@@ -1004,7 +1051,7 @@ BOOL runVideoOptionsMenu(VOID)
 
 	return TRUE;
 }
-*/
+
 
 // ////////////////////////////////////////////////////////////////////////////
 // Game Options Menu 2!
@@ -1427,9 +1474,9 @@ BOOL runGameOptionsMenu(VOID)
 		changeTitleMode(OPTIONS);
 		break;
 
-//	case FRONTEND_VIDEO:
-//		changeTitleMode(VIDEO);
-//		break;
+	case FRONTEND_VIDEO:
+		changeTitleMode(VIDEO);
+		break;
 
 	case FE_P0:
 		widgSetButtonState(psWScreen, FE_P0, WBUT_LOCK);		

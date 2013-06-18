@@ -37,7 +37,7 @@ void cmdDroidShutDown(void)
 }
 
 // Make new command droids available
-void cmdDroidAvailable(BRAIN_STATS *psBrainStats, SDWORD player)
+void cmdDroidAvailable(BRAIN_STATS *psBrainStats, SDWORD player) // FIXME Does it even do anything?
 {
 	UNUSEDPARAMETER(psBrainStats);
 	UNUSEDPARAMETER(player);
