@@ -364,7 +364,6 @@ void *blkAlloc(BLOCK_HEAP *psHeap, SDWORD size)
 	psCurr->pLastAllocated=pAlloc;
 ///* - error trapping an out-of-mem allocation !!!
 
-NoMemChk:
 	return pAlloc;
 }
 //*/
@@ -440,7 +439,7 @@ void blkFree(BLOCK_HEAP *psHeap, void *pMemToFree)
 #endif
 
 	{
-		BOOL bRes;
+
 
 #if(1)
 

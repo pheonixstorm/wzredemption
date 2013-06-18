@@ -399,6 +399,7 @@ SDWORD memRecReport(MEM_NODE *psRoot)
 			   psRoot->size;
 	}
 #endif
+    return 0; // Just to shut up the stupid compiler
 }
 
 #if DEBUG_MALLOC
